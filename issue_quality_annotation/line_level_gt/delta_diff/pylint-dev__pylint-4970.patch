@@ -1,0 +1,11 @@
+
+pylint/checkers/similar.py
+
+ 390⋮ 390│ 
+ 391⋮ 391│     def run(self) -> None:
+ 392⋮ 392│         """start looking for similarities and display results on stdout"""
+    ⋮ 393│+        if self.min_lines == 0:
+    ⋮ 394│+            return
+ 393⋮ 395│         self._display_sims(self._compute_sims())
+ 394⋮ 396│ 
+ 395⋮ 397│     def _compute_sims(self) -> List[Tuple[int, Set[LinesChunkLimits_T]]]:

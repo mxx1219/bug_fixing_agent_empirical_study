@@ -1,0 +1,47 @@
+
+sympy/core/mod.py
+
+  1 ⋮  1 │ from __future__ import print_function, division
+  2 ⋮  2 │ 
+  3 ⋮    │-from sympy.core.numbers import nan
+    ⋮  3 │+from sympy.core.numbers import nan, Integer
+    ⋮  4 │+from sympy.core.compatibility import integer_types
+  4 ⋮  5 │ from .function import Function
+  5 ⋮  6 │ 
+  6 ⋮  7 │ 
+
+ 45 ⋮ 46 │ 
+ 46 ⋮ 47 │             if q.is_Number:
+ 47 ⋮ 48 │                 if p.is_Number:
+ 48 ⋮    │-                    return (p % q)
+    ⋮ 49 │+                    return p%q
+ 49 ⋮ 50 │                 if q == 2:
+ 50 ⋮ 51 │                     if p.is_even:
+ 51 ⋮ 52 │                         return S.Zero
+
+ 64 ⋮ 65 │             except TypeError:
+ 65 ⋮ 66 │                 pass
+ 66 ⋮ 67 │             else:
+ 67 ⋮    │-                if type(d) is int:
+    ⋮ 68 │+                if isinstance(d, integer_types):
+ 68 ⋮ 69 │                     rv = p - d*q
+ 69 ⋮ 70 │                     if (rv*q < 0) == True:
+ 70 ⋮ 71 │                         rv += q
+
+ 139⋮ 140│                 net = prod_mod1*prod_mod
+ 140⋮ 141│                 return prod_non_mod*cls(net, q)
+ 141⋮ 142│ 
+    ⋮ 143│+            if q.is_Integer and q is not S.One:
+    ⋮ 144│+                _ = []
+    ⋮ 145│+                for i in non_mod_l:
+    ⋮ 146│+                    if i.is_Integer and (i % q is not S.Zero):
+    ⋮ 147│+                        _.append(i%q)
+    ⋮ 148│+                    else:
+    ⋮ 149│+                        _.append(i)
+    ⋮ 150│+                non_mod_l = _
+    ⋮ 151│+
+    ⋮ 152│+            p = Mul(*(non_mod_l + mod_l))
+    ⋮ 153│+
+ 142⋮ 154│         # XXX other possibilities?
+ 143⋮ 155│ 
+ 144⋮ 156│         # extract gcd; any further simplification should be done by the user

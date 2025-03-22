@@ -1,0 +1,27 @@
+
+django/db/migrations/loader.py
+
+ 88 ⋮ 88 │                     continue
+ 89 ⋮ 89 │                 raise
+ 90 ⋮ 90 │             else:
+ 91 ⋮    │-                # Empty directories are namespaces.
+ 92 ⋮    │-                # getattr() needed on PY36 and older (replace w/attribute access).
+ 93 ⋮    │-                if getattr(module, '__file__', None) is None:
+ 94 ⋮    │-                    self.unmigrated_apps.add(app_config.label)
+ 95 ⋮    │-                    continue
+ 96 ⋮ 91 │                 # Module is not a package (e.g. migrations.py).
+ 97 ⋮ 92 │                 if not hasattr(module, '__path__'):
+ 98 ⋮ 93 │                     self.unmigrated_apps.add(app_config.label)
+ 99 ⋮ 94 │                     continue
+    ⋮ 95 │+                # Empty directories are namespaces. Namespace packages have no
+    ⋮ 96 │+                # __file__ and don't use a list for __path__. See
+    ⋮ 97 │+                # https://docs.python.org/3/reference/import.html#namespace-packages
+    ⋮ 98 │+                if (
+    ⋮ 99 │+                    getattr(module, '__file__', None) is None and
+    ⋮ 100│+                    not isinstance(module.__path__, list)
+    ⋮ 101│+                ):
+    ⋮ 102│+                    self.unmigrated_apps.add(app_config.label)
+    ⋮ 103│+                    continue
+ 100⋮ 104│                 # Force a reload if it's already loaded (tests need this)
+ 101⋮ 105│                 if was_loaded:
+ 102⋮ 106│                     reload(module)

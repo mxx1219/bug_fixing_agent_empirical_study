@@ -1,0 +1,17 @@
+
+django/db/models/fields/__init__.py
+
+ 763⋮ 763│             if not getattr(cls, self.attname, None):
+ 764⋮ 764│                 setattr(cls, self.attname, self.descriptor_class(self))
+ 765⋮ 765│         if self.choices is not None:
+ 766⋮    │-            setattr(cls, 'get_%s_display' % self.name,
+ 767⋮    │-                    partialmethod(cls._get_FIELD_display, field=self))
+    ⋮ 766│+            if not hasattr(cls, 'get_%s_display' % self.name):
+    ⋮ 767│+                setattr(
+    ⋮ 768│+                    cls,
+    ⋮ 769│+                    'get_%s_display' % self.name,
+    ⋮ 770│+                    partialmethod(cls._get_FIELD_display, field=self),
+    ⋮ 771│+                )
+ 768⋮ 772│ 
+ 769⋮ 773│     def get_filter_kwargs_for_object(self, obj):
+ 770⋮ 774│         """

@@ -1,0 +1,58 @@
+
+django/contrib/admindocs/utils.py
+
+  3 ⋮  3 │ import re
+  4 ⋮  4 │ from email.errors import HeaderParseError
+  5 ⋮  5 │ from email.parser import HeaderParser
+    ⋮  6 │+from inspect import cleandoc
+  6 ⋮  7 │ 
+  7 ⋮  8 │ from django.urls import reverse
+  8 ⋮  9 │ from django.utils.regex_helper import _lazy_re_compile
+
+ 24 ⋮ 25 │     return mod_name + '.' + view_name
+ 25 ⋮ 26 │ 
+ 26 ⋮ 27 │ 
+ 27 ⋮    │-def trim_docstring(docstring):
+ 28 ⋮    │-    """
+ 29 ⋮    │-    Uniformly trim leading/trailing whitespace from docstrings.
+ 30 ⋮    │-
+ 31 ⋮    │-    Based on https://www.python.org/dev/peps/pep-0257/#handling-docstring-indentation
+ 32 ⋮    │-    """
+ 33 ⋮    │-    if not docstring or not docstring.strip():
+ 34 ⋮    │-        return ''
+ 35 ⋮    │-    # Convert tabs to spaces and split into lines
+ 36 ⋮    │-    lines = docstring.expandtabs().splitlines()
+ 37 ⋮    │-    indent = min(len(line) - len(line.lstrip()) for line in lines if line.lstrip())
+ 38 ⋮    │-    trimmed = [lines[0].lstrip()] + [line[indent:].rstrip() for line in lines[1:]]
+ 39 ⋮    │-    return "\n".join(trimmed).strip()
+ 40 ⋮    │-
+ 41 ⋮    │-
+ 42 ⋮ 28 │ def parse_docstring(docstring):
+ 43 ⋮ 29 │     """
+ 44 ⋮ 30 │     Parse out the parts of a docstring.  Return (title, body, metadata).
+ 45 ⋮ 31 │     """
+ 46 ⋮    │-    docstring = trim_docstring(docstring)
+    ⋮ 32 │+    if not docstring:
+    ⋮ 33 │+        return '', '', {}
+    ⋮ 34 │+    docstring = cleandoc(docstring)
+ 47 ⋮ 35 │     parts = re.split(r'\n{2,}', docstring)
+ 48 ⋮ 36 │     title = parts[0]
+ 49 ⋮ 37 │     if len(parts) == 1:
+
+django/contrib/admindocs/views.py
+
+  1 ⋮  1 │ import inspect
+  2 ⋮  2 │ from importlib import import_module
+    ⋮  3 │+from inspect import cleandoc
+  3 ⋮  4 │ from pathlib import Path
+  4 ⋮  5 │ 
+  5 ⋮  6 │ from django.apps import apps
+
+ 256⋮ 257│                     continue
+ 257⋮ 258│                 verbose = func.__doc__
+ 258⋮ 259│                 verbose = verbose and (
+ 259⋮    │-                    utils.parse_rst(utils.trim_docstring(verbose), 'model', _('model:') + opts.model_name)
+    ⋮ 260│+                    utils.parse_rst(cleandoc(verbose), 'model', _('model:') + opts.model_name)
+ 260⋮ 261│                 )
+ 261⋮ 262│                 # Show properties and methods without arguments as fields.
+ 262⋮ 263│                 # Otherwise, show as a 'method with arguments'.

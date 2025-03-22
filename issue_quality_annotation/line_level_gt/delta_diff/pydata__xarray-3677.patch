@@ -1,0 +1,10 @@
+
+xarray/core/dataset.py
+
+3604⋮3604│             If any variables conflict (see ``compat``).
+3605⋮3605│         """
+3606⋮3606│         _check_inplace(inplace)
+    ⋮3607│+        other = other.to_dataset() if isinstance(other, xr.DataArray) else other
+3607⋮3608│         merge_result = dataset_merge_method(
+3608⋮3609│             self,
+3609⋮3610│             other,

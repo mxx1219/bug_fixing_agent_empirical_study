@@ -1,0 +1,58 @@
+
+django/db/models/deletion.py
+
+  1 ⋮  1 │ from collections import Counter
+    ⋮  2 │+from itertools import chain
+  2 ⋮  3 │ from operator import attrgetter
+  3 ⋮  4 │ 
+  4 ⋮  5 │ from django.db import IntegrityError, connections, transaction
+
+ 116⋮ 117│             model, {}).setdefault(
+ 117⋮ 118│             (field, value), set()).update(objs)
+ 118⋮ 119│ 
+    ⋮ 120│+    def _has_signal_listeners(self, model):
+    ⋮ 121│+        return (
+    ⋮ 122│+            signals.pre_delete.has_listeners(model) or
+    ⋮ 123│+            signals.post_delete.has_listeners(model)
+    ⋮ 124│+        )
+    ⋮ 125│+
+ 119⋮ 126│     def can_fast_delete(self, objs, from_field=None):
+ 120⋮ 127│         """
+ 121⋮ 128│         Determine if the objects in the given queryset-like or single object
+
+ 135⋮ 142│             model = objs.model
+ 136⋮ 143│         else:
+ 137⋮ 144│             return False
+ 138⋮    │-        if (signals.pre_delete.has_listeners(model) or
+ 139⋮    │-                signals.post_delete.has_listeners(model) or
+ 140⋮    │-                signals.m2m_changed.has_listeners(model)):
+    ⋮ 145│+        if self._has_signal_listeners(model):
+ 141⋮ 146│             return False
+ 142⋮ 147│         # The use of from_field comes from the need to avoid cascade back to
+ 143⋮ 148│         # parent when parent delete is cascading to child.
+
+ 220⋮ 225│                     sub_objs = self.related_objects(related, batch)
+ 221⋮ 226│                     if self.can_fast_delete(sub_objs, from_field=field):
+ 222⋮ 227│                         self.fast_deletes.append(sub_objs)
+ 223⋮    │-                    elif sub_objs:
+ 224⋮    │-                        field.remote_field.on_delete(self, field, sub_objs, self.using)
+    ⋮ 228│+                    else:
+    ⋮ 229│+                        related_model = related.related_model
+    ⋮ 230│+                        # Non-referenced fields can be deferred if no signal
+    ⋮ 231│+                        # receivers are connected for the related model as
+    ⋮ 232│+                        # they'll never be exposed to the user. Skip field
+    ⋮ 233│+                        # deferring when some relationships are select_related
+    ⋮ 234│+                        # as interactions between both features are hard to
+    ⋮ 235│+                        # get right. This should only happen in the rare
+    ⋮ 236│+                        # cases where .related_objects is overridden anyway.
+    ⋮ 237│+                        if not (sub_objs.query.select_related or self._has_signal_listeners(related_model)):
+    ⋮ 238│+                            referenced_fields = set(chain.from_iterable(
+    ⋮ 239│+                                (rf.attname for rf in rel.field.foreign_related_fields)
+    ⋮ 240│+                                for rel in get_candidate_relations_to_delete(related_model._meta)
+    ⋮ 241│+                            ))
+    ⋮ 242│+                            sub_objs = sub_objs.only(*tuple(referenced_fields))
+    ⋮ 243│+                        if sub_objs:
+    ⋮ 244│+                            field.remote_field.on_delete(self, field, sub_objs, self.using)
+ 225⋮ 245│             for field in model._meta.private_fields:
+ 226⋮ 246│                 if hasattr(field, 'bulk_related_objects'):
+ 227⋮ 247│                     # It's something like generic foreign key.

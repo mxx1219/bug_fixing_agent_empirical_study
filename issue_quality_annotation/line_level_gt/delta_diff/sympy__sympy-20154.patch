@@ -1,0 +1,48 @@
+
+sympy/utilities/iterables.py
+
+1738⋮1738│     {2: 1, 4: 1}
+1739⋮1739│     {3: 2}
+1740⋮1740│ 
+1741⋮    │-    Note that the _same_ dictionary object is returned each time.
+1742⋮    │-    This is for speed:  generating each partition goes quickly,
+1743⋮    │-    taking constant time, independent of n.
+1744⋮    │-
+1745⋮    │-    >>> [p for p in partitions(6, k=2)]
+1746⋮    │-    [{1: 6}, {1: 6}, {1: 6}, {1: 6}]
+1747⋮    │-
+1748⋮    │-    If you want to build a list of the returned dictionaries then
+1749⋮    │-    make a copy of them:
+1750⋮    │-
+1751⋮    │-    >>> [p.copy() for p in partitions(6, k=2)]  # doctest: +SKIP
+1752⋮    │-    [{2: 3}, {1: 2, 2: 2}, {1: 4, 2: 1}, {1: 6}]
+1753⋮    │-    >>> [(M, p.copy()) for M, p in partitions(6, k=2, size=True)]  # doctest: +SKIP
+1754⋮    │-    [(3, {2: 3}), (4, {1: 2, 2: 2}), (5, {1: 4, 2: 1}), (6, {1: 6})]
+1755⋮    │-
+1756⋮1741│     References
+1757⋮1742│     ==========
+1758⋮1743│ 
+
+1802⋮1787│         keys.append(r)
+1803⋮1788│     room = m - q - bool(r)
+1804⋮1789│     if size:
+1805⋮    │-        yield sum(ms.values()), ms
+    ⋮1790│+        yield sum(ms.values()), ms.copy()
+1806⋮1791│     else:
+1807⋮    │-        yield ms
+    ⋮1792│+        yield ms.copy()
+1808⋮1793│ 
+1809⋮1794│     while keys != [1]:
+1810⋮1795│         # Reuse any 1's.
+
+1842⋮1827│             break
+1843⋮1828│         room -= need
+1844⋮1829│         if size:
+1845⋮    │-            yield sum(ms.values()), ms
+    ⋮1830│+            yield sum(ms.values()), ms.copy()
+1846⋮1831│         else:
+1847⋮    │-            yield ms
+    ⋮1832│+            yield ms.copy()
+1848⋮1833│ 
+1849⋮1834│ 
+1850⋮1835│ def ordered_partitions(n, m=None, sort=True):

@@ -1,0 +1,18 @@
+
+requests/models.py
+
+ 386⋮ 386│         self.body = body
+ 387⋮ 387│ 
+ 388⋮ 388│     def prepare_content_length(self, body):
+ 389⋮    │-        self.headers['Content-Length'] = '0'
+ 390⋮ 389│         if hasattr(body, 'seek') and hasattr(body, 'tell'):
+ 391⋮ 390│             body.seek(0, 2)
+ 392⋮ 391│             self.headers['Content-Length'] = str(body.tell())
+ 393⋮ 392│             body.seek(0, 0)
+ 394⋮ 393│         elif body is not None:
+ 395⋮ 394│             self.headers['Content-Length'] = str(len(body))
+    ⋮ 395│+        elif self.method not in ('GET', 'HEAD'):
+    ⋮ 396│+            self.headers['Content-Length'] = '0'
+ 396⋮ 397│ 
+ 397⋮ 398│     def prepare_auth(self, auth):
+ 398⋮ 399│         """Prepares the given HTTP auth data."""

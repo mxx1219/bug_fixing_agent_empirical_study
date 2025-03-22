@@ -1,0 +1,17 @@
+
+django/db/migrations/executor.py
+
+ 250⋮ 250│         if not fake:
+ 251⋮ 251│             with self.connection.schema_editor(atomic=migration.atomic) as schema_editor:
+ 252⋮ 252│                 state = migration.unapply(state, schema_editor)
+ 253⋮    │-        # For replacement migrations, record individual statuses
+    ⋮ 253│+        # For replacement migrations, also record individual statuses.
+ 254⋮ 254│         if migration.replaces:
+ 255⋮ 255│             for app_label, name in migration.replaces:
+ 256⋮ 256│                 self.recorder.record_unapplied(app_label, name)
+ 257⋮    │-        else:
+ 258⋮    │-            self.recorder.record_unapplied(migration.app_label, migration.name)
+    ⋮ 257│+        self.recorder.record_unapplied(migration.app_label, migration.name)
+ 259⋮ 258│         # Report progress
+ 260⋮ 259│         if self.progress_callback:
+ 261⋮ 260│             self.progress_callback("unapply_success", migration, fake)

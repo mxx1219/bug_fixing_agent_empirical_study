@@ -1,0 +1,130 @@
+
+sphinx/ext/autodoc/__init__.py
+
+1036⋮1036│     Mixin for FunctionDocumenter and MethodDocumenter to provide the
+1037⋮1037│     feature of reading the signature from the docstring.
+1038⋮1038│     """
+    ⋮1039│+    _new_docstrings = None  # type: List[List[str]]
+    ⋮1040│+    _signatures = None      # type: List[str]
+1039⋮1041│ 
+1040⋮1042│     def _find_signature(self, encoding: str = None) -> Tuple[str, str]:
+1041⋮1043│         if encoding is not None:
+1042⋮1044│             warnings.warn("The 'encoding' argument to autodoc.%s._find_signature() is "
+1043⋮1045│                           "deprecated." % self.__class__.__name__,
+1044⋮1046│                           RemovedInSphinx40Warning, stacklevel=2)
+    ⋮1047│+
+    ⋮1048│+        # candidates of the object name
+    ⋮1049│+        valid_names = [self.objpath[-1]]  # type: ignore
+    ⋮1050│+        if isinstance(self, ClassDocumenter):
+    ⋮1051│+            valid_names.append('__init__')
+    ⋮1052│+            if hasattr(self.object, '__mro__'):
+    ⋮1053│+                valid_names.extend(cls.__name__ for cls in self.object.__mro__)
+    ⋮1054│+
+1045⋮1055│         docstrings = self.get_doc()
+1046⋮1056│         self._new_docstrings = docstrings[:]
+    ⋮1057│+        self._signatures = []
+1047⋮1058│         result = None
+1048⋮1059│         for i, doclines in enumerate(docstrings):
+1049⋮    │-            # no lines in docstring, no match
+1050⋮    │-            if not doclines:
+1051⋮    │-                continue
+1052⋮    │-            # match first line of docstring against signature RE
+1053⋮    │-            match = py_ext_sig_re.match(doclines[0])
+1054⋮    │-            if not match:
+1055⋮    │-                continue
+1056⋮    │-            exmod, path, base, args, retann = match.groups()
+1057⋮    │-            # the base name must match ours
+1058⋮    │-            valid_names = [self.objpath[-1]]  # type: ignore
+1059⋮    │-            if isinstance(self, ClassDocumenter):
+1060⋮    │-                valid_names.append('__init__')
+1061⋮    │-                if hasattr(self.object, '__mro__'):
+1062⋮    │-                    valid_names.extend(cls.__name__ for cls in self.object.__mro__)
+1063⋮    │-            if base not in valid_names:
+1064⋮    │-                continue
+1065⋮    │-            # re-prepare docstring to ignore more leading indentation
+1066⋮    │-            tab_width = self.directive.state.document.settings.tab_width  # type: ignore
+1067⋮    │-            self._new_docstrings[i] = prepare_docstring('\n'.join(doclines[1:]),
+1068⋮    │-                                                        tabsize=tab_width)
+1069⋮    │-            result = args, retann
+1070⋮    │-            # don't look any further
+1071⋮    │-            break
+    ⋮1060│+            for j, line in enumerate(doclines):
+    ⋮1061│+                if not line:
+    ⋮1062│+                    # no lines in docstring, no match
+    ⋮1063│+                    break
+    ⋮1064│+
+    ⋮1065│+                if line.endswith('\\'):
+    ⋮1066│+                    multiline = True
+    ⋮1067│+                    line = line.rstrip('\\').rstrip()
+    ⋮1068│+                else:
+    ⋮1069│+                    multiline = False
+    ⋮1070│+
+    ⋮1071│+                # match first line of docstring against signature RE
+    ⋮1072│+                match = py_ext_sig_re.match(line)
+    ⋮1073│+                if not match:
+    ⋮1074│+                    continue
+    ⋮1075│+                exmod, path, base, args, retann = match.groups()
+    ⋮1076│+
+    ⋮1077│+                # the base name must match ours
+    ⋮1078│+                if base not in valid_names:
+    ⋮1079│+                    continue
+    ⋮1080│+
+    ⋮1081│+                # re-prepare docstring to ignore more leading indentation
+    ⋮1082│+                tab_width = self.directive.state.document.settings.tab_width  # type: ignore
+    ⋮1083│+                self._new_docstrings[i] = prepare_docstring('\n'.join(doclines[j + 1:]),
+    ⋮1084│+                                                            tabsize=tab_width)
+    ⋮1085│+
+    ⋮1086│+                if result is None:
+    ⋮1087│+                    # first signature
+    ⋮1088│+                    result = args, retann
+    ⋮1089│+                else:
+    ⋮1090│+                    # subsequent signatures
+    ⋮1091│+                    self._signatures.append("(%s) -> %s" % (args, retann))
+    ⋮1092│+
+    ⋮1093│+                if multiline:
+    ⋮1094│+                    # the signature have multiple signatures on docstring
+    ⋮1095│+                    continue
+    ⋮1096│+                else:
+    ⋮1097│+                    # don't look any further
+    ⋮1098│+                    break
+    ⋮1099│+
+    ⋮1100│+            if result:
+    ⋮1101│+                # finish the loop when signature found
+    ⋮1102│+                break
+    ⋮1103│+
+1072⋮1104│         return result
+1073⋮1105│ 
+1074⋮1106│     def get_doc(self, encoding: str = None, ignore: int = None) -> List[List[str]]:
+
+1076⋮1108│             warnings.warn("The 'encoding' argument to autodoc.%s.get_doc() is deprecated."
+1077⋮1109│                           % self.__class__.__name__,
+1078⋮1110│                           RemovedInSphinx40Warning, stacklevel=2)
+1079⋮    │-        lines = getattr(self, '_new_docstrings', None)
+1080⋮    │-        if lines is not None:
+1081⋮    │-            return lines
+    ⋮1111│+        if self._new_docstrings is not None:
+    ⋮1112│+            return self._new_docstrings
+1082⋮1113│         return super().get_doc(None, ignore)  # type: ignore
+1083⋮1114│ 
+1084⋮1115│     def format_signature(self, **kwargs: Any) -> str:
+
+1088⋮1119│             result = self._find_signature()
+1089⋮1120│             if result is not None:
+1090⋮1121│                 self.args, self.retann = result
+1091⋮    │-        return super().format_signature(**kwargs)  # type: ignore
+    ⋮1122│+        sig = super().format_signature(**kwargs)  # type: ignore
+    ⋮1123│+        if self._signatures:
+    ⋮1124│+            return "\n".join([sig] + self._signatures)
+    ⋮1125│+        else:
+    ⋮1126│+            return sig
+1092⋮1127│ 
+1093⋮1128│ 
+1094⋮1129│ class DocstringStripSignatureMixin(DocstringSignatureMixin):
+
+1170⋮1205│ 
+1171⋮1206│                     documenter = FunctionDocumenter(self.directive, '')
+1172⋮1207│                     documenter.object = func
+    ⋮1208│+                    documenter.objpath = [None]
+1173⋮1209│                     sigs.append(documenter.format_signature())
+1174⋮1210│ 
+1175⋮1211│         return "\n".join(sigs)

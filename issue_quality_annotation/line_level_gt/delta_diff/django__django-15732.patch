@@ -1,0 +1,68 @@
+
+django/db/backends/base/schema.py
+
+ 528⋮ 528│         # Deleted uniques
+ 529⋮ 529│         for fields in olds.difference(news):
+ 530⋮ 530│             self._delete_composed_index(
+ 531⋮    │-                model, fields, {"unique": True}, self.sql_delete_unique
+    ⋮ 531│+                model,
+    ⋮ 532│+                fields,
+    ⋮ 533│+                {"unique": True, "primary_key": False},
+    ⋮ 534│+                self.sql_delete_unique,
+ 532⋮ 535│             )
+ 533⋮ 536│         # Created uniques
+ 534⋮ 537│         for field_names in news.difference(olds):
+
+ 568⋮ 571│             exclude=meta_constraint_names | meta_index_names,
+ 569⋮ 572│             **constraint_kwargs,
+ 570⋮ 573│         )
+    ⋮ 574│+        if (
+    ⋮ 575│+            constraint_kwargs.get("unique") is True
+    ⋮ 576│+            and constraint_names
+    ⋮ 577│+            and self.connection.features.allows_multiple_constraints_on_same_fields
+    ⋮ 578│+        ):
+    ⋮ 579│+            # Constraint matching the unique_together name.
+    ⋮ 580│+            default_name = str(
+    ⋮ 581│+                self._unique_constraint_name(model._meta.db_table, columns, quote=False)
+    ⋮ 582│+            )
+    ⋮ 583│+            if default_name in constraint_names:
+    ⋮ 584│+                constraint_names = [default_name]
+ 571⋮ 585│         if len(constraint_names) != 1:
+ 572⋮ 586│             raise ValueError(
+ 573⋮ 587│                 "Found wrong number (%s) of constraints for %s(%s)"
+
+1560⋮1574│         ):
+1561⋮1575│             return None
+1562⋮1576│ 
+1563⋮    │-        def create_unique_name(*args, **kwargs):
+1564⋮    │-            return self.quote_name(self._create_index_name(*args, **kwargs))
+1565⋮    │-
+1566⋮1577│         compiler = Query(model, alias_cols=False).get_compiler(
+1567⋮1578│             connection=self.connection
+1568⋮1579│         )
+1569⋮1580│         table = model._meta.db_table
+1570⋮1581│         columns = [field.column for field in fields]
+1571⋮1582│         if name is None:
+1572⋮    │-            name = IndexName(table, columns, "_uniq", create_unique_name)
+    ⋮1583│+            name = self._unique_constraint_name(table, columns, quote=True)
+1573⋮1584│         else:
+1574⋮1585│             name = self.quote_name(name)
+1575⋮1586│         if condition or include or opclasses or expressions:
+
+1592⋮1603│             include=self._index_include_sql(model, include),
+1593⋮1604│         )
+1594⋮1605│ 
+    ⋮1606│+    def _unique_constraint_name(self, table, columns, quote=True):
+    ⋮1607│+        if quote:
+    ⋮1608│+
+    ⋮1609│+            def create_unique_name(*args, **kwargs):
+    ⋮1610│+                return self.quote_name(self._create_index_name(*args, **kwargs))
+    ⋮1611│+
+    ⋮1612│+        else:
+    ⋮1613│+            create_unique_name = self._create_index_name
+    ⋮1614│+
+    ⋮1615│+        return IndexName(table, columns, "_uniq", create_unique_name)
+    ⋮1616│+
+1595⋮1617│     def _delete_unique_sql(
+1596⋮1618│         self,
+1597⋮1619│         model,

@@ -1,0 +1,12 @@
+
+sphinx/domains/python.py
+
+ 861⋮ 861│ 
+ 862⋮ 862│         typ = self.options.get('type')
+ 863⋮ 863│         if typ:
+ 864⋮    │-            signode += addnodes.desc_annotation(typ, ': ' + typ)
+    ⋮ 864│+            annotations = _parse_annotation(typ, self.env)
+    ⋮ 865│+            signode += addnodes.desc_annotation(typ, '', nodes.Text(': '), *annotations)
+ 865⋮ 866│ 
+ 866⋮ 867│         return fullname, prefix
+ 867⋮ 868│ 

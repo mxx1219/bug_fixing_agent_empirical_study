@@ -1,0 +1,12 @@
+
+src/_pytest/python.py
+
+ 285⋮ 285│                     break
+ 286⋮ 286│             parts.append(name)
+ 287⋮ 287│         parts.reverse()
+ 288⋮    │-        s = ".".join(parts)
+ 289⋮    │-        return s.replace(".[", "[")
+    ⋮ 288│+        return ".".join(parts)
+ 290⋮ 289│ 
+ 291⋮ 290│     def reportinfo(self):
+ 292⋮ 291│         # XXX caching?

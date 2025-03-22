@@ -1,0 +1,25 @@
+
+django/core/management/commands/runserver.py
+
+ 51 ⋮ 51 │             '--noreload', action='store_false', dest='use_reloader',
+ 52 ⋮ 52 │             help='Tells Django to NOT use the auto-reloader.',
+ 53 ⋮ 53 │         )
+    ⋮ 54 │+        parser.add_argument(
+    ⋮ 55 │+            '--skip-checks', action='store_true',
+    ⋮ 56 │+            help='Skip system checks.',
+    ⋮ 57 │+        )
+ 54 ⋮ 58 │ 
+ 55 ⋮ 59 │     def execute(self, *args, **options):
+ 56 ⋮ 60 │         if options['no_color']:
+
+ 114⋮ 118│         shutdown_message = options.get('shutdown_message', '')
+ 115⋮ 119│         quit_command = 'CTRL-BREAK' if sys.platform == 'win32' else 'CONTROL-C'
+ 116⋮ 120│ 
+ 117⋮    │-        self.stdout.write("Performing system checks...\n\n")
+ 118⋮    │-        self.check(display_num_errors=True)
+    ⋮ 121│+        if not options['skip_checks']:
+    ⋮ 122│+            self.stdout.write('Performing system checks...\n\n')
+    ⋮ 123│+            self.check(display_num_errors=True)
+ 119⋮ 124│         # Need to check migrations here, so can't use the
+ 120⋮ 125│         # requires_migrations_check attribute.
+ 121⋮ 126│         self.check_migrations()

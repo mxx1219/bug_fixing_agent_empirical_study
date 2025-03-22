@@ -1,0 +1,21 @@
+
+django/db/backends/base/client.py
+
+ 21 ⋮ 21 │ 
+ 22 ⋮ 22 │     def runshell(self, parameters):
+ 23 ⋮ 23 │         args, env = self.settings_to_cmd_args_env(self.connection.settings_dict, parameters)
+ 24 ⋮    │-        if env:
+ 25 ⋮    │-            env = {**os.environ, **env}
+    ⋮ 24 │+        env = {**os.environ, **env} if env else None
+ 26 ⋮ 25 │         subprocess.run(args, env=env, check=True)
+
+django/db/backends/postgresql/client.py
+
+ 51 ⋮ 51 │             env['PGSSLKEY'] = str(sslkey)
+ 52 ⋮ 52 │         if passfile:
+ 53 ⋮ 53 │             env['PGPASSFILE'] = str(passfile)
+ 54 ⋮    │-        return args, env
+    ⋮ 54 │+        return args, (env or None)
+ 55 ⋮ 55 │ 
+ 56 ⋮ 56 │     def runshell(self, parameters):
+ 57 ⋮ 57 │         sigint_handler = signal.getsignal(signal.SIGINT)

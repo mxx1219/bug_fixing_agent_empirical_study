@@ -1,0 +1,11 @@
+
+django/db/models/base.py
+
+ 933⋮ 933│                         "%s() prohibited to prevent data loss due to unsaved "
+ 934⋮ 934│                         "related object '%s'." % (operation_name, field.name)
+ 935⋮ 935│                     )
+ 936⋮    │-                elif getattr(self, field.attname) is None:
+    ⋮ 936│+                elif getattr(self, field.attname) in field.empty_values:
+ 937⋮ 937│                     # Use pk from related object if it has been saved after
+ 938⋮ 938│                     # an assignment.
+ 939⋮ 939│                     setattr(self, field.attname, obj.pk)

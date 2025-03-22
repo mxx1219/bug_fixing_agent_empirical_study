@@ -1,0 +1,11 @@
+
+sympy/core/function.py
+
+ 507⋮ 507│             func = getattr(mpmath, fname)
+ 508⋮ 508│         except (AttributeError, KeyError):
+ 509⋮ 509│             try:
+ 510⋮    │-                return Float(self._imp_(*self.args), prec)
+    ⋮ 510│+                return Float(self._imp_(*[i.evalf(prec) for i in self.args]), prec)
+ 511⋮ 511│             except (AttributeError, TypeError, ValueError):
+ 512⋮ 512│                 return
+ 513⋮ 513│ 

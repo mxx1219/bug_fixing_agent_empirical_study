@@ -1,0 +1,17 @@
+
+django/db/migrations/executor.py
+
+ 96 ⋮ 96 │         (un)applied and in a second step run all the database operations.
+ 97 ⋮ 97 │         """
+ 98 ⋮ 98 │         # The django_migrations table must be present to record applied
+ 99 ⋮    │-        # migrations.
+ 100⋮    │-        self.recorder.ensure_schema()
+    ⋮ 99 │+        # migrations, but don't create it if there are no migrations to apply.
+    ⋮ 100│+        if plan == []:
+    ⋮ 101│+            if not self.recorder.has_table():
+    ⋮ 102│+                return self._create_project_state(with_applied_migrations=False)
+    ⋮ 103│+        else:
+    ⋮ 104│+            self.recorder.ensure_schema()
+ 101⋮ 105│ 
+ 102⋮ 106│         if plan is None:
+ 103⋮ 107│             plan = self.migration_plan(targets)

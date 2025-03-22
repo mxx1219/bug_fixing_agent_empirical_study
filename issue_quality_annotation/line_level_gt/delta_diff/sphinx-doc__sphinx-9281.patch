@@ -1,0 +1,29 @@
+
+sphinx/util/inspect.py
+
+ 442⋮ 442│                      (object_description(key), object_description(object[key]))
+ 443⋮ 443│                      for key in sorted_keys)
+ 444⋮ 444│             return "{%s}" % ", ".join(items)
+ 445⋮    │-    if isinstance(object, set):
+    ⋮ 445│+    elif isinstance(object, set):
+ 446⋮ 446│         try:
+ 447⋮ 447│             sorted_values = sorted(object)
+ 448⋮ 448│         except TypeError:
+ 449⋮ 449│             pass  # Cannot sort set values, fall back to generic repr
+ 450⋮ 450│         else:
+ 451⋮ 451│             return "{%s}" % ", ".join(object_description(x) for x in sorted_values)
+ 452⋮    │-    if isinstance(object, frozenset):
+    ⋮ 452│+    elif isinstance(object, frozenset):
+ 453⋮ 453│         try:
+ 454⋮ 454│             sorted_values = sorted(object)
+ 455⋮ 455│         except TypeError:
+
+ 457⋮ 457│         else:
+ 458⋮ 458│             return "frozenset({%s})" % ", ".join(object_description(x)
+ 459⋮ 459│                                                  for x in sorted_values)
+    ⋮ 460│+    elif isinstance(object, enum.Enum):
+    ⋮ 461│+        return "%s.%s" % (object.__class__.__name__, object.name)
+    ⋮ 462│+
+ 460⋮ 463│     try:
+ 461⋮ 464│         s = repr(object)
+ 462⋮ 465│     except Exception as exc:

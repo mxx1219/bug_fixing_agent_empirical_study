@@ -1,0 +1,11 @@
+
+sympy/core/symbol.py
+
+ 791⋮ 791│         return tuple(result)
+ 792⋮ 792│     else:
+ 793⋮ 793│         for name in names:
+ 794⋮    │-            result.append(symbols(name, **args))
+    ⋮ 794│+            result.append(symbols(name, cls=cls, **args))
+ 795⋮ 795│ 
+ 796⋮ 796│         return type(names)(result)
+ 797⋮ 797│ 

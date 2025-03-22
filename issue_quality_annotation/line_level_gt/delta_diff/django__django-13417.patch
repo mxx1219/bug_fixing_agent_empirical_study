@@ -1,0 +1,16 @@
+
+django/db/models/query.py
+
+1224⋮1224│             return True
+1225⋮1225│         if self.query.extra_order_by or self.query.order_by:
+1226⋮1226│             return True
+1227⋮    │-        elif self.query.default_ordering and self.query.get_meta().ordering:
+    ⋮1227│+        elif (
+    ⋮1228│+            self.query.default_ordering and
+    ⋮1229│+            self.query.get_meta().ordering and
+    ⋮1230│+            # A default ordering doesn't affect GROUP BY queries.
+    ⋮1231│+            not self.query.group_by
+    ⋮1232│+        ):
+1228⋮1233│             return True
+1229⋮1234│         else:
+1230⋮1235│             return False

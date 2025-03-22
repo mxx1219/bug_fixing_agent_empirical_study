@@ -1,0 +1,20 @@
+
+sklearn/compose/_column_transformer.py
+
+ 293⋮ 293│             Estimator instance.
+ 294⋮ 294│         """
+ 295⋮ 295│         super().set_output(transform=transform)
+    ⋮ 296│+
+ 296⋮ 297│         transformers = (
+ 297⋮ 298│             trans
+ 298⋮ 299│             for _, trans, _ in chain(
+
+ 303⋮ 304│         for trans in transformers:
+ 304⋮ 305│             _safe_set_output(trans, transform=transform)
+ 305⋮ 306│ 
+    ⋮ 307│+        if self.remainder not in {"passthrough", "drop"}:
+    ⋮ 308│+            _safe_set_output(self.remainder, transform=transform)
+    ⋮ 309│+
+ 306⋮ 310│         return self
+ 307⋮ 311│ 
+ 308⋮ 312│     def get_params(self, deep=True):

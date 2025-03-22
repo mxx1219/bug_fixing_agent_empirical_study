@@ -1,0 +1,11 @@
+
+sympy/tensor/array/dense_ndim_array.py
+
+ 149⋮ 149│         self._shape = shape
+ 150⋮ 150│         self._array = list(flat_list)
+ 151⋮ 151│         self._rank = len(shape)
+ 152⋮    │-        self._loop_size = functools.reduce(lambda x,y: x*y, shape) if shape else 0
+    ⋮ 152│+        self._loop_size = functools.reduce(lambda x,y: x*y, shape, 1)
+ 153⋮ 153│         return self
+ 154⋮ 154│ 
+ 155⋮ 155│     def __setitem__(self, index, value):

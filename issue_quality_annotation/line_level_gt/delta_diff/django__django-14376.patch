@@ -1,0 +1,38 @@
+
+django/db/backends/mysql/base.py
+
+ 200⋮ 200│         if settings_dict['USER']:
+ 201⋮ 201│             kwargs['user'] = settings_dict['USER']
+ 202⋮ 202│         if settings_dict['NAME']:
+ 203⋮    │-            kwargs['db'] = settings_dict['NAME']
+    ⋮ 203│+            kwargs['database'] = settings_dict['NAME']
+ 204⋮ 204│         if settings_dict['PASSWORD']:
+ 205⋮    │-            kwargs['passwd'] = settings_dict['PASSWORD']
+    ⋮ 205│+            kwargs['password'] = settings_dict['PASSWORD']
+ 206⋮ 206│         if settings_dict['HOST'].startswith('/'):
+ 207⋮ 207│             kwargs['unix_socket'] = settings_dict['HOST']
+ 208⋮ 208│         elif settings_dict['HOST']:
+
+django/db/backends/mysql/client.py
+
+  8 ⋮  8 │     def settings_to_cmd_args_env(cls, settings_dict, parameters):
+  9 ⋮  9 │         args = [cls.executable_name]
+ 10 ⋮ 10 │         env = None
+ 11 ⋮    │-        db = settings_dict['OPTIONS'].get('db', settings_dict['NAME'])
+    ⋮ 11 │+        database = settings_dict['OPTIONS'].get(
+    ⋮ 12 │+            'database',
+    ⋮ 13 │+            settings_dict['OPTIONS'].get('db', settings_dict['NAME']),
+    ⋮ 14 │+        )
+ 12 ⋮ 15 │         user = settings_dict['OPTIONS'].get('user', settings_dict['USER'])
+ 13 ⋮ 16 │         password = settings_dict['OPTIONS'].get(
+ 14 ⋮ 17 │             'password',
+
+ 51 ⋮ 54 │             args += ["--ssl-key=%s" % client_key]
+ 52 ⋮ 55 │         if charset:
+ 53 ⋮ 56 │             args += ['--default-character-set=%s' % charset]
+ 54 ⋮    │-        if db:
+ 55 ⋮    │-            args += [db]
+    ⋮ 57 │+        if database:
+    ⋮ 58 │+            args += [database]
+ 56 ⋮ 59 │         args.extend(parameters)
+ 57 ⋮ 60 │         return args, env

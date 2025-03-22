@@ -1,0 +1,13 @@
+
+django/contrib/admin/options.py
+
+1631⋮1631│ 
+1632⋮1632│     def _get_edited_object_pks(self, request, prefix):
+1633⋮1633│         """Return POST data values of list_editable primary keys."""
+1634⋮    │-        pk_pattern = re.compile(r'{}-\d+-{}$'.format(prefix, self.model._meta.pk.name))
+    ⋮1634│+        pk_pattern = re.compile(
+    ⋮1635│+            r'{}-\d+-{}$'.format(re.escape(prefix), self.model._meta.pk.name)
+    ⋮1636│+        )
+1635⋮1637│         return [value for key, value in request.POST.items() if pk_pattern.match(key)]
+1636⋮1638│ 
+1637⋮1639│     def _get_list_editable_queryset(self, request, prefix):

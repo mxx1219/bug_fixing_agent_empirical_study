@@ -1,0 +1,11 @@
+
+sympy/functions/elementary/miscellaneous.py
+
+ 339⋮ 339│ 
+ 340⋮ 340│ class MinMaxBase(Expr, LatticeOp):
+ 341⋮ 341│     def __new__(cls, *args, **assumptions):
+ 342⋮    │-        if not args:
+ 343⋮    │-            raise ValueError("The Max/Min functions must have arguments.")
+ 344⋮ 342│ 
+ 345⋮ 343│         args = (sympify(arg) for arg in args)
+ 346⋮ 344│ 

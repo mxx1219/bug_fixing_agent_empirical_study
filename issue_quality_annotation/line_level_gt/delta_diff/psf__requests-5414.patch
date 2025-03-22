@@ -1,0 +1,11 @@
+
+requests/models.py
+
+ 403⋮ 403│                 host = self._get_idna_encoded_host(host)
+ 404⋮ 404│             except UnicodeError:
+ 405⋮ 405│                 raise InvalidURL('URL has an invalid label.')
+ 406⋮    │-        elif host.startswith(u'*'):
+    ⋮ 406│+        elif host.startswith((u'*', u'.')):
+ 407⋮ 407│             raise InvalidURL('URL has an invalid label.')
+ 408⋮ 408│ 
+ 409⋮ 409│         # Carefully reconstruct the network location

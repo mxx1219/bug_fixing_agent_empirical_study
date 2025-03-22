@@ -1,0 +1,16 @@
+
+astropy/table/table.py
+
+1239⋮1239│                                 f'{fully_qualified_name} '
+1240⋮1240│                                 'did not return a valid mixin column')
+1241⋮1241│ 
+1242⋮    │-        # Structured ndarray gets viewed as a mixin unless already a valid
+1243⋮    │-        # mixin class
+1244⋮    │-        if (not isinstance(data, Column) and not data_is_mixin
+1245⋮    │-                and isinstance(data, np.ndarray) and len(data.dtype) > 1):
+1246⋮    │-            data = data.view(NdarrayMixin)
+1247⋮    │-            data_is_mixin = True
+1248⋮    │-
+1249⋮1242│         # Get the final column name using precedence.  Some objects may not
+1250⋮1243│         # have an info attribute. Also avoid creating info as a side effect.
+1251⋮1244│         if not name:

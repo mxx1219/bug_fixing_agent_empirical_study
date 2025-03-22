@@ -1,0 +1,16 @@
+
+django/contrib/admin/checks.py
+
+ 771⋮ 771│             except FieldDoesNotExist:
+ 772⋮ 772│                 return [
+ 773⋮ 773│                     checks.Error(
+ 774⋮    │-                        "The value of '%s' is not a callable, an attribute of "
+ 775⋮    │-                        "'%s', or an attribute of '%s'."
+    ⋮ 774│+                        "The value of '%s' refers to '%s', which is not a callable, "
+    ⋮ 775│+                        "an attribute of '%s', or an attribute of '%s'."
+ 776⋮ 776│                         % (
+ 777⋮ 777│                             label,
+    ⋮ 778│+                            field_name,
+ 778⋮ 779│                             obj.__class__.__name__,
+ 779⋮ 780│                             obj.model._meta.label,
+ 780⋮ 781│                         ),

@@ -1,0 +1,67 @@
+
+sklearn/linear_model/ridge.py
+
+1212⋮1212│ 
+1213⋮1213│     store_cv_values : boolean, default=False
+1214⋮1214│         Flag indicating if the cross-validation values corresponding to
+1215⋮    │-        each alpha should be stored in the `cv_values_` attribute (see
+1216⋮    │-        below). This flag is only compatible with `cv=None` (i.e. using
+    ⋮1215│+        each alpha should be stored in the ``cv_values_`` attribute (see
+    ⋮1216│+        below). This flag is only compatible with ``cv=None`` (i.e. using
+1217⋮1217│         Generalized Cross-Validation).
+1218⋮1218│ 
+1219⋮1219│     Attributes
+1220⋮1220│     ----------
+1221⋮1221│     cv_values_ : array, shape = [n_samples, n_alphas] or \
+1222⋮1222│         shape = [n_samples, n_targets, n_alphas], optional
+1223⋮    │-        Cross-validation values for each alpha (if `store_cv_values=True` and \
+1224⋮    │-        `cv=None`). After `fit()` has been called, this attribute will \
+1225⋮    │-        contain the mean squared errors (by default) or the values of the \
+1226⋮    │-        `{loss,score}_func` function (if provided in the constructor).
+    ⋮1223│+        Cross-validation values for each alpha (if ``store_cv_values=True``\
+    ⋮1224│+        and ``cv=None``). After ``fit()`` has been called, this attribute \
+    ⋮1225│+        will contain the mean squared errors (by default) or the values \
+    ⋮1226│+        of the ``{loss,score}_func`` function (if provided in the constructor).
+1227⋮1227│ 
+1228⋮1228│     coef_ : array, shape = [n_features] or [n_targets, n_features]
+1229⋮1229│         Weight vector(s).
+
+1301⋮1301│         weights inversely proportional to class frequencies in the input data
+1302⋮1302│         as ``n_samples / (n_classes * np.bincount(y))``
+1303⋮1303│ 
+    ⋮1304│+    store_cv_values : boolean, default=False
+    ⋮1305│+        Flag indicating if the cross-validation values corresponding to
+    ⋮1306│+        each alpha should be stored in the ``cv_values_`` attribute (see
+    ⋮1307│+        below). This flag is only compatible with ``cv=None`` (i.e. using
+    ⋮1308│+        Generalized Cross-Validation).
+    ⋮1309│+
+1304⋮1310│     Attributes
+1305⋮1311│     ----------
+1306⋮    │-    cv_values_ : array, shape = [n_samples, n_alphas] or \
+1307⋮    │-    shape = [n_samples, n_responses, n_alphas], optional
+1308⋮    │-        Cross-validation values for each alpha (if `store_cv_values=True` and
+1309⋮    │-    `cv=None`). After `fit()` has been called, this attribute will contain \
+1310⋮    │-    the mean squared errors (by default) or the values of the \
+1311⋮    │-    `{loss,score}_func` function (if provided in the constructor).
+    ⋮1312│+    cv_values_ : array, shape = [n_samples, n_targets, n_alphas], optional
+    ⋮1313│+        Cross-validation values for each alpha (if ``store_cv_values=True`` and
+    ⋮1314│+        ``cv=None``). After ``fit()`` has been called, this attribute will
+    ⋮1315│+        contain the mean squared errors (by default) or the values of the
+    ⋮1316│+        ``{loss,score}_func`` function (if provided in the constructor).
+1312⋮1317│ 
+1313⋮1318│     coef_ : array, shape = [n_features] or [n_targets, n_features]
+1314⋮1319│         Weight vector(s).
+
+1333⋮1338│     advantage of the multi-variate response support in Ridge.
+1334⋮1339│     """
+1335⋮1340│     def __init__(self, alphas=(0.1, 1.0, 10.0), fit_intercept=True,
+1336⋮    │-                 normalize=False, scoring=None, cv=None, class_weight=None):
+    ⋮1341│+                 normalize=False, scoring=None, cv=None, class_weight=None,
+    ⋮1342│+                 store_cv_values=False):
+1337⋮1343│         super(RidgeClassifierCV, self).__init__(
+1338⋮1344│             alphas=alphas, fit_intercept=fit_intercept, normalize=normalize,
+1339⋮    │-            scoring=scoring, cv=cv)
+    ⋮1345│+            scoring=scoring, cv=cv, store_cv_values=store_cv_values)
+1340⋮1346│         self.class_weight = class_weight
+1341⋮1347│ 
+1342⋮1348│     def fit(self, X, y, sample_weight=None):

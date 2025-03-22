@@ -1,0 +1,37 @@
+
+sympy/printing/codeprinter.py
+
+  9 ⋮  9 │ from sympy.core.mul import _keep_coeff
+ 10 ⋮ 10 │ from sympy.core.symbol import Symbol
+ 11 ⋮ 11 │ from sympy.printing.str import StrPrinter
+ 12 ⋮    │-from sympy.printing.precedence import precedence
+    ⋮ 12 │+from sympy.printing.precedence import precedence, PRECEDENCE
+ 13 ⋮ 13 │ 
+ 14 ⋮ 14 │ 
+ 15 ⋮ 15 │ class requires:
+
+ 487⋮ 487│ 
+ 488⋮ 488│         a = a or [S.One]
+ 489⋮ 489│ 
+ 490⋮    │-        a_str = [self.parenthesize(x, prec) for x in a]
+    ⋮ 490│+        if len(a) == 1 and sign == "-":
+    ⋮ 491│+            # Unary minus does not have a SymPy class, and hence there's no
+    ⋮ 492│+            # precedence weight associated with it, Python's unary minus has
+    ⋮ 493│+            # an operator precedence between multiplication and exponentiation,
+    ⋮ 494│+            # so we use this to compute a weight.
+    ⋮ 495│+            a_str = [self.parenthesize(a[0], 0.5*(PRECEDENCE["Pow"]+PRECEDENCE["Mul"]))]
+    ⋮ 496│+        else:
+    ⋮ 497│+            a_str = [self.parenthesize(x, prec) for x in a]
+ 491⋮ 498│         b_str = [self.parenthesize(x, prec) for x in b]
+ 492⋮ 499│ 
+ 493⋮ 500│         # To parenthesize Pow with exp = -1 and having more than one Symbol
+
+sympy/printing/precedence.py
+
+ 40 ⋮ 40 │     "MatAdd": PRECEDENCE["Add"],
+ 41 ⋮ 41 │     "MatPow": PRECEDENCE["Pow"],
+ 42 ⋮ 42 │     "MatrixSolve": PRECEDENCE["Mul"],
+    ⋮ 43 │+    "Mod": PRECEDENCE["Mul"],
+ 43 ⋮ 44 │     "TensAdd": PRECEDENCE["Add"],
+ 44 ⋮ 45 │     # As soon as `TensMul` is a subclass of `Mul`, remove this:
+ 45 ⋮ 46 │     "TensMul": PRECEDENCE["Mul"],

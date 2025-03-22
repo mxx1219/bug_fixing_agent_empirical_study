@@ -1,0 +1,98 @@
+
+xarray/core/dataarray.py
+
+3481⋮3481│         return self._from_temp_dataset(ds)
+3482⋮3482│ 
+3483⋮3483│     def integrate(
+3484⋮    │-        self, dim: Union[Hashable, Sequence[Hashable]], datetime_unit: str = None
+    ⋮3484│+        self,
+    ⋮3485│+        coord: Union[Hashable, Sequence[Hashable]] = None,
+    ⋮3486│+        datetime_unit: str = None,
+    ⋮3487│+        *,
+    ⋮3488│+        dim: Union[Hashable, Sequence[Hashable]] = None,
+3485⋮3489│     ) -> "DataArray":
+3486⋮    │-        """ integrate the array with the trapezoidal rule.
+    ⋮3490│+        """Integrate along the given coordinate using the trapezoidal rule.
+3487⋮3491│ 
+3488⋮3492│         .. note::
+3489⋮    │-            This feature is limited to simple cartesian geometry, i.e. dim
+    ⋮3493│+            This feature is limited to simple cartesian geometry, i.e. coord
+3490⋮3494│             must be one dimensional.
+3491⋮3495│ 
+3492⋮3496│         Parameters
+3493⋮3497│         ----------
+    ⋮3498│+        coord: hashable, or a sequence of hashable
+    ⋮3499│+            Coordinate(s) used for the integration.
+3494⋮3500│         dim : hashable, or sequence of hashable
+3495⋮3501│             Coordinate(s) used for the integration.
+3496⋮    │-        datetime_unit : {"Y", "M", "W", "D", "h", "m", "s", "ms", "us", "ns", \
+3497⋮    │-                         "ps", "fs", "as"}, optional
+3498⋮    │-            Can be used to specify the unit if datetime coordinate is used.
+    ⋮3502│+        datetime_unit: {'Y', 'M', 'W', 'D', 'h', 'm', 's', 'ms', 'us', 'ns', \
+    ⋮3503│+                        'ps', 'fs', 'as'}, optional
+3499⋮3504│ 
+3500⋮3505│         Returns
+3501⋮3506│         -------
+
+3503⋮3508│ 
+3504⋮3509│         See also
+3505⋮3510│         --------
+    ⋮3511│+        Dataset.integrate
+3506⋮3512│         numpy.trapz: corresponding numpy function
+3507⋮3513│ 
+3508⋮3514│         Examples
+
+3528⋮3534│         array([5.4, 6.6, 7.8])
+3529⋮3535│         Dimensions without coordinates: y
+3530⋮3536│         """
+3531⋮    │-        ds = self._to_temp_dataset().integrate(dim, datetime_unit)
+    ⋮3537│+        if dim is not None and coord is not None:
+    ⋮3538│+            raise ValueError(
+    ⋮3539│+                "Cannot pass both 'dim' and 'coord'. Please pass only 'coord' instead."
+    ⋮3540│+            )
+    ⋮3541│+
+    ⋮3542│+        if dim is not None and coord is None:
+    ⋮3543│+            coord = dim
+    ⋮3544│+            msg = (
+    ⋮3545│+                "The `dim` keyword argument to `DataArray.integrate` is "
+    ⋮3546│+                "being replaced with `coord`, for consistency with "
+    ⋮3547│+                "`Dataset.integrate`. Please pass `coord` instead."
+    ⋮3548│+                " `dim` will be removed in version 0.19.0."
+    ⋮3549│+            )
+    ⋮3550│+            warnings.warn(msg, FutureWarning, stacklevel=2)
+    ⋮3551│+
+    ⋮3552│+        ds = self._to_temp_dataset().integrate(coord, datetime_unit)
+3532⋮3553│         return self._from_temp_dataset(ds)
+3533⋮3554│ 
+3534⋮3555│     def unify_chunks(self) -> "DataArray":
+
+xarray/core/dataset.py
+
+5963⋮5963│                 variables[k] = v
+5964⋮5964│         return self._replace(variables)
+5965⋮5965│ 
+5966⋮    │-    def integrate(self, coord, datetime_unit=None):
+5967⋮    │-        """ integrate the array with the trapezoidal rule.
+    ⋮5966│+    def integrate(
+    ⋮5967│+        self, coord: Union[Hashable, Sequence[Hashable]], datetime_unit: str = None
+    ⋮5968│+    ) -> "Dataset":
+    ⋮5969│+        """Integrate along the given coordinate using the trapezoidal rule.
+5968⋮5970│ 
+5969⋮5971│         .. note::
+5970⋮5972│             This feature is limited to simple cartesian geometry, i.e. coord
+
+5972⋮5974│ 
+5973⋮5975│         Parameters
+5974⋮5976│         ----------
+5975⋮    │-        coord: str, or sequence of str
+    ⋮5977│+        coord: hashable, or a sequence of hashable
+5976⋮5978│             Coordinate(s) used for the integration.
+5977⋮    │-        datetime_unit : {"Y", "M", "W", "D", "h", "m", "s", "ms", "us", "ns", \
+5978⋮    │-                         "ps", "fs", "as"}, optional
+5979⋮    │-            Can be specify the unit if datetime coordinate is used.
+    ⋮5979│+        datetime_unit: {'Y', 'M', 'W', 'D', 'h', 'm', 's', 'ms', 'us', 'ns', \
+    ⋮5980│+                        'ps', 'fs', 'as'}, optional
+    ⋮5981│+            Specify the unit if datetime coordinate is used.
+5980⋮5982│ 
+5981⋮5983│         Returns
+5982⋮5984│         -------

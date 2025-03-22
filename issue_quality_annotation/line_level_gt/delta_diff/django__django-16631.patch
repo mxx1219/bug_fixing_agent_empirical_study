@@ -1,0 +1,63 @@
+
+django/contrib/auth/__init__.py
+
+ 199⋮ 199│             # Verify the session
+ 200⋮ 200│             if hasattr(user, "get_session_auth_hash"):
+ 201⋮ 201│                 session_hash = request.session.get(HASH_SESSION_KEY)
+ 202⋮    │-                session_hash_verified = session_hash and constant_time_compare(
+ 203⋮    │-                    session_hash, user.get_session_auth_hash()
+ 204⋮    │-                )
+    ⋮ 202│+                if not session_hash:
+    ⋮ 203│+                    session_hash_verified = False
+    ⋮ 204│+                else:
+    ⋮ 205│+                    session_auth_hash = user.get_session_auth_hash()
+    ⋮ 206│+                    session_hash_verified = constant_time_compare(
+    ⋮ 207│+                        session_hash, session_auth_hash
+    ⋮ 208│+                    )
+ 205⋮ 209│                 if not session_hash_verified:
+ 206⋮    │-                    request.session.flush()
+ 207⋮    │-                    user = None
+    ⋮ 210│+                    # If the current secret does not verify the session, try
+    ⋮ 211│+                    # with the fallback secrets and stop when a matching one is
+    ⋮ 212│+                    # found.
+    ⋮ 213│+                    if session_hash and any(
+    ⋮ 214│+                        constant_time_compare(session_hash, fallback_auth_hash)
+    ⋮ 215│+                        for fallback_auth_hash in user.get_session_auth_fallback_hash()
+    ⋮ 216│+                    ):
+    ⋮ 217│+                        request.session.cycle_key()
+    ⋮ 218│+                        request.session[HASH_SESSION_KEY] = session_auth_hash
+    ⋮ 219│+                    else:
+    ⋮ 220│+                        request.session.flush()
+    ⋮ 221│+                        user = None
+ 208⋮ 222│ 
+ 209⋮ 223│     return user or AnonymousUser()
+ 210⋮ 224│ 
+
+django/contrib/auth/base_user.py
+
+  5 ⋮  5 │ import unicodedata
+  6 ⋮  6 │ import warnings
+  7 ⋮  7 │ 
+    ⋮  8 │+from django.conf import settings
+  8 ⋮  9 │ from django.contrib.auth import password_validation
+  9 ⋮ 10 │ from django.contrib.auth.hashers import (
+ 10 ⋮ 11 │     check_password,
+
+ 135⋮ 136│         """
+ 136⋮ 137│         Return an HMAC of the password field.
+ 137⋮ 138│         """
+    ⋮ 139│+        return self._get_session_auth_hash()
+    ⋮ 140│+
+    ⋮ 141│+    def get_session_auth_fallback_hash(self):
+    ⋮ 142│+        for fallback_secret in settings.SECRET_KEY_FALLBACKS:
+    ⋮ 143│+            yield self._get_session_auth_hash(secret=fallback_secret)
+    ⋮ 144│+
+    ⋮ 145│+    def _get_session_auth_hash(self, secret=None):
+ 138⋮ 146│         key_salt = "django.contrib.auth.models.AbstractBaseUser.get_session_auth_hash"
+ 139⋮ 147│         return salted_hmac(
+ 140⋮ 148│             key_salt,
+ 141⋮ 149│             self.password,
+    ⋮ 150│+            secret=secret,
+ 142⋮ 151│             algorithm="sha256",
+ 143⋮ 152│         ).hexdigest()
+ 144⋮ 153│ 

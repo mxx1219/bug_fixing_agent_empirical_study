@@ -1,0 +1,229 @@
+
+sphinx/domains/c.py
+
+ 31 ⋮ 31 │     NoOldIdError, ASTBaseBase, verify_description_mode, StringifyTransform,
+ 32 ⋮ 32 │     BaseParser, DefinitionError, UnsupportedMultiCharacterCharLiteral,
+ 33 ⋮ 33 │     identifier_re, anon_identifier_re, integer_literal_re, octal_literal_re,
+ 34 ⋮    │-    hex_literal_re, binary_literal_re, float_literal_re,
+    ⋮ 34 │+    hex_literal_re, binary_literal_re, integers_literal_suffix_re,
+    ⋮ 35 │+    float_literal_re, float_literal_suffix_re,
+ 35 ⋮ 36 │     char_literal_re
+ 36 ⋮ 37 │ )
+ 37 ⋮ 38 │ from sphinx.util.docfields import Field, TypedField
+
+2076⋮2077│             return ASTBooleanLiteral(True)
+2077⋮2078│         if self.skip_word('false'):
+2078⋮2079│             return ASTBooleanLiteral(False)
+2079⋮    │-        for regex in [float_literal_re, binary_literal_re, hex_literal_re,
+    ⋮2080│+        pos = self.pos
+    ⋮2081│+        if self.match(float_literal_re):
+    ⋮2082│+            self.match(float_literal_suffix_re)
+    ⋮2083│+            return ASTNumberLiteral(self.definition[pos:self.pos])
+    ⋮2084│+        for regex in [binary_literal_re, hex_literal_re,
+2080⋮2085│                       integer_literal_re, octal_literal_re]:
+2081⋮    │-            pos = self.pos
+2082⋮2086│             if self.match(regex):
+2083⋮    │-                while self.current_char in 'uUlLfF':
+2084⋮    │-                    self.pos += 1
+    ⋮2087│+                self.match(integers_literal_suffix_re)
+2085⋮2088│                 return ASTNumberLiteral(self.definition[pos:self.pos])
+2086⋮2089│ 
+2087⋮2090│         string = self._parse_string()
+
+sphinx/domains/cpp.py
+
+ 34 ⋮ 34 │     NoOldIdError, ASTBaseBase, ASTAttribute, verify_description_mode, StringifyTransform,
+ 35 ⋮ 35 │     BaseParser, DefinitionError, UnsupportedMultiCharacterCharLiteral,
+ 36 ⋮ 36 │     identifier_re, anon_identifier_re, integer_literal_re, octal_literal_re,
+ 37 ⋮    │-    hex_literal_re, binary_literal_re, float_literal_re,
+    ⋮ 37 │+    hex_literal_re, binary_literal_re, integers_literal_suffix_re,
+    ⋮ 38 │+    float_literal_re, float_literal_suffix_re,
+ 38 ⋮ 39 │     char_literal_re
+ 39 ⋮ 40 │ )
+ 40 ⋮ 41 │ from sphinx.util.docfields import Field, GroupedField
+
+ 296⋮ 297│             nested-name
+ 297⋮ 298│ """
+ 298⋮ 299│ 
+    ⋮ 300│+udl_identifier_re = re.compile(r'''(?x)
+    ⋮ 301│+    [a-zA-Z_][a-zA-Z0-9_]*\b   # note, no word boundary in the beginning
+    ⋮ 302│+''')
+ 299⋮ 303│ _string_re = re.compile(r"[LuU8]?('([^'\\]*(?:\\.[^'\\]*)*)'"
+ 300⋮ 304│                         r'|"([^"\\]*(?:\\.[^"\\]*)*)")', re.S)
+ 301⋮ 305│ _visibility_re = re.compile(r'\b(public|private|protected)\b')
+
+ 607⋮ 611│                                           reftype='identifier',
+ 608⋮ 612│                                           reftarget=targetText, modname=None,
+ 609⋮ 613│                                           classname=None)
+ 610⋮    │-            key = symbol.get_lookup_key()
+ 611⋮    │-            pnode['cpp:parent_key'] = key
+    ⋮ 614│+            pnode['cpp:parent_key'] = symbol.get_lookup_key()
+ 612⋮ 615│             if self.is_anon():
+ 613⋮ 616│                 pnode += nodes.strong(text="[anonymous]")
+ 614⋮ 617│             else:
+
+ 624⋮ 627│                 signode += nodes.strong(text="[anonymous]")
+ 625⋮ 628│             else:
+ 626⋮ 629│                 signode += nodes.Text(self.identifier)
+    ⋮ 630│+        elif mode == 'udl':
+    ⋮ 631│+            # the target is 'operator""id' instead of just 'id'
+    ⋮ 632│+            assert len(prefix) == 0
+    ⋮ 633│+            assert len(templateArgs) == 0
+    ⋮ 634│+            assert not self.is_anon()
+    ⋮ 635│+            targetText = 'operator""' + self.identifier
+    ⋮ 636│+            pnode = addnodes.pending_xref('', refdomain='cpp',
+    ⋮ 637│+                                          reftype='identifier',
+    ⋮ 638│+                                          reftarget=targetText, modname=None,
+    ⋮ 639│+                                          classname=None)
+    ⋮ 640│+            pnode['cpp:parent_key'] = symbol.get_lookup_key()
+    ⋮ 641│+            pnode += nodes.Text(self.identifier)
+    ⋮ 642│+            signode += pnode
+ 627⋮ 643│         else:
+ 628⋮ 644│             raise Exception('Unknown description mode: %s' % mode)
+ 629⋮ 645│ 
+
+ 830⋮ 846│         return self.data
+ 831⋮ 847│ 
+ 832⋮ 848│     def get_id(self, version: int) -> str:
+    ⋮ 849│+        # TODO: floats should be mangled by writing the hex of the binary representation
+ 833⋮ 850│         return "L%sE" % self.data
+ 834⋮ 851│ 
+ 835⋮ 852│     def describe_signature(self, signode: TextElement, mode: str,
+
+ 874⋮ 891│             return self.prefix + "'" + self.data + "'"
+ 875⋮ 892│ 
+ 876⋮ 893│     def get_id(self, version: int) -> str:
+    ⋮ 894│+        # TODO: the ID should be have L E around it
+ 877⋮ 895│         return self.type + str(self.value)
+ 878⋮ 896│ 
+ 879⋮ 897│     def describe_signature(self, signode: TextElement, mode: str,
+
+ 882⋮ 900│         signode.append(nodes.Text(txt, txt))
+ 883⋮ 901│ 
+ 884⋮ 902│ 
+    ⋮ 903│+class ASTUserDefinedLiteral(ASTLiteral):
+    ⋮ 904│+    def __init__(self, literal: ASTLiteral, ident: ASTIdentifier):
+    ⋮ 905│+        self.literal = literal
+    ⋮ 906│+        self.ident = ident
+    ⋮ 907│+
+    ⋮ 908│+    def _stringify(self, transform: StringifyTransform) -> str:
+    ⋮ 909│+        return transform(self.literal) + transform(self.ident)
+    ⋮ 910│+
+    ⋮ 911│+    def get_id(self, version: int) -> str:
+    ⋮ 912│+        # mangle as if it was a function call: ident(literal)
+    ⋮ 913│+        return 'clL_Zli{}E{}E'.format(self.ident.get_id(version), self.literal.get_id(version))
+    ⋮ 914│+
+    ⋮ 915│+    def describe_signature(self, signode: TextElement, mode: str,
+    ⋮ 916│+                           env: "BuildEnvironment", symbol: "Symbol") -> None:
+    ⋮ 917│+        self.literal.describe_signature(signode, mode, env, symbol)
+    ⋮ 918│+        self.ident.describe_signature(signode, "udl", env, "", "", symbol)
+    ⋮ 919│+
+    ⋮ 920│+
+    ⋮ 921│+################################################################################
+    ⋮ 922│+
+ 885⋮ 923│ class ASTThisLiteral(ASTExpression):
+ 886⋮ 924│     def _stringify(self, transform: StringifyTransform) -> str:
+ 887⋮ 925│         return "this"
+
+4651⋮4689│         #  | boolean-literal -> "false" | "true"
+4652⋮4690│         #  | pointer-literal -> "nullptr"
+4653⋮4691│         #  | user-defined-literal
+    ⋮4692│+
+    ⋮4693│+        def _udl(literal: ASTLiteral) -> ASTLiteral:
+    ⋮4694│+            if not self.match(udl_identifier_re):
+    ⋮4695│+                return literal
+    ⋮4696│+            # hmm, should we care if it's a keyword?
+    ⋮4697│+            # it looks like GCC does not disallow keywords
+    ⋮4698│+            ident = ASTIdentifier(self.matched_text)
+    ⋮4699│+            return ASTUserDefinedLiteral(literal, ident)
+    ⋮4700│+
+4654⋮4701│         self.skip_ws()
+4655⋮4702│         if self.skip_word('nullptr'):
+4656⋮4703│             return ASTPointerLiteral()
+
+4658⋮4705│             return ASTBooleanLiteral(True)
+4659⋮4706│         if self.skip_word('false'):
+4660⋮4707│             return ASTBooleanLiteral(False)
+4661⋮    │-        for regex in [float_literal_re, binary_literal_re, hex_literal_re,
+    ⋮4708│+        pos = self.pos
+    ⋮4709│+        if self.match(float_literal_re):
+    ⋮4710│+            hasSuffix = self.match(float_literal_suffix_re)
+    ⋮4711│+            floatLit = ASTNumberLiteral(self.definition[pos:self.pos])
+    ⋮4712│+            if hasSuffix:
+    ⋮4713│+                return floatLit
+    ⋮4714│+            else:
+    ⋮4715│+                return _udl(floatLit)
+    ⋮4716│+        for regex in [binary_literal_re, hex_literal_re,
+4662⋮4717│                       integer_literal_re, octal_literal_re]:
+4663⋮    │-            pos = self.pos
+4664⋮4718│             if self.match(regex):
+4665⋮    │-                while self.current_char in 'uUlLfF':
+4666⋮    │-                    self.pos += 1
+4667⋮    │-                return ASTNumberLiteral(self.definition[pos:self.pos])
+    ⋮4719│+                hasSuffix = self.match(integers_literal_suffix_re)
+    ⋮4720│+                intLit = ASTNumberLiteral(self.definition[pos:self.pos])
+    ⋮4721│+                if hasSuffix:
+    ⋮4722│+                    return intLit
+    ⋮4723│+                else:
+    ⋮4724│+                    return _udl(intLit)
+4668⋮4725│ 
+4669⋮4726│         string = self._parse_string()
+4670⋮4727│         if string is not None:
+4671⋮    │-            return ASTStringLiteral(string)
+    ⋮4728│+            return _udl(ASTStringLiteral(string))
+4672⋮4729│ 
+4673⋮4730│         # character-literal
+4674⋮4731│         if self.match(char_literal_re):
+4675⋮4732│             prefix = self.last_match.group(1)  # may be None when no prefix
+4676⋮4733│             data = self.last_match.group(2)
+4677⋮4734│             try:
+4678⋮    │-                return ASTCharLiteral(prefix, data)
+    ⋮4735│+                charLit = ASTCharLiteral(prefix, data)
+4679⋮4736│             except UnicodeDecodeError as e:
+4680⋮4737│                 self.fail("Can not handle character literal. Internal error was: %s" % e)
+4681⋮4738│             except UnsupportedMultiCharacterCharLiteral:
+4682⋮4739│                 self.fail("Can not handle character literal"
+4683⋮4740│                           " resulting in multiple decoded characters.")
+4684⋮    │-
+4685⋮    │-        # TODO: user-defined lit
+    ⋮4741│+            return _udl(charLit)
+4686⋮4742│         return None
+4687⋮4743│ 
+4688⋮4744│     def _parse_fold_or_paren_expression(self) -> ASTExpression:
+
+sphinx/util/cfamily.py
+
+ 41 ⋮ 41 │ octal_literal_re = re.compile(r'0[0-7]*')
+ 42 ⋮ 42 │ hex_literal_re = re.compile(r'0[xX][0-9a-fA-F][0-9a-fA-F]*')
+ 43 ⋮ 43 │ binary_literal_re = re.compile(r'0[bB][01][01]*')
+    ⋮ 44 │+integers_literal_suffix_re = re.compile(r'''(?x)
+    ⋮ 45 │+    # unsigned and/or (long) long, in any order, but at least one of them
+    ⋮ 46 │+    (
+    ⋮ 47 │+        ([uU]    ([lL]  |  (ll)  |  (LL))?)
+    ⋮ 48 │+        |
+    ⋮ 49 │+        (([lL]  |  (ll)  |  (LL))    [uU]?)
+    ⋮ 50 │+    )\b
+    ⋮ 51 │+    # the ending word boundary is important for distinguishing
+    ⋮ 52 │+    # between suffixes and UDLs in C++
+    ⋮ 53 │+''')
+ 44 ⋮ 54 │ float_literal_re = re.compile(r'''(?x)
+ 45 ⋮ 55 │     [+-]?(
+ 46 ⋮ 56 │     # decimal
+
+ 53 ⋮ 63 │     | (0[xX][0-9a-fA-F]+\.([pP][+-]?[0-9a-fA-F]+)?)
+ 54 ⋮ 64 │     )
+ 55 ⋮ 65 │ ''')
+    ⋮ 66 │+float_literal_suffix_re = re.compile(r'[fFlL]\b')
+    ⋮ 67 │+# the ending word boundary is important for distinguishing between suffixes and UDLs in C++
+ 56 ⋮ 68 │ char_literal_re = re.compile(r'''(?x)
+ 57 ⋮ 69 │     ((?:u8)|u|U|L)?
+ 58 ⋮ 70 │     '(
+
+ 69 ⋮ 81 │ 
+ 70 ⋮ 82 │ 
+ 71 ⋮ 83 │ def verify_description_mode(mode: str) -> None:
+ 72 ⋮    │-    if mode not in ('lastIsName', 'noneIsName', 'markType', 'markName', 'param'):
+    ⋮ 84 │+    if mode not in ('lastIsName', 'noneIsName', 'markType', 'markName', 'param', 'udl'):
+ 73 ⋮ 85 │         raise Exception("Description mode '%s' is invalid." % mode)
+ 74 ⋮ 86 │ 
+ 75 ⋮ 87 │ 

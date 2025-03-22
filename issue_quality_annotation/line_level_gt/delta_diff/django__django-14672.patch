@@ -1,0 +1,11 @@
+
+django/db/models/fields/reverse_related.py
+
+ 310⋮ 310│     def identity(self):
+ 311⋮ 311│         return super().identity + (
+ 312⋮ 312│             self.through,
+ 313⋮    │-            self.through_fields,
+    ⋮ 313│+            make_hashable(self.through_fields),
+ 314⋮ 314│             self.db_constraint,
+ 315⋮ 315│         )
+ 316⋮ 316│ 

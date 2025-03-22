@@ -1,0 +1,38 @@
+
+sphinx/domains/python.py
+
+ 105⋮ 105│             result.append(addnodes.desc_sig_punctuation('', ']'))
+ 106⋮ 106│             return result
+ 107⋮ 107│         elif isinstance(node, ast.Tuple):
+ 108⋮    │-            result = []
+ 109⋮    │-            for elem in node.elts:
+ 110⋮    │-                result.extend(unparse(elem))
+ 111⋮    │-                result.append(addnodes.desc_sig_punctuation('', ', '))
+ 112⋮    │-            result.pop()
+    ⋮ 108│+            if node.elts:
+    ⋮ 109│+                result = []
+    ⋮ 110│+                for elem in node.elts:
+    ⋮ 111│+                    result.extend(unparse(elem))
+    ⋮ 112│+                    result.append(addnodes.desc_sig_punctuation('', ', '))
+    ⋮ 113│+                result.pop()
+    ⋮ 114│+            else:
+    ⋮ 115│+                result = [addnodes.desc_sig_punctuation('', '('),
+    ⋮ 116│+                          addnodes.desc_sig_punctuation('', ')')]
+    ⋮ 117│+
+ 113⋮ 118│             return result
+ 114⋮ 119│         else:
+ 115⋮ 120│             raise SyntaxError  # unsupported syntax
+
+sphinx/pycode/ast.py
+
+ 114⋮ 114│     elif isinstance(node, ast.UnaryOp):
+ 115⋮ 115│         return "%s %s" % (unparse(node.op), unparse(node.operand))
+ 116⋮ 116│     elif isinstance(node, ast.Tuple):
+ 117⋮    │-        return ", ".join(unparse(e) for e in node.elts)
+    ⋮ 117│+        if node.elts:
+    ⋮ 118│+            return ", ".join(unparse(e) for e in node.elts)
+    ⋮ 119│+        else:
+    ⋮ 120│+            return "()"
+ 118⋮ 121│     elif sys.version_info > (3, 6) and isinstance(node, ast.Constant):
+ 119⋮ 122│         # this branch should be placed at last
+ 120⋮ 123│         return repr(node.value)

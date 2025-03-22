@@ -1,0 +1,20 @@
+
+django/db/models/fields/files.py
+
+ 229⋮ 229│ 
+ 230⋮ 230│         self.storage = storage or default_storage
+ 231⋮ 231│         if callable(self.storage):
+    ⋮ 232│+            # Hold a reference to the callable for deconstruct().
+    ⋮ 233│+            self._storage_callable = self.storage
+ 232⋮ 234│             self.storage = self.storage()
+ 233⋮ 235│             if not isinstance(self.storage, Storage):
+ 234⋮ 236│                 raise TypeError(
+
+ 279⋮ 281│             del kwargs["max_length"]
+ 280⋮ 282│         kwargs['upload_to'] = self.upload_to
+ 281⋮ 283│         if self.storage is not default_storage:
+ 282⋮    │-            kwargs['storage'] = self.storage
+    ⋮ 284│+            kwargs['storage'] = getattr(self, '_storage_callable', self.storage)
+ 283⋮ 285│         return name, path, args, kwargs
+ 284⋮ 286│ 
+ 285⋮ 287│     def get_internal_type(self):

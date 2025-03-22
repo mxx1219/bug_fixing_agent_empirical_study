@@ -1,0 +1,70 @@
+
+sympy/core/relational.py
+
+ 302⋮ 302│ 
+ 303⋮ 303│     def _eval_simplify(self, **kwargs):
+ 304⋮ 304│         from .add import Add
+    ⋮ 305│+        from sympy.core.expr import Expr
+ 305⋮ 306│         r = self
+ 306⋮ 307│         r = r.func(*[i.simplify(**kwargs) for i in r.args])
+ 307⋮ 308│         if r.is_Relational:
+    ⋮ 309│+            if not isinstance(r.lhs, Expr) or not isinstance(r.rhs, Expr):
+    ⋮ 310│+                return r
+ 308⋮ 311│             dif = r.lhs - r.rhs
+ 309⋮ 312│             # replace dif with a valid Number that will
+ 310⋮ 313│             # allow a definitive comparison with 0
+
+ 557⋮ 560│ 
+ 558⋮ 561│     def _eval_simplify(self, **kwargs):
+ 559⋮ 562│         from .add import Add
+    ⋮ 563│+        from sympy.core.expr import Expr
+ 560⋮ 564│         from sympy.solvers.solveset import linear_coeffs
+ 561⋮ 565│         # standard simplify
+ 562⋮ 566│         e = super()._eval_simplify(**kwargs)
+ 563⋮ 567│         if not isinstance(e, Equality):
+ 564⋮ 568│             return e
+    ⋮ 569│+        if not isinstance(e.lhs, Expr) or not isinstance(e.rhs, Expr):
+    ⋮ 570│+            return e
+ 565⋮ 571│         free = self.free_symbols
+ 566⋮ 572│         if len(free) == 1:
+ 567⋮ 573│             try:
+
+sympy/sets/handlers/comparison.py
+
+ 23 ⋮ 23 │                lhs.left_open == rhs.left_open,
+ 24 ⋮ 24 │                lhs.right_open == rhs.right_open)
+ 25 ⋮ 25 │ 
+ 26 ⋮    │-
+ 27 ⋮    │-@dispatch(FiniteSet, Interval) # type:ignore
+ 28 ⋮    │-def _eval_is_eq(lhs, rhs): # noqa: F811
+ 29 ⋮    │-    return False
+ 30 ⋮    │-
+ 31 ⋮    │-
+ 32 ⋮ 26 │ @dispatch(FiniteSet, FiniteSet) # type:ignore
+ 33 ⋮ 27 │ def _eval_is_eq(lhs, rhs): # noqa: F811
+ 34 ⋮ 28 │     def all_in_both():
+
+ 56 ⋮ 50 │ 
+ 57 ⋮ 51 │ @dispatch(Set, Set) # type:ignore
+ 58 ⋮ 52 │ def _eval_is_eq(lhs, rhs): # noqa: F811
+ 59 ⋮    │-    return None
+    ⋮ 53 │+    return tfn[fuzzy_and(a.is_subset(b) for a, b in [(lhs, rhs), (rhs, lhs)])]
+
+sympy/sets/handlers/issubset.py
+
+  1 ⋮  1 │ from sympy import S, Symbol
+  2 ⋮  2 │ from sympy.core.logic import fuzzy_and, fuzzy_bool, fuzzy_not, fuzzy_or
+  3 ⋮  3 │ from sympy.core.relational import Eq
+  4 ⋮    │-from sympy.sets.sets import FiniteSet, Interval, Set, Union
+    ⋮  4 │+from sympy.sets.sets import FiniteSet, Interval, Set, Union, ProductSet
+  5 ⋮  5 │ from sympy.sets.fancysets import Complexes, Reals, Range, Rationals
+  6 ⋮  6 │ from sympy.multipledispatch import dispatch
+  7 ⋮  7 │ 
+
+ 133⋮ 133│ @dispatch(Rationals, Range)  # type: ignore # noqa:F811
+ 134⋮ 134│ def is_subset_sets(a, b): # noqa:F811
+ 135⋮ 135│     return False
+    ⋮ 136│+
+    ⋮ 137│+@dispatch(ProductSet, FiniteSet)  # type: ignore # noqa:F811
+    ⋮ 138│+def is_subset_sets(a_ps, b_fs): # noqa:F811
+    ⋮ 139│+    return fuzzy_and(b_fs.contains(x) for x in a_ps)

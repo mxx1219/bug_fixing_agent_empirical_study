@@ -1,0 +1,13 @@
+
+django/contrib/auth/forms.py
+
+ 163⋮ 163│         super().__init__(*args, **kwargs)
+ 164⋮ 164│         password = self.fields.get("password")
+ 165⋮ 165│         if password:
+ 166⋮    │-            password.help_text = password.help_text.format("../password/")
+    ⋮ 166│+            password.help_text = password.help_text.format(
+    ⋮ 167│+                f"../../{self.instance.pk}/password/"
+    ⋮ 168│+            )
+ 167⋮ 169│         user_permissions = self.fields.get("user_permissions")
+ 168⋮ 170│         if user_permissions:
+ 169⋮ 171│             user_permissions.queryset = user_permissions.queryset.select_related(

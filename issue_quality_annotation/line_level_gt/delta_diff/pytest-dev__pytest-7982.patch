@@ -1,0 +1,11 @@
+
+src/_pytest/pathlib.py
+
+ 558⋮ 558│     entries = sorted(os.scandir(path), key=lambda entry: entry.name)
+ 559⋮ 559│     yield from entries
+ 560⋮ 560│     for entry in entries:
+ 561⋮    │-        if entry.is_dir(follow_symlinks=False) and recurse(entry):
+    ⋮ 561│+        if entry.is_dir() and recurse(entry):
+ 562⋮ 562│             yield from visit(entry.path, recurse)
+ 563⋮ 563│ 
+ 564⋮ 564│ 

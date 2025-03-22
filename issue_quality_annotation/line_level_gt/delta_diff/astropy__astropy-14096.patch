@@ -1,0 +1,15 @@
+
+astropy/coordinates/sky_coordinate.py
+
+ 894⋮ 894│             if frame_cls is not None and self.frame.is_transformable_to(frame_cls):
+ 895⋮ 895│                 return self.transform_to(attr)
+ 896⋮ 896│ 
+ 897⋮    │-        # Fail
+ 898⋮    │-        raise AttributeError(
+ 899⋮    │-            f"'{self.__class__.__name__}' object has no attribute '{attr}'"
+ 900⋮    │-        )
+    ⋮ 897│+        # Call __getattribute__; this will give correct exception.
+    ⋮ 898│+        return self.__getattribute__(attr)
+ 901⋮ 899│ 
+ 902⋮ 900│     def __setattr__(self, attr, val):
+ 903⋮ 901│         # This is to make anything available through __getattr__ immutable

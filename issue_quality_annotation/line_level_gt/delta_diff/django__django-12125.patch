@@ -1,0 +1,11 @@
+
+django/db/migrations/serializer.py
+
+ 269⋮ 269│             if module == builtins.__name__:
+ 270⋮ 270│                 return self.value.__name__, set()
+ 271⋮ 271│             else:
+ 272⋮    │-                return "%s.%s" % (module, self.value.__name__), {"import %s" % module}
+    ⋮ 272│+                return "%s.%s" % (module, self.value.__qualname__), {"import %s" % module}
+ 273⋮ 273│ 
+ 274⋮ 274│ 
+ 275⋮ 275│ class UUIDSerializer(BaseSerializer):

@@ -1,0 +1,37 @@
+
+django/db/models/fields/__init__.py
+
+2332⋮2332│             value = connection.ops.validate_autopk_value(value)
+2333⋮2333│         return value
+2334⋮2334│ 
+2335⋮    │-    def get_prep_value(self, value):
+2336⋮    │-        from django.db.models.expressions import OuterRef
+2337⋮    │-        return value if isinstance(value, OuterRef) else super().get_prep_value(value)
+2338⋮    │-
+2339⋮2335│     def contribute_to_class(self, cls, name, **kwargs):
+2340⋮2336│         assert not cls._meta.auto_field, (
+2341⋮2337│             "Model %s can't have more than one auto-generated field."
+
+django/db/models/fields/related_lookups.py
+
+ 101⋮ 101│ 
+ 102⋮ 102│ class RelatedLookupMixin:
+ 103⋮ 103│     def get_prep_lookup(self):
+ 104⋮    │-        if not isinstance(self.lhs, MultiColSource) and self.rhs_is_direct_value():
+    ⋮ 104│+        if not isinstance(self.lhs, MultiColSource) and not hasattr(self.rhs, 'resolve_expression'):
+ 105⋮ 105│             # If we get here, we are dealing with single-column relations.
+ 106⋮ 106│             self.rhs = get_normalized_value(self.rhs, self.lhs)[0]
+ 107⋮ 107│             # We need to run the related field's get_prep_value(). Consider case
+
+django/db/models/sql/query.py
+
+1702⋮1702│         handle.
+1703⋮1703│         """
+1704⋮1704│         filter_lhs, filter_rhs = filter_expr
+1705⋮    │-        if isinstance(filter_rhs, F):
+    ⋮1705│+        if isinstance(filter_rhs, OuterRef):
+    ⋮1706│+            filter_expr = (filter_lhs, OuterRef(filter_rhs))
+    ⋮1707│+        elif isinstance(filter_rhs, F):
+1706⋮1708│             filter_expr = (filter_lhs, OuterRef(filter_rhs.name))
+1707⋮1709│         # Generate the inner query.
+1708⋮1710│         query = Query(self.model)

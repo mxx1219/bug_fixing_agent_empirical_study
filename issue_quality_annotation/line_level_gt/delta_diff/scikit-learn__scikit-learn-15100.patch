@@ -1,0 +1,19 @@
+
+sklearn/feature_extraction/text.py
+
+ 129⋮ 129│         Remove accentuated char for any unicode symbol that has a direct
+ 130⋮ 130│         ASCII equivalent.
+ 131⋮ 131│     """
+ 132⋮    │-    normalized = unicodedata.normalize('NFKD', s)
+ 133⋮    │-    if normalized == s:
+    ⋮ 132│+    try:
+    ⋮ 133│+        # If `s` is ASCII-compatible, then it does not contain any accented
+    ⋮ 134│+        # characters and we can avoid an expensive list comprehension
+    ⋮ 135│+        s.encode("ASCII", errors="strict")
+ 134⋮ 136│         return s
+ 135⋮    │-    else:
+    ⋮ 137│+    except UnicodeEncodeError:
+    ⋮ 138│+        normalized = unicodedata.normalize('NFKD', s)
+ 136⋮ 139│         return ''.join([c for c in normalized if not unicodedata.combining(c)])
+ 137⋮ 140│ 
+ 138⋮ 141│ 

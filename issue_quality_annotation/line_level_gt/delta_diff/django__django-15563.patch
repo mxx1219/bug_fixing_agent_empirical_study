@@ -1,0 +1,53 @@
+
+django/db/models/sql/compiler.py
+
+1836⋮1836│         query.clear_ordering(force=True)
+1837⋮1837│         query.extra = {}
+1838⋮1838│         query.select = []
+1839⋮    │-        query.add_fields([query.get_meta().pk.name])
+    ⋮1839│+        meta = query.get_meta()
+    ⋮1840│+        fields = [meta.pk.name]
+    ⋮1841│+        related_ids_index = []
+    ⋮1842│+        for related in self.query.related_updates:
+    ⋮1843│+            if all(
+    ⋮1844│+                path.join_field.primary_key for path in meta.get_path_to_parent(related)
+    ⋮1845│+            ):
+    ⋮1846│+                # If a primary key chain exists to the targeted related update,
+    ⋮1847│+                # then the meta.pk value can be used for it.
+    ⋮1848│+                related_ids_index.append((related, 0))
+    ⋮1849│+            else:
+    ⋮1850│+                # This branch will only be reached when updating a field of an
+    ⋮1851│+                # ancestor that is not part of the primary key chain of a MTI
+    ⋮1852│+                # tree.
+    ⋮1853│+                related_ids_index.append((related, len(fields)))
+    ⋮1854│+                fields.append(related._meta.pk.name)
+    ⋮1855│+        query.add_fields(fields)
+1840⋮1856│         super().pre_sql_setup()
+1841⋮1857│ 
+1842⋮1858│         must_pre_select = (
+
+1851⋮1867│             # don't want them to change), or the db backend doesn't support
+1852⋮1868│             # selecting from the updating table (e.g. MySQL).
+1853⋮1869│             idents = []
+    ⋮1870│+            related_ids = collections.defaultdict(list)
+1854⋮1871│             for rows in query.get_compiler(self.using).execute_sql(MULTI):
+1855⋮1872│                 idents.extend(r[0] for r in rows)
+    ⋮1873│+                for parent, index in related_ids_index:
+    ⋮1874│+                    related_ids[parent].extend(r[index] for r in rows)
+1856⋮1875│             self.query.add_filter("pk__in", idents)
+1857⋮    │-            self.query.related_ids = idents
+    ⋮1876│+            self.query.related_ids = related_ids
+1858⋮1877│         else:
+1859⋮1878│             # The fast path. Filters and updates in one query.
+1860⋮1879│             self.query.add_filter("pk__in", query)
+
+django/db/models/sql/subqueries.py
+
+ 134⋮ 134│             query = UpdateQuery(model)
+ 135⋮ 135│             query.values = values
+ 136⋮ 136│             if self.related_ids is not None:
+ 137⋮    │-                query.add_filter("pk__in", self.related_ids)
+    ⋮ 137│+                query.add_filter("pk__in", self.related_ids[model])
+ 138⋮ 138│             result.append(query)
+ 139⋮ 139│         return result
+ 140⋮ 140│ 

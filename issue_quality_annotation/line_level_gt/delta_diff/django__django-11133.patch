@@ -1,0 +1,11 @@
+
+django/http/response.py
+
+ 229⋮ 229│         # Handle string types -- we can't rely on force_bytes here because:
+ 230⋮ 230│         # - Python attempts str conversion first
+ 231⋮ 231│         # - when self._charset != 'utf-8' it re-encodes the content
+ 232⋮    │-        if isinstance(value, bytes):
+    ⋮ 232│+        if isinstance(value, (bytes, memoryview)):
+ 233⋮ 233│             return bytes(value)
+ 234⋮ 234│         if isinstance(value, str):
+ 235⋮ 235│             return bytes(value.encode(self.charset))

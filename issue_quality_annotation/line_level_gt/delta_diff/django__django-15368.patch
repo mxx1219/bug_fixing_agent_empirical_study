@@ -1,0 +1,20 @@
+
+django/db/models/query.py
+
+ 17 ⋮ 17 │ from django.db.models import AutoField, DateField, DateTimeField, sql
+ 18 ⋮ 18 │ from django.db.models.constants import LOOKUP_SEP, OnConflict
+ 19 ⋮ 19 │ from django.db.models.deletion import Collector
+ 20 ⋮    │-from django.db.models.expressions import Case, Expression, F, Ref, Value, When
+    ⋮ 20 │+from django.db.models.expressions import Case, F, Ref, Value, When
+ 21 ⋮ 21 │ from django.db.models.functions import Cast, Trunc
+ 22 ⋮ 22 │ from django.db.models.query_utils import FilteredRelation, Q
+ 23 ⋮ 23 │ from django.db.models.sql.constants import CURSOR, GET_ITERATOR_CHUNK_SIZE
+
+ 670⋮ 670│                 when_statements = []
+ 671⋮ 671│                 for obj in batch_objs:
+ 672⋮ 672│                     attr = getattr(obj, field.attname)
+ 673⋮    │-                    if not isinstance(attr, Expression):
+    ⋮ 673│+                    if not hasattr(attr, 'resolve_expression'):
+ 674⋮ 674│                         attr = Value(attr, output_field=field)
+ 675⋮ 675│                     when_statements.append(When(pk=obj.pk, then=attr))
+ 676⋮ 676│                 case_statement = Case(*when_statements, output_field=field)

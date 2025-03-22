@@ -1,0 +1,106 @@
+[
+    {
+        "type": "functions",
+        "line_range": "120-154"
+    },
+    {
+        "type": "functions",
+        "line_range": "157-185"
+    },
+    {
+        "type": "functions",
+        "line_range": "188-197"
+    },
+    {
+        "type": "functions",
+        "line_range": "200,203-206"
+    },
+    {
+        "type": "functions",
+        "line_range": "201-202"
+    },
+    {
+        "type": "functions",
+        "line_range": "209,212-215"
+    },
+    {
+        "type": "functions",
+        "line_range": "210-211"
+    },
+    {
+        "type": "functions",
+        "line_range": "218-224,230-233"
+    },
+    {
+        "type": "functions",
+        "line_range": "225-229"
+    },
+    {
+        "type": "functions",
+        "line_range": "236-260"
+    },
+    {
+        "type": "functions",
+        "line_range": "263-274"
+    },
+    {
+        "type": "functions",
+        "line_range": "277-278"
+    },
+    {
+        "type": "functions",
+        "line_range": "281-282"
+    },
+    {
+        "type": "functions",
+        "line_range": "288-289"
+    },
+    {
+        "type": "functions",
+        "line_range": "299-303"
+    },
+    {
+        "type": "methods",
+        "line_range": "309-313"
+    },
+    {
+        "type": "methods",
+        "line_range": "319-323"
+    },
+    {
+        "type": "methods",
+        "line_range": "329-332"
+    },
+    {
+        "type": "classes",
+        "line_range": "306-308"
+    },
+    {
+        "type": "classes",
+        "line_range": "316-318"
+    },
+    {
+        "type": "classes",
+        "line_range": "326-328"
+    },
+    {
+        "type": "imports",
+        "line_range": "8-12"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "1-6"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "14-117"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "285"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "293-296"
+    }
+]

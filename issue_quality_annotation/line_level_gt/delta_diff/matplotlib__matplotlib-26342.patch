@@ -1,0 +1,23 @@
+
+lib/matplotlib/collections.py
+
+ 207⋮ 207│         return self._paths
+ 208⋮ 208│ 
+ 209⋮ 209│     def set_paths(self, paths):
+ 210⋮    │-        raise NotImplementedError
+    ⋮ 210│+        self._paths = paths
+    ⋮ 211│+        self.stale = True
+ 211⋮ 212│ 
+ 212⋮ 213│     def get_transforms(self):
+ 213⋮ 214│         return self._transforms
+
+1001⋮1002│         self.set_sizes(sizes)
+1002⋮1003│         self.stale = True
+1003⋮1004│ 
+1004⋮    │-    def set_paths(self, paths):
+1005⋮    │-        self._paths = paths
+1006⋮    │-        self.stale = True
+1007⋮    │-
+1008⋮1005│     def get_paths(self):
+1009⋮1006│         return self._paths
+1010⋮1007│ 

@@ -1,0 +1,18 @@
+
+lib/matplotlib/axes/_base.py
+
+4441⋮4441│         self.yaxis.tick_left()
+4442⋮4442│         ax2.xaxis.set_visible(False)
+4443⋮4443│         ax2.patch.set_visible(False)
+    ⋮4444│+        ax2.xaxis.units = self.xaxis.units
+4444⋮4445│         return ax2
+4445⋮4446│ 
+4446⋮4447│     def twiny(self):
+
+4470⋮4471│         self.xaxis.tick_bottom()
+4471⋮4472│         ax2.yaxis.set_visible(False)
+4472⋮4473│         ax2.patch.set_visible(False)
+    ⋮4474│+        ax2.yaxis.units = self.yaxis.units
+4473⋮4475│         return ax2
+4474⋮4476│ 
+4475⋮4477│     def get_shared_x_axes(self):

@@ -1,0 +1,15 @@
+
+lib/matplotlib/offsetbox.py
+
+ 166⋮ 166│         descent = max(d for h, d in hd_list)
+ 167⋮ 167│         height = height_descent + descent
+ 168⋮ 168│         offsets = [0. for h, d in hd_list]
+ 169⋮    │-    elif align in ["left", "top"]:
+    ⋮ 169│+    elif align in ["left", "bottom"]:
+ 170⋮ 170│         descent = 0.
+ 171⋮ 171│         offsets = [d for h, d in hd_list]
+ 172⋮    │-    elif align in ["right", "bottom"]:
+    ⋮ 172│+    elif align in ["right", "top"]:
+ 173⋮ 173│         descent = 0.
+ 174⋮ 174│         offsets = [height - h + d for h, d in hd_list]
+ 175⋮ 175│     elif align == "center":

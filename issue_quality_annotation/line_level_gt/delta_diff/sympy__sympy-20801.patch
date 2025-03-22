@@ -1,0 +1,20 @@
+
+sympy/core/numbers.py
+
+1386⋮1386│             other = _sympify(other)
+1387⋮1387│         except SympifyError:
+1388⋮1388│             return NotImplemented
+1389⋮    │-        if not self:
+1390⋮    │-            return not other
+1391⋮1389│         if isinstance(other, Boolean):
+1392⋮1390│             return False
+1393⋮1391│         if other.is_NumberSymbol:
+
+1408⋮1406│             # the mpf tuples
+1409⋮1407│             ompf = other._as_mpf_val(self._prec)
+1410⋮1408│             return bool(mlib.mpf_eq(self._mpf_, ompf))
+    ⋮1409│+        if not self:
+    ⋮1410│+            return not other
+1411⋮1411│         return False    # Float != non-Number
+1412⋮1412│ 
+1413⋮1413│     def __ne__(self, other):

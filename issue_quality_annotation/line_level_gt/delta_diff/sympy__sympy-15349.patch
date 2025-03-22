@@ -1,0 +1,11 @@
+
+sympy/algebras/quaternion.py
+
+ 529⋮ 529│ 
+ 530⋮ 530│         m10 = 2*s*(q.b*q.c + q.d*q.a)
+ 531⋮ 531│         m11 = 1 - 2*s*(q.b**2 + q.d**2)
+ 532⋮    │-        m12 = 2*s*(q.c*q.d + q.b*q.a)
+    ⋮ 532│+        m12 = 2*s*(q.c*q.d - q.b*q.a)
+ 533⋮ 533│ 
+ 534⋮ 534│         m20 = 2*s*(q.b*q.d - q.c*q.a)
+ 535⋮ 535│         m21 = 2*s*(q.c*q.d + q.b*q.a)

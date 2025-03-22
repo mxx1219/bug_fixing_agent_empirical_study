@@ -1,0 +1,20 @@
+
+astropy/wcs/wcsapi/wrappers/sliced_wcs.py
+
+ 243⋮ 243│         return world_arrays
+ 244⋮ 244│ 
+ 245⋮ 245│     def world_to_pixel_values(self, *world_arrays):
+    ⋮ 246│+        sliced_out_world_coords = self._pixel_to_world_values_all(*[0]*len(self._pixel_keep))
+    ⋮ 247│+
+ 246⋮ 248│         world_arrays = tuple(map(np.asanyarray, world_arrays))
+ 247⋮ 249│         world_arrays_new = []
+ 248⋮ 250│         iworld_curr = -1
+
+ 251⋮ 253│                 iworld_curr += 1
+ 252⋮ 254│                 world_arrays_new.append(world_arrays[iworld_curr])
+ 253⋮ 255│             else:
+ 254⋮    │-                world_arrays_new.append(1.)
+    ⋮ 256│+                world_arrays_new.append(sliced_out_world_coords[iworld])
+ 255⋮ 257│ 
+ 256⋮ 258│         world_arrays_new = np.broadcast_arrays(*world_arrays_new)
+ 257⋮ 259│         pixel_arrays = list(self._wcs.world_to_pixel_values(*world_arrays_new))

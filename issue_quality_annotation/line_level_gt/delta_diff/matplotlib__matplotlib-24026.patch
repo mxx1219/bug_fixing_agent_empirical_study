@@ -1,0 +1,43 @@
+
+lib/matplotlib/stackplot.py
+
+  6 ⋮  6 │ (https://stackoverflow.com/users/66549/doug)
+  7 ⋮  7 │ """
+  8 ⋮  8 │ 
+    ⋮  9 │+import itertools
+    ⋮ 10 │+
+  9 ⋮ 11 │ import numpy as np
+ 10 ⋮ 12 │ 
+ 11 ⋮ 13 │ from matplotlib import _api
+
+ 70 ⋮ 72 │ 
+ 71 ⋮ 73 │     labels = iter(labels)
+ 72 ⋮ 74 │     if colors is not None:
+ 73 ⋮    │-        axes.set_prop_cycle(color=colors)
+    ⋮ 75 │+        colors = itertools.cycle(colors)
+    ⋮ 76 │+    else:
+    ⋮ 77 │+        colors = (axes._get_lines.get_next_color() for _ in y)
+ 74 ⋮ 78 │ 
+ 75 ⋮ 79 │     # Assume data passed has not been 'stacked', so stack it here.
+ 76 ⋮ 80 │     # We'll need a float buffer for the upcoming calculations.
+
+ 108⋮ 112│         stack += first_line
+ 109⋮ 113│ 
+ 110⋮ 114│     # Color between x = 0 and the first array.
+ 111⋮    │-    color = axes._get_lines.get_next_color()
+ 112⋮ 115│     coll = axes.fill_between(x, first_line, stack[0, :],
+ 113⋮    │-                             facecolor=color, label=next(labels, None),
+    ⋮ 116│+                             facecolor=next(colors), label=next(labels, None),
+ 114⋮ 117│                              **kwargs)
+ 115⋮ 118│     coll.sticky_edges.y[:] = [0]
+ 116⋮ 119│     r = [coll]
+ 117⋮ 120│ 
+ 118⋮ 121│     # Color between array i-1 and array i
+ 119⋮ 122│     for i in range(len(y) - 1):
+ 120⋮    │-        color = axes._get_lines.get_next_color()
+ 121⋮ 123│         r.append(axes.fill_between(x, stack[i, :], stack[i + 1, :],
+ 122⋮    │-                                   facecolor=color, label=next(labels, None),
+    ⋮ 124│+                                   facecolor=next(colors),
+    ⋮ 125│+                                   label=next(labels, None),
+ 123⋮ 126│                                    **kwargs))
+ 124⋮ 127│     return r

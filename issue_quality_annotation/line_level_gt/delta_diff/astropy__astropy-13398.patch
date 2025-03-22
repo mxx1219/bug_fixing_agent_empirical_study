@@ -1,0 +1,293 @@
+
+astropy/coordinates/builtin_frames/__init__.py
+
+ 48 ⋮ 48 │ from . import icrs_cirs_transforms
+ 49 ⋮ 49 │ from . import cirs_observed_transforms
+ 50 ⋮ 50 │ from . import icrs_observed_transforms
+    ⋮ 51 │+from . import itrs_observed_transforms
+ 51 ⋮ 52 │ from . import intermediate_rotation_transforms
+ 52 ⋮ 53 │ from . import ecliptic_transforms
+ 53 ⋮ 54 │ 
+
+astropy/coordinates/builtin_frames/intermediate_rotation_transforms.py
+
+ 71 ⋮ 71 │     sp = erfa.sp00(*get_jd12(time, 'tt'))
+ 72 ⋮ 72 │     pmmat = erfa.pom00(xp, yp, sp)
+ 73 ⋮ 73 │ 
+ 74 ⋮    │-    # now determine the greenwich apparent siderial time for the input obstime
+    ⋮ 74 │+    # now determine the greenwich apparent sidereal time for the input obstime
+ 75 ⋮ 75 │     # we use the 2006A model for consistency with RBPN matrix use in GCRS <-> TETE
+ 76 ⋮ 76 │     ujd1, ujd2 = get_jd12(time, 'ut1')
+ 77 ⋮ 77 │     jd1, jd2 = get_jd12(time, 'tt')
+
+ 146⋮ 146│ 
+ 147⋮ 147│ @frame_transform_graph.transform(FunctionTransformWithFiniteDifference, TETE, ITRS)
+ 148⋮ 148│ def tete_to_itrs(tete_coo, itrs_frame):
+ 149⋮    │-    # first get us to TETE at the target obstime, and geocentric position
+    ⋮ 149│+    # first get us to TETE at the target obstime, and location (no-op if same)
+ 150⋮ 150│     tete_coo2 = tete_coo.transform_to(TETE(obstime=itrs_frame.obstime,
+ 151⋮    │-                                           location=EARTH_CENTER))
+    ⋮ 151│+                                           location=itrs_frame.location))
+ 152⋮ 152│ 
+ 153⋮ 153│     # now get the pmatrix
+ 154⋮ 154│     pmat = tete_to_itrs_mat(itrs_frame.obstime)
+
+ 161⋮ 161│     # compute the pmatrix, and then multiply by its transpose
+ 162⋮ 162│     pmat = tete_to_itrs_mat(itrs_coo.obstime)
+ 163⋮ 163│     newrepr = itrs_coo.cartesian.transform(matrix_transpose(pmat))
+ 164⋮    │-    tete = TETE(newrepr, obstime=itrs_coo.obstime)
+    ⋮ 164│+    tete = TETE(newrepr, obstime=itrs_coo.obstime, location=itrs_coo.location)
+ 165⋮ 165│ 
+ 166⋮    │-    # now do any needed offsets (no-op if same obstime)
+    ⋮ 166│+    # now do any needed offsets (no-op if same obstime and location)
+ 167⋮ 167│     return tete.transform_to(tete_frame)
+ 168⋮ 168│ 
+ 169⋮ 169│ 
+
+ 196⋮ 196│ 
+ 197⋮ 197│ @frame_transform_graph.transform(FunctionTransformWithFiniteDifference, CIRS, ITRS)
+ 198⋮ 198│ def cirs_to_itrs(cirs_coo, itrs_frame):
+ 199⋮    │-    # first get us to geocentric CIRS at the target obstime
+    ⋮ 199│+    # first get us to CIRS at the target obstime, and location (no-op if same)
+ 200⋮ 200│     cirs_coo2 = cirs_coo.transform_to(CIRS(obstime=itrs_frame.obstime,
+ 201⋮    │-                                           location=EARTH_CENTER))
+    ⋮ 201│+                                           location=itrs_frame.location))
+ 202⋮ 202│ 
+ 203⋮ 203│     # now get the pmatrix
+ 204⋮ 204│     pmat = cirs_to_itrs_mat(itrs_frame.obstime)
+
+ 211⋮ 211│     # compute the pmatrix, and then multiply by its transpose
+ 212⋮ 212│     pmat = cirs_to_itrs_mat(itrs_coo.obstime)
+ 213⋮ 213│     newrepr = itrs_coo.cartesian.transform(matrix_transpose(pmat))
+ 214⋮    │-    cirs = CIRS(newrepr, obstime=itrs_coo.obstime)
+    ⋮ 214│+    cirs = CIRS(newrepr, obstime=itrs_coo.obstime, location=itrs_coo.location)
+ 215⋮ 215│ 
+ 216⋮    │-    # now do any needed offsets (no-op if same obstime)
+    ⋮ 216│+    # now do any needed offsets (no-op if same obstime and location)
+ 217⋮ 217│     return cirs.transform_to(cirs_frame)
+ 218⋮ 218│ 
+ 219⋮ 219│ 
+
+astropy/coordinates/builtin_frames/itrs.py
+
+  3 ⋮  3 │ from astropy.utils.decorators import format_doc
+  4 ⋮  4 │ from astropy.coordinates.representation import CartesianRepresentation, CartesianDifferential
+  5 ⋮  5 │ from astropy.coordinates.baseframe import BaseCoordinateFrame, base_doc
+  6 ⋮    │-from astropy.coordinates.attributes import TimeAttribute
+  7 ⋮    │-from .utils import DEFAULT_OBSTIME
+    ⋮  6 │+from astropy.coordinates.attributes import (TimeAttribute,
+    ⋮  7 │+                                            EarthLocationAttribute)
+    ⋮  8 │+from .utils import DEFAULT_OBSTIME, EARTH_CENTER
+  8 ⋮  9 │ 
+  9 ⋮ 10 │ __all__ = ['ITRS']
+ 10 ⋮ 11 │ 
+    ⋮ 12 │+doc_footer = """
+    ⋮ 13 │+    Other parameters
+    ⋮ 14 │+    ----------------
+    ⋮ 15 │+    obstime : `~astropy.time.Time`
+    ⋮ 16 │+        The time at which the observation is taken.  Used for determining the
+    ⋮ 17 │+        position of the Earth and its precession.
+    ⋮ 18 │+    location : `~astropy.coordinates.EarthLocation`
+    ⋮ 19 │+        The location on the Earth.  This can be specified either as an
+    ⋮ 20 │+        `~astropy.coordinates.EarthLocation` object or as anything that can be
+    ⋮ 21 │+        transformed to an `~astropy.coordinates.ITRS` frame. The default is the
+    ⋮ 22 │+        centre of the Earth.
+    ⋮ 23 │+"""
+ 11 ⋮ 24 │ 
+ 12 ⋮    │-@format_doc(base_doc, components="", footer="")
+    ⋮ 25 │+
+    ⋮ 26 │+@format_doc(base_doc, components="", footer=doc_footer)
+ 13 ⋮ 27 │ class ITRS(BaseCoordinateFrame):
+ 14 ⋮ 28 │     """
+ 15 ⋮ 29 │     A coordinate or frame in the International Terrestrial Reference System
+ 16 ⋮ 30 │     (ITRS).  This is approximately a geocentric system, although strictly it is
+ 17 ⋮    │-    defined by a series of reference locations near the surface of the Earth.
+    ⋮ 31 │+    defined by a series of reference locations near the surface of the Earth (the ITRF).
+ 18 ⋮ 32 │     For more background on the ITRS, see the references provided in the
+ 19 ⋮ 33 │     :ref:`astropy:astropy-coordinates-seealso` section of the documentation.
+    ⋮ 34 │+
+    ⋮ 35 │+    This frame also includes frames that are defined *relative* to the center of the Earth,
+    ⋮ 36 │+    but that are offset (in both position and velocity) from the center of the Earth. You
+    ⋮ 37 │+    may see such non-geocentric coordinates referred to as "topocentric".
+    ⋮ 38 │+
+    ⋮ 39 │+    Topocentric ITRS frames are convenient for observations of near Earth objects where
+    ⋮ 40 │+    stellar aberration is not included. One can merely subtract the observing site's
+    ⋮ 41 │+    EarthLocation geocentric ITRS coordinates from the object's geocentric ITRS coordinates,
+    ⋮ 42 │+    put the resulting vector into a topocentric ITRS frame and then transform to
+    ⋮ 43 │+    `~astropy.coordinates.AltAz` or `~astropy.coordinates.HADec`. The other way around is
+    ⋮ 44 │+    to transform an observed `~astropy.coordinates.AltAz` or `~astropy.coordinates.HADec`
+    ⋮ 45 │+    position to a topocentric ITRS frame and add the observing site's EarthLocation geocentric
+    ⋮ 46 │+    ITRS coordinates to yield the object's geocentric ITRS coordinates.
+    ⋮ 47 │+
+    ⋮ 48 │+    On the other hand, using ``transform_to`` to transform geocentric ITRS coordinates to
+    ⋮ 49 │+    topocentric ITRS, observed `~astropy.coordinates.AltAz`, or observed
+    ⋮ 50 │+    `~astropy.coordinates.HADec` coordinates includes the difference between stellar aberration
+    ⋮ 51 │+    from the point of view of an observer at the geocenter and stellar aberration from the
+    ⋮ 52 │+    point of view of an observer on the surface of the Earth. If the geocentric ITRS
+    ⋮ 53 │+    coordinates of the object include stellar aberration at the geocenter (e.g. certain ILRS
+    ⋮ 54 │+    ephemerides), then this is the way to go.
+    ⋮ 55 │+
+    ⋮ 56 │+    Note to ILRS ephemeris users: Astropy does not currently consider relativistic
+    ⋮ 57 │+    effects of the Earth's gravatational field. Nor do the `~astropy.coordinates.AltAz`
+    ⋮ 58 │+    or `~astropy.coordinates.HADec` refraction corrections compute the change in the
+    ⋮ 59 │+    range due to the curved path of light through the atmosphere, so Astropy is no
+    ⋮ 60 │+    substitute for the ILRS software in these respects.
+    ⋮ 61 │+
+ 20 ⋮ 62 │     """
+ 21 ⋮ 63 │ 
+ 22 ⋮ 64 │     default_representation = CartesianRepresentation
+ 23 ⋮ 65 │     default_differential = CartesianDifferential
+ 24 ⋮ 66 │ 
+ 25 ⋮ 67 │     obstime = TimeAttribute(default=DEFAULT_OBSTIME)
+    ⋮ 68 │+    location = EarthLocationAttribute(default=EARTH_CENTER)
+ 26 ⋮ 69 │ 
+ 27 ⋮ 70 │     @property
+ 28 ⋮ 71 │     def earth_location(self):
+
+added: astropy/coordinates/builtin_frames/itrs_observed_transforms.py
+
+    ⋮  1 │+import numpy as np
+    ⋮  2 │+import erfa
+    ⋮  3 │+from astropy import units as u
+    ⋮  4 │+from astropy.coordinates.matrix_utilities import rotation_matrix, matrix_transpose
+    ⋮  5 │+from astropy.coordinates.baseframe import frame_transform_graph
+    ⋮  6 │+from astropy.coordinates.transformations import FunctionTransformWithFiniteDifference
+    ⋮  7 │+from astropy.coordinates.representation import CartesianRepresentation
+    ⋮  8 │+from .altaz import AltAz
+    ⋮  9 │+from .hadec import HADec
+    ⋮ 10 │+from .itrs import ITRS
+    ⋮ 11 │+
+    ⋮ 12 │+# Minimum cos(alt) and sin(alt) for refraction purposes
+    ⋮ 13 │+CELMIN = 1e-6
+    ⋮ 14 │+SELMIN = 0.05
+    ⋮ 15 │+# Latitude of the north pole.
+    ⋮ 16 │+NORTH_POLE = 90.0*u.deg
+    ⋮ 17 │+
+    ⋮ 18 │+
+    ⋮ 19 │+def itrs_to_altaz_mat(lon, lat):
+    ⋮ 20 │+    # form ITRS to AltAz matrix
+    ⋮ 21 │+    # AltAz frame is left handed
+    ⋮ 22 │+    minus_x = np.eye(3)
+    ⋮ 23 │+    minus_x[0][0] = -1.0
+    ⋮ 24 │+    mat = (minus_x
+    ⋮ 25 │+           @ rotation_matrix(NORTH_POLE - lat, 'y')
+    ⋮ 26 │+           @ rotation_matrix(lon, 'z'))
+    ⋮ 27 │+    return mat
+    ⋮ 28 │+
+    ⋮ 29 │+
+    ⋮ 30 │+def itrs_to_hadec_mat(lon):
+    ⋮ 31 │+    # form ITRS to HADec matrix
+    ⋮ 32 │+    # HADec frame is left handed
+    ⋮ 33 │+    minus_y = np.eye(3)
+    ⋮ 34 │+    minus_y[1][1] = -1.0
+    ⋮ 35 │+    mat = (minus_y
+    ⋮ 36 │+           @ rotation_matrix(lon, 'z'))
+    ⋮ 37 │+    return mat
+    ⋮ 38 │+
+    ⋮ 39 │+
+    ⋮ 40 │+def altaz_to_hadec_mat(lat):
+    ⋮ 41 │+    # form AltAz to HADec matrix
+    ⋮ 42 │+    z180 = np.eye(3)
+    ⋮ 43 │+    z180[0][0] = -1.0
+    ⋮ 44 │+    z180[1][1] = -1.0
+    ⋮ 45 │+    mat = (z180
+    ⋮ 46 │+           @ rotation_matrix(NORTH_POLE - lat, 'y'))
+    ⋮ 47 │+    return mat
+    ⋮ 48 │+
+    ⋮ 49 │+
+    ⋮ 50 │+def add_refraction(aa_crepr, observed_frame):
+    ⋮ 51 │+    # add refraction to AltAz cartesian representation
+    ⋮ 52 │+    refa, refb = erfa.refco(
+    ⋮ 53 │+        observed_frame.pressure.to_value(u.hPa),
+    ⋮ 54 │+        observed_frame.temperature.to_value(u.deg_C),
+    ⋮ 55 │+        observed_frame.relative_humidity.value,
+    ⋮ 56 │+        observed_frame.obswl.to_value(u.micron)
+    ⋮ 57 │+    )
+    ⋮ 58 │+    # reference: erfa.atioq()
+    ⋮ 59 │+    norm, uv = erfa.pn(aa_crepr.get_xyz(xyz_axis=-1).to_value())
+    ⋮ 60 │+    # Cosine and sine of altitude, with precautions.
+    ⋮ 61 │+    sel = np.maximum(uv[..., 2], SELMIN)
+    ⋮ 62 │+    cel = np.maximum(np.sqrt(uv[..., 0] ** 2 + uv[..., 1] ** 2), CELMIN)
+    ⋮ 63 │+    # A*tan(z)+B*tan^3(z) model, with Newton-Raphson correction.
+    ⋮ 64 │+    tan_z = cel / sel
+    ⋮ 65 │+    w = refb * tan_z ** 2
+    ⋮ 66 │+    delta_el = (refa + w) * tan_z / (1.0 + (refa + 3.0 * w) / (sel ** 2))
+    ⋮ 67 │+    # Apply the change, giving observed vector
+    ⋮ 68 │+    cosdel = 1.0 - 0.5 * delta_el ** 2
+    ⋮ 69 │+    f = cosdel - delta_el * sel / cel
+    ⋮ 70 │+    uv[..., 0] *= f
+    ⋮ 71 │+    uv[..., 1] *= f
+    ⋮ 72 │+    uv[..., 2] = cosdel * uv[..., 2] + delta_el * cel
+    ⋮ 73 │+    # Need to renormalize to get agreement with CIRS->Observed on distance
+    ⋮ 74 │+    norm2, uv = erfa.pn(uv)
+    ⋮ 75 │+    uv = erfa.sxp(norm, uv)
+    ⋮ 76 │+    return CartesianRepresentation(uv, xyz_axis=-1, unit=aa_crepr.x.unit, copy=False)
+    ⋮ 77 │+
+    ⋮ 78 │+
+    ⋮ 79 │+def remove_refraction(aa_crepr, observed_frame):
+    ⋮ 80 │+    # remove refraction from AltAz cartesian representation
+    ⋮ 81 │+    refa, refb = erfa.refco(
+    ⋮ 82 │+        observed_frame.pressure.to_value(u.hPa),
+    ⋮ 83 │+        observed_frame.temperature.to_value(u.deg_C),
+    ⋮ 84 │+        observed_frame.relative_humidity.value,
+    ⋮ 85 │+        observed_frame.obswl.to_value(u.micron)
+    ⋮ 86 │+    )
+    ⋮ 87 │+    # reference: erfa.atoiq()
+    ⋮ 88 │+    norm, uv = erfa.pn(aa_crepr.get_xyz(xyz_axis=-1).to_value())
+    ⋮ 89 │+    # Cosine and sine of altitude, with precautions.
+    ⋮ 90 │+    sel = np.maximum(uv[..., 2], SELMIN)
+    ⋮ 91 │+    cel = np.sqrt(uv[..., 0] ** 2 + uv[..., 1] ** 2)
+    ⋮ 92 │+    # A*tan(z)+B*tan^3(z) model
+    ⋮ 93 │+    tan_z = cel / sel
+    ⋮ 94 │+    delta_el = (refa + refb * tan_z ** 2) * tan_z
+    ⋮ 95 │+    # Apply the change, giving observed vector.
+    ⋮ 96 │+    az, el = erfa.c2s(uv)
+    ⋮ 97 │+    el -= delta_el
+    ⋮ 98 │+    uv = erfa.s2c(az, el)
+    ⋮ 99 │+    uv = erfa.sxp(norm, uv)
+    ⋮ 100│+    return CartesianRepresentation(uv, xyz_axis=-1, unit=aa_crepr.x.unit, copy=False)
+    ⋮ 101│+
+    ⋮ 102│+
+    ⋮ 103│+@frame_transform_graph.transform(FunctionTransformWithFiniteDifference, ITRS, AltAz)
+    ⋮ 104│+@frame_transform_graph.transform(FunctionTransformWithFiniteDifference, ITRS, HADec)
+    ⋮ 105│+def itrs_to_observed(itrs_coo, observed_frame):
+    ⋮ 106│+    if (np.any(itrs_coo.location != observed_frame.location) or
+    ⋮ 107│+            np.any(itrs_coo.obstime != observed_frame.obstime)):
+    ⋮ 108│+        # This transform will go through the CIRS and alter stellar aberration.
+    ⋮ 109│+        itrs_coo = itrs_coo.transform_to(ITRS(obstime=observed_frame.obstime,
+    ⋮ 110│+                                              location=observed_frame.location))
+    ⋮ 111│+
+    ⋮ 112│+    lon, lat, height = observed_frame.location.to_geodetic('WGS84')
+    ⋮ 113│+
+    ⋮ 114│+    if isinstance(observed_frame, AltAz) or (observed_frame.pressure > 0.0):
+    ⋮ 115│+        crepr = itrs_coo.cartesian.transform(itrs_to_altaz_mat(lon, lat))
+    ⋮ 116│+        if observed_frame.pressure > 0.0:
+    ⋮ 117│+            crepr = add_refraction(crepr, observed_frame)
+    ⋮ 118│+            if isinstance(observed_frame, HADec):
+    ⋮ 119│+                crepr = crepr.transform(altaz_to_hadec_mat(lat))
+    ⋮ 120│+    else:
+    ⋮ 121│+        crepr = itrs_coo.cartesian.transform(itrs_to_hadec_mat(lon))
+    ⋮ 122│+    return observed_frame.realize_frame(crepr)
+    ⋮ 123│+
+    ⋮ 124│+
+    ⋮ 125│+@frame_transform_graph.transform(FunctionTransformWithFiniteDifference, AltAz, ITRS)
+    ⋮ 126│+@frame_transform_graph.transform(FunctionTransformWithFiniteDifference, HADec, ITRS)
+    ⋮ 127│+def observed_to_itrs(observed_coo, itrs_frame):
+    ⋮ 128│+
+    ⋮ 129│+    lon, lat, height = observed_coo.location.to_geodetic('WGS84')
+    ⋮ 130│+
+    ⋮ 131│+    if isinstance(observed_coo, AltAz) or (observed_coo.pressure > 0.0):
+    ⋮ 132│+        crepr = observed_coo.cartesian
+    ⋮ 133│+        if observed_coo.pressure > 0.0:
+    ⋮ 134│+            if isinstance(observed_coo, HADec):
+    ⋮ 135│+                crepr = crepr.transform(matrix_transpose(altaz_to_hadec_mat(lat)))
+    ⋮ 136│+            crepr = remove_refraction(crepr, observed_coo)
+    ⋮ 137│+        crepr = crepr.transform(matrix_transpose(itrs_to_altaz_mat(lon, lat)))
+    ⋮ 138│+    else:
+    ⋮ 139│+        crepr = observed_coo.cartesian.transform(matrix_transpose(itrs_to_hadec_mat(lon)))
+    ⋮ 140│+
+    ⋮ 141│+    itrs_at_obs_time = ITRS(crepr, obstime=observed_coo.obstime,
+    ⋮ 142│+                            location=observed_coo.location)
+    ⋮ 143│+    # This final transform may be a no-op if the obstimes and locations are the same.
+    ⋮ 144│+    # Otherwise, this transform will go through the CIRS and alter stellar aberration.
+    ⋮ 145│+    return itrs_at_obs_time.transform_to(itrs_frame)

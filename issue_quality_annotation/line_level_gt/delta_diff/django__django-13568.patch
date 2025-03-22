@@ -1,0 +1,14 @@
+
+django/contrib/auth/checks.py
+
+ 52 ⋮ 52 │         )
+ 53 ⋮ 53 │ 
+ 54 ⋮ 54 │     # Check that the username field is unique
+ 55 ⋮    │-    if not cls._meta.get_field(cls.USERNAME_FIELD).unique:
+    ⋮ 55 │+    if not cls._meta.get_field(cls.USERNAME_FIELD).unique and not any(
+    ⋮ 56 │+        constraint.fields == (cls.USERNAME_FIELD,)
+    ⋮ 57 │+        for constraint in cls._meta.total_unique_constraints
+    ⋮ 58 │+    ):
+ 56 ⋮ 59 │         if (settings.AUTHENTICATION_BACKENDS ==
+ 57 ⋮ 60 │                 ['django.contrib.auth.backends.ModelBackend']):
+ 58 ⋮ 61 │             errors.append(

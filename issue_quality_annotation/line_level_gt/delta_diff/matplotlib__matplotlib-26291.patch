@@ -1,0 +1,11 @@
+
+lib/mpl_toolkits/axes_grid1/inset_locator.py
+
+ 69 ⋮ 69 │         raise RuntimeError("No draw method should be called")
+ 70 ⋮ 70 │ 
+ 71 ⋮ 71 │     def __call__(self, ax, renderer):
+    ⋮ 72 │+        if renderer is None:
+    ⋮ 73 │+            renderer = ax.figure._get_renderer()
+ 72 ⋮ 74 │         self.axes = ax
+ 73 ⋮ 75 │         bbox = self.get_window_extent(renderer)
+ 74 ⋮ 76 │         px, py = self.get_offset(bbox.width, bbox.height, 0, 0, renderer)

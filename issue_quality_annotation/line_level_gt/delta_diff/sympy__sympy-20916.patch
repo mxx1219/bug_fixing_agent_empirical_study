@@ -1,0 +1,20 @@
+
+sympy/printing/conventions.py
+
+  7 ⋮  7 │ from collections.abc import Iterable
+  8 ⋮  8 │ from sympy import Derivative
+  9 ⋮  9 │ 
+ 10 ⋮    │-_name_with_digits_p = re.compile(r'^([a-zA-Z]+)([0-9]+)$')
+    ⋮ 10 │+_name_with_digits_p = re.compile(r'^([^\W\d_]+)(\d+)$', re.U)
+ 11 ⋮ 11 │ 
+ 12 ⋮ 12 │ 
+ 13 ⋮ 13 │ def split_super_sub(text):
+
+ 60 ⋮ 60 │         else:
+ 61 ⋮ 61 │             raise RuntimeError("This should never happen.")
+ 62 ⋮ 62 │ 
+ 63 ⋮    │-    # make a little exception when a name ends with digits, i.e. treat them
+    ⋮ 63 │+    # Make a little exception when a name ends with digits, i.e. treat them
+ 64 ⋮ 64 │     # as a subscript too.
+ 65 ⋮ 65 │     m = _name_with_digits_p.match(name)
+ 66 ⋮ 66 │     if m:

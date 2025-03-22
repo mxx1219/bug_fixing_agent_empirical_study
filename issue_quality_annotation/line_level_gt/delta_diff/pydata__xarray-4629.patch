@@ -1,0 +1,11 @@
+
+xarray/core/merge.py
+
+ 501⋮ 501│     if combine_attrs == "drop":
+ 502⋮ 502│         return {}
+ 503⋮ 503│     elif combine_attrs == "override":
+ 504⋮    │-        return variable_attrs[0]
+    ⋮ 504│+        return dict(variable_attrs[0])
+ 505⋮ 505│     elif combine_attrs == "no_conflicts":
+ 506⋮ 506│         result = dict(variable_attrs[0])
+ 507⋮ 507│         for attrs in variable_attrs[1:]:

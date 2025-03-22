@@ -1,0 +1,27 @@
+
+lib/matplotlib/legend.py
+
+ 360⋮ 360│         """
+ 361⋮ 361│         # local import only to avoid circularity
+ 362⋮ 362│         from matplotlib.axes import Axes
+ 363⋮    │-        from matplotlib.figure import Figure
+    ⋮ 363│+        from matplotlib.figure import FigureBase
+ 364⋮ 364│ 
+ 365⋮ 365│         super().__init__()
+ 366⋮ 366│ 
+
+ 434⋮ 434│             self.isaxes = True
+ 435⋮ 435│             self.axes = parent
+ 436⋮ 436│             self.set_figure(parent.figure)
+ 437⋮    │-        elif isinstance(parent, Figure):
+    ⋮ 437│+        elif isinstance(parent, FigureBase):
+ 438⋮ 438│             self.isaxes = False
+ 439⋮ 439│             self.set_figure(parent)
+ 440⋮ 440│         else:
+ 441⋮    │-            raise TypeError("Legend needs either Axes or Figure as parent")
+    ⋮ 441│+            raise TypeError(
+    ⋮ 442│+                "Legend needs either Axes or FigureBase as parent"
+    ⋮ 443│+            )
+ 442⋮ 444│         self.parent = parent
+ 443⋮ 445│ 
+ 444⋮ 446│         self._loc_used_default = loc is None

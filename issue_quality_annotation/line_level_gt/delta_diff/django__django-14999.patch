@@ -1,0 +1,21 @@
+
+django/db/migrations/operations/models.py
+
+ 320⋮ 320│         new_model = to_state.apps.get_model(app_label, self.new_name)
+ 321⋮ 321│         if self.allow_migrate_model(schema_editor.connection.alias, new_model):
+ 322⋮ 322│             old_model = from_state.apps.get_model(app_label, self.old_name)
+    ⋮ 323│+            old_db_table = old_model._meta.db_table
+    ⋮ 324│+            new_db_table = new_model._meta.db_table
+    ⋮ 325│+            # Don't alter when a table name is not changed.
+    ⋮ 326│+            if old_db_table == new_db_table:
+    ⋮ 327│+                return
+ 323⋮ 328│             # Move the main table
+ 324⋮    │-            schema_editor.alter_db_table(
+ 325⋮    │-                new_model,
+ 326⋮    │-                old_model._meta.db_table,
+ 327⋮    │-                new_model._meta.db_table,
+ 328⋮    │-            )
+    ⋮ 329│+            schema_editor.alter_db_table(new_model, old_db_table, new_db_table)
+ 329⋮ 330│             # Alter the fields pointing to us
+ 330⋮ 331│             for related_object in old_model._meta.related_objects:
+ 331⋮ 332│                 if related_object.related_model == old_model:

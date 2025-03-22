@@ -1,0 +1,22 @@
+
+django/core/management/commands/inspectdb.py
+
+ 116⋮ 116│                         extra_params['unique'] = True
+ 117⋮ 117│ 
+ 118⋮ 118│                     if is_relation:
+    ⋮ 119│+                        ref_db_column, ref_db_table = relations[column_name]
+ 119⋮ 120│                         if extra_params.pop('unique', False) or extra_params.get('primary_key'):
+ 120⋮ 121│                             rel_type = 'OneToOneField'
+ 121⋮ 122│                         else:
+ 122⋮ 123│                             rel_type = 'ForeignKey'
+    ⋮ 124│+                            ref_pk_column = connection.introspection.get_primary_key_column(cursor, ref_db_table)
+    ⋮ 125│+                            if ref_pk_column and ref_pk_column != ref_db_column:
+    ⋮ 126│+                                extra_params['to_field'] = ref_db_column
+ 123⋮ 127│                         rel_to = (
+ 124⋮    │-                            "self" if relations[column_name][1] == table_name
+ 125⋮    │-                            else table2model(relations[column_name][1])
+    ⋮ 128│+                            'self' if ref_db_table == table_name
+    ⋮ 129│+                            else table2model(ref_db_table)
+ 126⋮ 130│                         )
+ 127⋮ 131│                         if rel_to in known_models:
+ 128⋮ 132│                             field_type = '%s(%s' % (rel_type, rel_to)

@@ -1,0 +1,20 @@
+
+django/views/generic/base.py
+
+ 148⋮ 148│             request.path,
+ 149⋮ 149│             extra={"status_code": 405, "request": request},
+ 150⋮ 150│         )
+ 151⋮    │-        return HttpResponseNotAllowed(self._allowed_methods())
+    ⋮ 151│+        response = HttpResponseNotAllowed(self._allowed_methods())
+    ⋮ 152│+
+    ⋮ 153│+        if self.view_is_async:
+    ⋮ 154│+
+    ⋮ 155│+            async def func():
+    ⋮ 156│+                return response
+    ⋮ 157│+
+    ⋮ 158│+            return func()
+    ⋮ 159│+        else:
+    ⋮ 160│+            return response
+ 152⋮ 161│ 
+ 153⋮ 162│     def options(self, request, *args, **kwargs):
+ 154⋮ 163│         """Handle responding to requests for the OPTIONS HTTP verb."""

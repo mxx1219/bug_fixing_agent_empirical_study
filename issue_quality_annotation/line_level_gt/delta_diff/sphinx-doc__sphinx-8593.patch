@@ -1,0 +1,103 @@
+
+sphinx/ext/autodoc/__init__.py
+
+ 25 ⋮ 25 │ from sphinx.deprecation import (RemovedInSphinx40Warning, RemovedInSphinx50Warning,
+ 26 ⋮ 26 │                                 RemovedInSphinx60Warning)
+ 27 ⋮ 27 │ from sphinx.environment import BuildEnvironment
+ 28 ⋮    │-from sphinx.ext.autodoc.importer import (ClassAttribute, get_class_members, get_module_members,
+ 29 ⋮    │-                                         get_object_members, import_module, import_object)
+    ⋮ 28 │+from sphinx.ext.autodoc.importer import (ClassAttribute, get_class_members, get_object_members,
+    ⋮ 29 │+                                         import_module, import_object)
+ 30 ⋮ 30 │ from sphinx.ext.autodoc.mock import mock
+ 31 ⋮ 31 │ from sphinx.locale import _, __
+ 32 ⋮ 32 │ from sphinx.pycode import ModuleAnalyzer, PycodeError
+
+1043⋮1043│         if self.options.deprecated:
+1044⋮1044│             self.add_line('   :deprecated:', sourcename)
+1045⋮1045│ 
+    ⋮1046│+    def get_module_members(self) -> Dict[str, ObjectMember]:
+    ⋮1047│+        """Get members of target module."""
+    ⋮1048│+        if self.analyzer:
+    ⋮1049│+            attr_docs = self.analyzer.attr_docs
+    ⋮1050│+        else:
+    ⋮1051│+            attr_docs = {}
+    ⋮1052│+
+    ⋮1053│+        members = {}  # type: Dict[str, ObjectMember]
+    ⋮1054│+        for name in dir(self.object):
+    ⋮1055│+            try:
+    ⋮1056│+                value = safe_getattr(self.object, name, None)
+    ⋮1057│+                docstring = attr_docs.get(('', name), [])
+    ⋮1058│+                members[name] = ObjectMember(name, value, docstring="\n".join(docstring))
+    ⋮1059│+            except AttributeError:
+    ⋮1060│+                continue
+    ⋮1061│+
+    ⋮1062│+        # annotation only member (ex. attr: int)
+    ⋮1063│+        try:
+    ⋮1064│+            for name in inspect.getannotations(self.object):
+    ⋮1065│+                if name not in members:
+    ⋮1066│+                    docstring = attr_docs.get(('', name), [])
+    ⋮1067│+                    members[name] = ObjectMember(name, INSTANCEATTR,
+    ⋮1068│+                                                 docstring="\n".join(docstring))
+    ⋮1069│+        except AttributeError:
+    ⋮1070│+            pass
+    ⋮1071│+
+    ⋮1072│+        return members
+    ⋮1073│+
+1046⋮1074│     def get_object_members(self, want_all: bool) -> Tuple[bool, ObjectMembers]:
+    ⋮1075│+        members = self.get_module_members()
+1047⋮1076│         if want_all:
+1048⋮    │-            members = get_module_members(self.object)
+1049⋮1077│             if not self.__all__:
+1050⋮1078│                 # for implicit module members, check __module__ to avoid
+1051⋮1079│                 # documenting imported objects
+1052⋮    │-                return True, members
+    ⋮1080│+                return True, list(members.values())
+1053⋮1081│             else:
+1054⋮    │-                ret = []
+1055⋮    │-                for name, value in members:
+1056⋮    │-                    if name in self.__all__:
+1057⋮    │-                        ret.append(ObjectMember(name, value))
+1058⋮    │-                    else:
+1059⋮    │-                        ret.append(ObjectMember(name, value, skipped=True))
+    ⋮1082│+                for member in members.values():
+    ⋮1083│+                    if member.__name__ not in self.__all__:
+    ⋮1084│+                        member.skipped = True
+1060⋮1085│ 
+1061⋮    │-                return False, ret
+    ⋮1086│+                return False, list(members.values())
+1062⋮1087│         else:
+1063⋮1088│             memberlist = self.options.members or []
+1064⋮1089│             ret = []
+1065⋮1090│             for name in memberlist:
+1066⋮    │-                try:
+1067⋮    │-                    value = safe_getattr(self.object, name)
+1068⋮    │-                    ret.append(ObjectMember(name, value))
+1069⋮    │-                except AttributeError:
+    ⋮1091│+                if name in members:
+    ⋮1092│+                    ret.append(members[name])
+    ⋮1093│+                else:
+1070⋮1094│                     logger.warning(__('missing attribute mentioned in :members: option: '
+1071⋮1095│                                       'module %s, attribute %s') %
+1072⋮1096│                                    (safe_getattr(self.object, '__name__', '???'), name),
+
+sphinx/ext/autodoc/importer.py
+
+ 13 ⋮ 13 │ import warnings
+ 14 ⋮ 14 │ from typing import Any, Callable, Dict, List, Mapping, NamedTuple, Optional, Tuple
+ 15 ⋮ 15 │ 
+ 16 ⋮    │-from sphinx.deprecation import RemovedInSphinx40Warning, deprecated_alias
+    ⋮ 16 │+from sphinx.deprecation import (RemovedInSphinx40Warning, RemovedInSphinx50Warning,
+    ⋮ 17 │+                                deprecated_alias)
+ 17 ⋮ 18 │ from sphinx.pycode import ModuleAnalyzer, PycodeError
+ 18 ⋮ 19 │ from sphinx.util import logging
+ 19 ⋮ 20 │ from sphinx.util.inspect import (getannotations, getmro, getslots, isclass, isenumclass,
+
+ 141⋮ 142│     """Get members of target module."""
+ 142⋮ 143│     from sphinx.ext.autodoc import INSTANCEATTR
+ 143⋮ 144│ 
+    ⋮ 145│+    warnings.warn('sphinx.ext.autodoc.importer.get_module_members() is deprecated.',
+    ⋮ 146│+                  RemovedInSphinx50Warning)
+    ⋮ 147│+
+ 144⋮ 148│     members = {}  # type: Dict[str, Tuple[str, Any]]
+ 145⋮ 149│     for name in dir(module):
+ 146⋮ 150│         try:

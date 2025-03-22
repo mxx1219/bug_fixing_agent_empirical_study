@@ -1,0 +1,10 @@
+
+django/utils/formats.py
+
+ 113⋮ 113│             use_l10n = settings.USE_L10N
+ 114⋮ 114│     if use_l10n and lang is None:
+ 115⋮ 115│         lang = get_language()
+    ⋮ 116│+    format_type = str(format_type)  # format_type may be lazy.
+ 116⋮ 117│     cache_key = (format_type, lang)
+ 117⋮ 118│     try:
+ 118⋮ 119│         return _format_cache[cache_key]

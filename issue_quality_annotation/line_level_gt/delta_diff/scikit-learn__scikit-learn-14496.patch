@@ -1,0 +1,73 @@
+
+sklearn/cluster/optics_.py
+
+ 44 ⋮ 44 │ 
+ 45 ⋮ 45 │     Parameters
+ 46 ⋮ 46 │     ----------
+ 47 ⋮    │-    min_samples : int > 1 or float between 0 and 1 (default=None)
+    ⋮ 47 │+    min_samples : int > 1 or float between 0 and 1 (default=5)
+ 48 ⋮ 48 │         The number of samples in a neighborhood for a point to be considered as
+ 49 ⋮ 49 │         a core point. Also, up and down steep regions can't have more then
+ 50 ⋮ 50 │         ``min_samples`` consecutive non-steep points. Expressed as an absolute
+
+ 341⋮ 341│         A feature array, or array of distances between samples if
+ 342⋮ 342│         metric='precomputed'
+ 343⋮ 343│ 
+ 344⋮    │-    min_samples : int (default=5)
+    ⋮ 344│+    min_samples : int > 1 or float between 0 and 1
+ 345⋮ 345│         The number of samples in a neighborhood for a point to be considered
+ 346⋮ 346│         as a core point. Expressed as an absolute number or a fraction of the
+ 347⋮ 347│         number of samples (rounded to be at least 2).
+
+ 437⋮ 437│     n_samples = X.shape[0]
+ 438⋮ 438│     _validate_size(min_samples, n_samples, 'min_samples')
+ 439⋮ 439│     if min_samples <= 1:
+ 440⋮    │-        min_samples = max(2, min_samples * n_samples)
+    ⋮ 440│+        min_samples = max(2, int(min_samples * n_samples))
+ 441⋮ 441│ 
+ 442⋮ 442│     # Start all points as 'unprocessed' ##
+ 443⋮ 443│     reachability_ = np.empty(n_samples)
+
+ 582⋮ 582│     ordering : array, shape (n_samples,)
+ 583⋮ 583│         OPTICS ordered point indices (`ordering_`)
+ 584⋮ 584│ 
+ 585⋮    │-    min_samples : int > 1 or float between 0 and 1 (default=None)
+    ⋮ 585│+    min_samples : int > 1 or float between 0 and 1
+ 586⋮ 586│         The same as the min_samples given to OPTICS. Up and down steep regions
+ 587⋮ 587│         can't have more then ``min_samples`` consecutive non-steep points.
+ 588⋮ 588│         Expressed as an absolute number or a fraction of the number of samples
+
+ 619⋮ 619│     n_samples = len(reachability)
+ 620⋮ 620│     _validate_size(min_samples, n_samples, 'min_samples')
+ 621⋮ 621│     if min_samples <= 1:
+ 622⋮    │-        min_samples = max(2, min_samples * n_samples)
+    ⋮ 622│+        min_samples = max(2, int(min_samples * n_samples))
+ 623⋮ 623│     if min_cluster_size is None:
+ 624⋮ 624│         min_cluster_size = min_samples
+ 625⋮ 625│     _validate_size(min_cluster_size, n_samples, 'min_cluster_size')
+ 626⋮ 626│     if min_cluster_size <= 1:
+ 627⋮    │-        min_cluster_size = max(2, min_cluster_size * n_samples)
+    ⋮ 627│+        min_cluster_size = max(2, int(min_cluster_size * n_samples))
+ 628⋮ 628│ 
+ 629⋮ 629│     clusters = _xi_cluster(reachability[ordering], predecessor[ordering],
+ 630⋮ 630│                            ordering, xi,
+
+ 753⋮ 753│         reachability plot is defined by the ratio from one point to its
+ 754⋮ 754│         successor being at most 1-xi.
+ 755⋮ 755│ 
+ 756⋮    │-    min_samples : int > 1 or float between 0 and 1 (default=None)
+    ⋮ 756│+    min_samples : int > 1
+ 757⋮ 757│         The same as the min_samples given to OPTICS. Up and down steep regions
+ 758⋮ 758│         can't have more then ``min_samples`` consecutive non-steep points.
+ 759⋮    │-        Expressed as an absolute number or a fraction of the number of samples
+ 760⋮    │-        (rounded to be at least 2).
+ 761⋮ 759│ 
+ 762⋮    │-    min_cluster_size : int > 1 or float between 0 and 1
+ 763⋮    │-        Minimum number of samples in an OPTICS cluster, expressed as an
+ 764⋮    │-        absolute number or a fraction of the number of samples (rounded
+ 765⋮    │-        to be at least 2).
+    ⋮ 760│+    min_cluster_size : int > 1
+    ⋮ 761│+        Minimum number of samples in an OPTICS cluster.
+ 766⋮ 762│ 
+ 767⋮ 763│     predecessor_correction : bool
+ 768⋮ 764│         Correct clusters based on the calculated predecessors.

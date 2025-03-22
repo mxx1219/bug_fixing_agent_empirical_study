@@ -1,0 +1,22 @@
+
+xarray/core/computation.py
+
+1933⋮1933│     from .dataset import Dataset
+1934⋮1934│ 
+1935⋮1935│     def to_floatable(x: DataArray) -> DataArray:
+1936⋮    │-        if x.dtype.kind in "mM":
+    ⋮1936│+        if x.dtype.kind == "M":
+    ⋮1937│+            # datetimes
+1937⋮1938│             return x.copy(
+1938⋮1939│                 data=datetime_to_numeric(
+1939⋮1940│                     x.data,
+
+1941⋮1942│                     datetime_unit="ns",
+1942⋮1943│                 ),
+1943⋮1944│             )
+    ⋮1945│+        elif x.dtype.kind == "m":
+    ⋮1946│+            # timedeltas
+    ⋮1947│+            return x.astype(float)
+1944⋮1948│         return x
+1945⋮1949│ 
+1946⋮1950│     if isinstance(data, Dataset):

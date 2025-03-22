@@ -1,0 +1,77 @@
+
+lib/matplotlib/axes/_base.py
+
+3262⋮3262│             cbook._warn_external(
+3263⋮3263│                 f"Attempting to set identical left == right == {left} results "
+3264⋮3264│                 f"in singular transformations; automatically expanding.")
+    ⋮3265│+        swapped = left > right
+3265⋮3266│         left, right = self.xaxis.get_major_locator().nonsingular(left, right)
+3266⋮3267│         left, right = self.xaxis.limit_range_for_scale(left, right)
+    ⋮3268│+        if swapped:
+    ⋮3269│+            left, right = right, left
+3267⋮3270│ 
+3268⋮3271│         self.viewLim.intervalx = (left, right)
+3269⋮3272│         if auto is not None:
+
+3642⋮3645│                 f"Attempting to set identical bottom == top == {bottom} "
+3643⋮3646│                 f"results in singular transformations; automatically "
+3644⋮3647│                 f"expanding.")
+    ⋮3648│+        swapped = bottom > top
+3645⋮3649│         bottom, top = self.yaxis.get_major_locator().nonsingular(bottom, top)
+3646⋮3650│         bottom, top = self.yaxis.limit_range_for_scale(bottom, top)
+    ⋮3651│+        if swapped:
+    ⋮3652│+            bottom, top = top, bottom
+3647⋮3653│ 
+3648⋮3654│         self.viewLim.intervaly = (bottom, top)
+3649⋮3655│         if auto is not None:
+
+lib/matplotlib/ticker.py
+
+1521⋮1521│         return locs
+1522⋮1522│ 
+1523⋮1523│     def nonsingular(self, v0, v1):
+1524⋮    │-        """Modify the endpoints of a range as needed to avoid singularities."""
+1525⋮    │-        return mtransforms.nonsingular(v0, v1, increasing=False, expander=.05)
+    ⋮1524│+        """Expand a range as needed to avoid singularities."""
+    ⋮1525│+        return mtransforms.nonsingular(v0, v1, expander=.05)
+1526⋮1526│ 
+1527⋮1527│     def view_limits(self, vmin, vmax):
+1528⋮1528│         """
+
+lib/mpl_toolkits/mplot3d/axes3d.py
+
+ 623⋮ 623│             cbook._warn_external(
+ 624⋮ 624│                 f"Attempting to set identical left == right == {left} results "
+ 625⋮ 625│                 f"in singular transformations; automatically expanding.")
+    ⋮ 626│+        swapped = left > right
+ 626⋮ 627│         left, right = self.xaxis.get_major_locator().nonsingular(left, right)
+ 627⋮ 628│         left, right = self.xaxis.limit_range_for_scale(left, right)
+    ⋮ 629│+        if swapped:
+    ⋮ 630│+            left, right = right, left
+ 628⋮ 631│         self.xy_viewLim.intervalx = (left, right)
+ 629⋮ 632│ 
+ 630⋮ 633│         if auto is not None:
+
+ 681⋮ 684│                 f"Attempting to set identical bottom == top == {bottom} "
+ 682⋮ 685│                 f"results in singular transformations; automatically "
+ 683⋮ 686│                 f"expanding.")
+    ⋮ 687│+        swapped = bottom > top
+ 684⋮ 688│         bottom, top = self.yaxis.get_major_locator().nonsingular(bottom, top)
+ 685⋮ 689│         bottom, top = self.yaxis.limit_range_for_scale(bottom, top)
+    ⋮ 690│+        if swapped:
+    ⋮ 691│+            bottom, top = top, bottom
+ 686⋮ 692│         self.xy_viewLim.intervaly = (bottom, top)
+ 687⋮ 693│ 
+ 688⋮ 694│         if auto is not None:
+
+ 739⋮ 745│                 f"Attempting to set identical bottom == top == {bottom} "
+ 740⋮ 746│                 f"results in singular transformations; automatically "
+ 741⋮ 747│                 f"expanding.")
+    ⋮ 748│+        swapped = bottom > top
+ 742⋮ 749│         bottom, top = self.zaxis.get_major_locator().nonsingular(bottom, top)
+ 743⋮ 750│         bottom, top = self.zaxis.limit_range_for_scale(bottom, top)
+    ⋮ 751│+        if swapped:
+    ⋮ 752│+            bottom, top = top, bottom
+ 744⋮ 753│         self.zz_viewLim.intervalx = (bottom, top)
+ 745⋮ 754│ 
+ 746⋮ 755│         if auto is not None:

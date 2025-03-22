@@ -1,0 +1,89 @@
+
+sympy/physics/quantum/tensorproduct.py
+
+ 18 ⋮ 18 │     matrix_tensor_product
+ 19 ⋮ 19 │ )
+ 20 ⋮ 20 │ 
+    ⋮ 21 │+
+ 21 ⋮ 22 │ __all__ = [
+ 22 ⋮ 23 │     'TensorProduct',
+ 23 ⋮ 24 │     'tensor_product_simp'
+
+ 310⋮ 311│ 
+ 311⋮ 312│     """
+ 312⋮ 313│     # TODO: This won't work with Muls that have other composites of
+ 313⋮    │-    # TensorProducts, like an Add, Pow, Commutator, etc.
+    ⋮ 314│+    # TensorProducts, like an Add, Commutator, etc.
+ 314⋮ 315│     # TODO: This only works for the equivalent of single Qbit gates.
+ 315⋮ 316│     if not isinstance(e, Mul):
+ 316⋮ 317│         return e
+ 317⋮ 318│     c_part, nc_part = e.args_cnc()
+ 318⋮ 319│     n_nc = len(nc_part)
+ 319⋮    │-    if n_nc == 0 or n_nc == 1:
+    ⋮ 320│+    if n_nc == 0:
+    ⋮ 321│+        return e
+    ⋮ 322│+    elif n_nc == 1:
+    ⋮ 323│+        if isinstance(nc_part[0], Pow):
+    ⋮ 324│+            return  Mul(*c_part) * tensor_product_simp_Pow(nc_part[0])
+ 320⋮ 325│         return e
+ 321⋮ 326│     elif e.has(TensorProduct):
+ 322⋮ 327│         current = nc_part[0]
+ 323⋮ 328│         if not isinstance(current, TensorProduct):
+ 324⋮    │-            raise TypeError('TensorProduct expected, got: %r' % current)
+    ⋮ 329│+            if isinstance(current, Pow):
+    ⋮ 330│+                if isinstance(current.base, TensorProduct):
+    ⋮ 331│+                    current = tensor_product_simp_Pow(current)
+    ⋮ 332│+            else:
+    ⋮ 333│+                raise TypeError('TensorProduct expected, got: %r' % current)
+ 325⋮ 334│         n_terms = len(current.args)
+ 326⋮ 335│         new_args = list(current.args)
+ 327⋮ 336│         for next in nc_part[1:]:
+
+ 335⋮ 344│                 for i in range(len(new_args)):
+ 336⋮ 345│                     new_args[i] = new_args[i] * next.args[i]
+ 337⋮ 346│             else:
+ 338⋮    │-                # this won't quite work as we don't want next in the
+ 339⋮    │-                # TensorProduct
+ 340⋮    │-                for i in range(len(new_args)):
+ 341⋮    │-                    new_args[i] = new_args[i] * next
+    ⋮ 347│+                if isinstance(next, Pow):
+    ⋮ 348│+                    if isinstance(next.base, TensorProduct):
+    ⋮ 349│+                        new_tp = tensor_product_simp_Pow(next)
+    ⋮ 350│+                        for i in range(len(new_args)):
+    ⋮ 351│+                            new_args[i] = new_args[i] * new_tp.args[i]
+    ⋮ 352│+                    else:
+    ⋮ 353│+                        raise TypeError('TensorProduct expected, got: %r' % next)
+    ⋮ 354│+                else:
+    ⋮ 355│+                    raise TypeError('TensorProduct expected, got: %r' % next)
+ 342⋮ 356│             current = next
+ 343⋮ 357│         return Mul(*c_part) * TensorProduct(*new_args)
+    ⋮ 358│+    elif e.has(Pow):
+    ⋮ 359│+        new_args = [ tensor_product_simp_Pow(nc) for nc in nc_part ]
+    ⋮ 360│+        return tensor_product_simp_Mul(Mul(*c_part) * TensorProduct(*new_args))
+ 344⋮ 361│     else:
+ 345⋮ 362│         return e
+ 346⋮ 363│ 
+    ⋮ 364│+def tensor_product_simp_Pow(e):
+    ⋮ 365│+    """Evaluates ``Pow`` expressions whose base is ``TensorProduct``"""
+    ⋮ 366│+    if not isinstance(e, Pow):
+    ⋮ 367│+        return e
+    ⋮ 368│+
+    ⋮ 369│+    if isinstance(e.base, TensorProduct):
+    ⋮ 370│+        return TensorProduct(*[ b**e.exp for b in e.base.args])
+    ⋮ 371│+    else:
+    ⋮ 372│+        return e
+ 347⋮ 373│ 
+ 348⋮ 374│ def tensor_product_simp(e, **hints):
+ 349⋮ 375│     """Try to simplify and combine TensorProducts.
+
+ 382⋮ 408│     if isinstance(e, Add):
+ 383⋮ 409│         return Add(*[tensor_product_simp(arg) for arg in e.args])
+ 384⋮ 410│     elif isinstance(e, Pow):
+ 385⋮    │-        return tensor_product_simp(e.base) ** e.exp
+    ⋮ 411│+        if isinstance(e.base, TensorProduct):
+    ⋮ 412│+            return tensor_product_simp_Pow(e)
+    ⋮ 413│+        else:
+    ⋮ 414│+            return tensor_product_simp(e.base) ** e.exp
+ 386⋮ 415│     elif isinstance(e, Mul):
+ 387⋮ 416│         return tensor_product_simp_Mul(e)
+ 388⋮ 417│     elif isinstance(e, Commutator):

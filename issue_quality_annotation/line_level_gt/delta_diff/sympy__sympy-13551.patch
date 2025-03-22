@@ -1,0 +1,13 @@
+
+sympy/concrete/products.py
+
+ 282⋮ 282│                 # There is expression, which couldn't change by
+ 283⋮ 283│                 # as_numer_denom(). E.g. n**(2/3) + 1 --> (n**(2/3) + 1, 1).
+ 284⋮ 284│                 # We have to catch this case.
+ 285⋮    │-
+ 286⋮    │-                p = sum([self._eval_product(i, (k, a, n)) for i in p.as_coeff_Add()])
+    ⋮ 285│+                from sympy.concrete.summations import Sum
+    ⋮ 286│+                p = exp(Sum(log(p), (k, a, n)))
+ 287⋮ 287│             else:
+ 288⋮ 288│                 p = self._eval_product(p, (k, a, n))
+ 289⋮ 289│             return p / q

@@ -1,0 +1,14 @@
+
+sympy/core/_print_helpers.py
+
+ 17 ⋮ 17 │     This also adds support for LaTeX printing in jupyter notebooks.
+ 18 ⋮ 18 │     """
+ 19 ⋮ 19 │ 
+    ⋮ 20 │+    # Since this class is used as a mixin we set empty slots. That means that
+    ⋮ 21 │+    # instances of any subclasses that use slots will not need to have a
+    ⋮ 22 │+    # __dict__.
+    ⋮ 23 │+    __slots__ = ()
+    ⋮ 24 │+
+ 20 ⋮ 25 │     # Note, we always use the default ordering (lex) in __str__ and __repr__,
+ 21 ⋮ 26 │     # regardless of the global setting. See issue 5487.
+ 22 ⋮ 27 │     def __str__(self):

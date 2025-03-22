@@ -1,0 +1,15 @@
+
+django/db/backends/sqlite3/base.py
+
+ 64 ⋮ 64 │ 
+ 65 ⋮ 65 │ 
+ 66 ⋮ 66 │ def check_sqlite_version():
+ 67 ⋮    │-    if Database.sqlite_version_info < (3, 8, 3):
+ 68 ⋮    │-        raise ImproperlyConfigured('SQLite 3.8.3 or later is required (found %s).' % Database.sqlite_version)
+    ⋮ 67 │+    if Database.sqlite_version_info < (3, 9, 0):
+    ⋮ 68 │+        raise ImproperlyConfigured(
+    ⋮ 69 │+            'SQLite 3.9.0 or later is required (found %s).' % Database.sqlite_version
+    ⋮ 70 │+        )
+ 69 ⋮ 71 │ 
+ 70 ⋮ 72 │ 
+ 71 ⋮ 73 │ check_sqlite_version()

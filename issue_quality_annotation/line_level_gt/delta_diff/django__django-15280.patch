@@ -1,0 +1,14 @@
+
+django/db/models/fields/related_descriptors.py
+
+ 646⋮ 646│             # Since we just bypassed this class' get_queryset(), we must manage
+ 647⋮ 647│             # the reverse relation manually.
+ 648⋮ 648│             for rel_obj in queryset:
+ 649⋮    │-                instance = instances_dict[rel_obj_attr(rel_obj)]
+ 650⋮    │-                setattr(rel_obj, self.field.name, instance)
+    ⋮ 649│+                if not self.field.is_cached(rel_obj):
+    ⋮ 650│+                    instance = instances_dict[rel_obj_attr(rel_obj)]
+    ⋮ 651│+                    setattr(rel_obj, self.field.name, instance)
+ 651⋮ 652│             cache_name = self.field.remote_field.get_cache_name()
+ 652⋮ 653│             return queryset, rel_obj_attr, instance_attr, False, cache_name, False
+ 653⋮ 654│ 

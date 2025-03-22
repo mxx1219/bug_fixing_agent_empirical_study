@@ -1,0 +1,30 @@
+
+django/db/backends/sqlite3/base.py
+
+ 327⋮ 327│                     violations = cursor.execute('PRAGMA foreign_key_check').fetchall()
+ 328⋮ 328│                 else:
+ 329⋮ 329│                     violations = chain.from_iterable(
+ 330⋮    │-                        cursor.execute('PRAGMA foreign_key_check(%s)' % table_name).fetchall()
+    ⋮ 330│+                        cursor.execute(
+    ⋮ 331│+                            'PRAGMA foreign_key_check(%s)'
+    ⋮ 332│+                            % self.ops.quote_name(table_name)
+    ⋮ 333│+                        ).fetchall()
+ 331⋮ 334│                         for table_name in table_names
+ 332⋮ 335│                     )
+ 333⋮ 336│                 # See https://www.sqlite.org/pragma.html#pragma_foreign_key_check
+ 334⋮ 337│                 for table_name, rowid, referenced_table_name, foreign_key_index in violations:
+ 335⋮ 338│                     foreign_key = cursor.execute(
+ 336⋮    │-                        'PRAGMA foreign_key_list(%s)' % table_name
+    ⋮ 339│+                        'PRAGMA foreign_key_list(%s)' % self.ops.quote_name(table_name)
+ 337⋮ 340│                     ).fetchall()[foreign_key_index]
+ 338⋮ 341│                     column_name, referenced_column_name = foreign_key[3:5]
+ 339⋮ 342│                     primary_key_column_name = self.introspection.get_primary_key_column(cursor, table_name)
+ 340⋮ 343│                     primary_key_value, bad_value = cursor.execute(
+ 341⋮ 344│                         'SELECT %s, %s FROM %s WHERE rowid = %%s' % (
+ 342⋮    │-                            primary_key_column_name, column_name, table_name
+    ⋮ 345│+                            self.ops.quote_name(primary_key_column_name),
+    ⋮ 346│+                            self.ops.quote_name(column_name),
+    ⋮ 347│+                            self.ops.quote_name(table_name),
+ 343⋮ 348│                         ),
+ 344⋮ 349│                         (rowid,),
+ 345⋮ 350│                     ).fetchone()

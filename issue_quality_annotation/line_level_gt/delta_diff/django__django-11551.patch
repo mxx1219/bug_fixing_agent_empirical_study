@@ -1,0 +1,57 @@
+
+django/contrib/admin/checks.py
+
+ 720⋮ 720│             return []
+ 721⋮ 721│         elif hasattr(obj, item):
+ 722⋮ 722│             return []
+ 723⋮    │-        elif hasattr(obj.model, item):
+    ⋮ 723│+        try:
+    ⋮ 724│+            field = obj.model._meta.get_field(item)
+    ⋮ 725│+        except FieldDoesNotExist:
+ 724⋮ 726│             try:
+ 725⋮    │-                field = obj.model._meta.get_field(item)
+ 726⋮    │-            except FieldDoesNotExist:
+ 727⋮    │-                return []
+ 728⋮    │-            else:
+ 729⋮    │-                if isinstance(field, models.ManyToManyField):
+ 730⋮    │-                    return [
+ 731⋮    │-                        checks.Error(
+ 732⋮    │-                            "The value of '%s' must not be a ManyToManyField." % label,
+ 733⋮    │-                            obj=obj.__class__,
+ 734⋮    │-                            id='admin.E109',
+ 735⋮    │-                        )
+ 736⋮    │-                    ]
+ 737⋮    │-                return []
+ 738⋮    │-        else:
+    ⋮ 727│+                field = getattr(obj.model, item)
+    ⋮ 728│+            except AttributeError:
+    ⋮ 729│+                return [
+    ⋮ 730│+                    checks.Error(
+    ⋮ 731│+                        "The value of '%s' refers to '%s', which is not a "
+    ⋮ 732│+                        "callable, an attribute of '%s', or an attribute or "
+    ⋮ 733│+                        "method on '%s.%s'." % (
+    ⋮ 734│+                            label, item, obj.__class__.__name__,
+    ⋮ 735│+                            obj.model._meta.app_label, obj.model._meta.object_name,
+    ⋮ 736│+                        ),
+    ⋮ 737│+                        obj=obj.__class__,
+    ⋮ 738│+                        id='admin.E108',
+    ⋮ 739│+                    )
+    ⋮ 740│+                ]
+    ⋮ 741│+        if isinstance(field, models.ManyToManyField):
+ 739⋮ 742│             return [
+ 740⋮ 743│                 checks.Error(
+ 741⋮    │-                    "The value of '%s' refers to '%s', which is not a callable, "
+ 742⋮    │-                    "an attribute of '%s', or an attribute or method on '%s.%s'." % (
+ 743⋮    │-                        label, item, obj.__class__.__name__,
+ 744⋮    │-                        obj.model._meta.app_label, obj.model._meta.object_name,
+ 745⋮    │-                    ),
+    ⋮ 744│+                    "The value of '%s' must not be a ManyToManyField." % label,
+ 746⋮ 745│                     obj=obj.__class__,
+ 747⋮    │-                    id='admin.E108',
+    ⋮ 746│+                    id='admin.E109',
+ 748⋮ 747│                 )
+ 749⋮ 748│             ]
+    ⋮ 749│+        return []
+ 750⋮ 750│ 
+ 751⋮ 751│     def _check_list_display_links(self, obj):
+ 752⋮ 752│         """ Check that list_display_links is a unique subset of list_display.

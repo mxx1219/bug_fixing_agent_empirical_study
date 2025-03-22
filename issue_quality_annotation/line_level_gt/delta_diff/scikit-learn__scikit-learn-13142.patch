@@ -1,0 +1,26 @@
+
+sklearn/mixture/base.py
+
+ 257⋮ 257│                 best_params = self._get_parameters()
+ 258⋮ 258│                 best_n_iter = n_iter
+ 259⋮ 259│ 
+ 260⋮    │-        # Always do a final e-step to guarantee that the labels returned by
+ 261⋮    │-        # fit_predict(X) are always consistent with fit(X).predict(X)
+ 262⋮    │-        # for any value of max_iter and tol (and any random_state).
+ 263⋮    │-        _, log_resp = self._e_step(X)
+ 264⋮    │-
+ 265⋮ 260│         if not self.converged_:
+ 266⋮ 261│             warnings.warn('Initialization %d did not converge. '
+ 267⋮ 262│                           'Try different init parameters, '
+
+ 273⋮ 268│         self.n_iter_ = best_n_iter
+ 274⋮ 269│         self.lower_bound_ = max_lower_bound
+ 275⋮ 270│ 
+    ⋮ 271│+        # Always do a final e-step to guarantee that the labels returned by
+    ⋮ 272│+        # fit_predict(X) are always consistent with fit(X).predict(X)
+    ⋮ 273│+        # for any value of max_iter and tol (and any random_state).
+    ⋮ 274│+        _, log_resp = self._e_step(X)
+    ⋮ 275│+
+ 276⋮ 276│         return log_resp.argmax(axis=1)
+ 277⋮ 277│ 
+ 278⋮ 278│     def _e_step(self, X):

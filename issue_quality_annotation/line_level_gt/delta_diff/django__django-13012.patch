@@ -1,0 +1,12 @@
+
+django/db/models/expressions.py
+
+ 863⋮ 863│     def get_source_expressions(self):
+ 864⋮ 864│         return [self.expression]
+ 865⋮ 865│ 
+    ⋮ 866│+    def get_group_by_cols(self, alias=None):
+    ⋮ 867│+        return self.expression.get_group_by_cols(alias=alias)
+    ⋮ 868│+
+ 866⋮ 869│     def as_sql(self, compiler, connection):
+ 867⋮ 870│         return self.expression.as_sql(compiler, connection)
+ 868⋮ 871│ 

@@ -1,0 +1,29 @@
+
+django/db/models/sql/query.py
+
+ 403⋮ 403│         # Store annotation mask prior to temporarily adding aggregations for
+ 404⋮ 404│         # resolving purpose to facilitate their subsequent removal.
+ 405⋮ 405│         refs_subquery = False
+    ⋮ 406│+        refs_window = False
+ 406⋮ 407│         replacements = {}
+ 407⋮ 408│         annotation_select_mask = self.annotation_select_mask
+ 408⋮ 409│         for alias, aggregate_expr in aggregate_exprs.items():
+
+ 419⋮ 420│                 getattr(self.annotations[ref], "subquery", False)
+ 420⋮ 421│                 for ref in aggregate.get_refs()
+ 421⋮ 422│             )
+    ⋮ 423│+            refs_window |= any(
+    ⋮ 424│+                getattr(self.annotations[ref], "contains_over_clause", True)
+    ⋮ 425│+                for ref in aggregate.get_refs()
+    ⋮ 426│+            )
+ 422⋮ 427│             aggregate = aggregate.replace_expressions(replacements)
+ 423⋮ 428│             self.annotations[alias] = aggregate
+ 424⋮ 429│             replacements[Ref(alias, aggregate)] = aggregate
+
+ 451⋮ 456│             or self.is_sliced
+ 452⋮ 457│             or has_existing_aggregation
+ 453⋮ 458│             or refs_subquery
+    ⋮ 459│+            or refs_window
+ 454⋮ 460│             or qualify
+ 455⋮ 461│             or self.distinct
+ 456⋮ 462│             or self.combinator

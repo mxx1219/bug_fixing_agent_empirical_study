@@ -1,0 +1,458 @@
+[
+    {
+        "type": "functions",
+        "line_range": "50-54"
+    },
+    {
+        "type": "functions",
+        "line_range": "57-62"
+    },
+    {
+        "type": "functions",
+        "line_range": "71-74"
+    },
+    {
+        "type": "functions",
+        "line_range": "2240-2251"
+    },
+    {
+        "type": "functions",
+        "line_range": "2254-2262"
+    },
+    {
+        "type": "functions",
+        "line_range": "2265-2270"
+    },
+    {
+        "type": "methods",
+        "line_range": "80-90"
+    },
+    {
+        "type": "methods",
+        "line_range": "92-93"
+    },
+    {
+        "type": "methods",
+        "line_range": "95-96"
+    },
+    {
+        "type": "methods",
+        "line_range": "98-103"
+    },
+    {
+        "type": "methods",
+        "line_range": "105-115"
+    },
+    {
+        "type": "methods",
+        "line_range": "117-118"
+    },
+    {
+        "type": "methods",
+        "line_range": "120-122"
+    },
+    {
+        "type": "methods",
+        "line_range": "124-125"
+    },
+    {
+        "type": "methods",
+        "line_range": "127-142"
+    },
+    {
+        "type": "methods",
+        "line_range": "153-235"
+    },
+    {
+        "type": "methods",
+        "line_range": "237-242"
+    },
+    {
+        "type": "methods",
+        "line_range": "244-246"
+    },
+    {
+        "type": "methods",
+        "line_range": "248-251"
+    },
+    {
+        "type": "methods",
+        "line_range": "253-262"
+    },
+    {
+        "type": "methods",
+        "line_range": "264-269"
+    },
+    {
+        "type": "methods",
+        "line_range": "271-275"
+    },
+    {
+        "type": "methods",
+        "line_range": "277-282"
+    },
+    {
+        "type": "methods",
+        "line_range": "284-290"
+    },
+    {
+        "type": "methods",
+        "line_range": "292-336"
+    },
+    {
+        "type": "methods",
+        "line_range": "338-351"
+    },
+    {
+        "type": "methods",
+        "line_range": "353-356"
+    },
+    {
+        "type": "methods",
+        "line_range": "358-408"
+    },
+    {
+        "type": "methods",
+        "line_range": "410-503"
+    },
+    {
+        "type": "methods",
+        "line_range": "505-514"
+    },
+    {
+        "type": "methods",
+        "line_range": "516-517"
+    },
+    {
+        "type": "methods",
+        "line_range": "519-529"
+    },
+    {
+        "type": "methods",
+        "line_range": "531-537"
+    },
+    {
+        "type": "methods",
+        "line_range": "539-638"
+    },
+    {
+        "type": "methods",
+        "line_range": "640-724"
+    },
+    {
+        "type": "methods",
+        "line_range": "726-749"
+    },
+    {
+        "type": "methods",
+        "line_range": "751-753"
+    },
+    {
+        "type": "methods",
+        "line_range": "755-757"
+    },
+    {
+        "type": "methods",
+        "line_range": "759-791"
+    },
+    {
+        "type": "methods",
+        "line_range": "793-810"
+    },
+    {
+        "type": "methods",
+        "line_range": "812-819"
+    },
+    {
+        "type": "methods",
+        "line_range": "821-855"
+    },
+    {
+        "type": "methods",
+        "line_range": "857-863,881-904"
+    },
+    {
+        "type": "methods",
+        "line_range": "864-880"
+    },
+    {
+        "type": "methods",
+        "line_range": "906-916"
+    },
+    {
+        "type": "methods",
+        "line_range": "918-924"
+    },
+    {
+        "type": "methods",
+        "line_range": "926-972"
+    },
+    {
+        "type": "methods",
+        "line_range": "974-1005"
+    },
+    {
+        "type": "methods",
+        "line_range": "1007-1012"
+    },
+    {
+        "type": "methods",
+        "line_range": "1014-1040"
+    },
+    {
+        "type": "methods",
+        "line_range": "1042-1046"
+    },
+    {
+        "type": "methods",
+        "line_range": "1048-1072"
+    },
+    {
+        "type": "methods",
+        "line_range": "1074-1090"
+    },
+    {
+        "type": "methods",
+        "line_range": "1092-1101"
+    },
+    {
+        "type": "methods",
+        "line_range": "1103-1121"
+    },
+    {
+        "type": "methods",
+        "line_range": "1123-1132"
+    },
+    {
+        "type": "methods",
+        "line_range": "1134-1177"
+    },
+    {
+        "type": "methods",
+        "line_range": "1179-1197"
+    },
+    {
+        "type": "methods",
+        "line_range": "1199-1326"
+    },
+    {
+        "type": "methods",
+        "line_range": "1328-1329"
+    },
+    {
+        "type": "methods",
+        "line_range": "1331-1346"
+    },
+    {
+        "type": "methods",
+        "line_range": "1348-1349"
+    },
+    {
+        "type": "methods",
+        "line_range": "1351-1377"
+    },
+    {
+        "type": "methods",
+        "line_range": "1379-1399"
+    },
+    {
+        "type": "methods",
+        "line_range": "1401-1412"
+    },
+    {
+        "type": "methods",
+        "line_range": "1414-1508"
+    },
+    {
+        "type": "methods",
+        "line_range": "1510-1547,1550-1571,1582-1610"
+    },
+    {
+        "type": "methods",
+        "line_range": "1548-1549"
+    },
+    {
+        "type": "methods",
+        "line_range": "1572-1581"
+    },
+    {
+        "type": "methods",
+        "line_range": "1612-1638"
+    },
+    {
+        "type": "methods",
+        "line_range": "1640-1646"
+    },
+    {
+        "type": "methods",
+        "line_range": "1648-1683"
+    },
+    {
+        "type": "methods",
+        "line_range": "1685-1754"
+    },
+    {
+        "type": "methods",
+        "line_range": "1756-1757"
+    },
+    {
+        "type": "methods",
+        "line_range": "1759-1760"
+    },
+    {
+        "type": "methods",
+        "line_range": "1762-1783"
+    },
+    {
+        "type": "methods",
+        "line_range": "1785-1787"
+    },
+    {
+        "type": "methods",
+        "line_range": "1789-1791"
+    },
+    {
+        "type": "methods",
+        "line_range": "1793-1794"
+    },
+    {
+        "type": "methods",
+        "line_range": "1796-1802"
+    },
+    {
+        "type": "methods",
+        "line_range": "1804-1810"
+    },
+    {
+        "type": "methods",
+        "line_range": "1812-1819"
+    },
+    {
+        "type": "methods",
+        "line_range": "1821-1823"
+    },
+    {
+        "type": "methods",
+        "line_range": "1825-1827"
+    },
+    {
+        "type": "methods",
+        "line_range": "1829-1834"
+    },
+    {
+        "type": "methods",
+        "line_range": "1836-1872"
+    },
+    {
+        "type": "methods",
+        "line_range": "1874-1897"
+    },
+    {
+        "type": "methods",
+        "line_range": "1899-1907"
+    },
+    {
+        "type": "methods",
+        "line_range": "1909-1934"
+    },
+    {
+        "type": "methods",
+        "line_range": "1936-1950"
+    },
+    {
+        "type": "methods",
+        "line_range": "1952-1982"
+    },
+    {
+        "type": "methods",
+        "line_range": "1984-1986"
+    },
+    {
+        "type": "methods",
+        "line_range": "1988-2006"
+    },
+    {
+        "type": "methods",
+        "line_range": "2008-2030"
+    },
+    {
+        "type": "methods",
+        "line_range": "2032-2049"
+    },
+    {
+        "type": "methods",
+        "line_range": "2051-2053"
+    },
+    {
+        "type": "methods",
+        "line_range": "2055-2061"
+    },
+    {
+        "type": "methods",
+        "line_range": "2063-2065"
+    },
+    {
+        "type": "methods",
+        "line_range": "2067-2076"
+    },
+    {
+        "type": "methods",
+        "line_range": "2078-2111"
+    },
+    {
+        "type": "methods",
+        "line_range": "2113-2130"
+    },
+    {
+        "type": "methods",
+        "line_range": "2132-2145"
+    },
+    {
+        "type": "methods",
+        "line_range": "2147-2219"
+    },
+    {
+        "type": "methods",
+        "line_range": "2221-2237"
+    },
+    {
+        "type": "methods",
+        "line_range": "2279-2292"
+    },
+    {
+        "type": "methods",
+        "line_range": "2294-2299"
+    },
+    {
+        "type": "methods",
+        "line_range": "2301-2355"
+    },
+    {
+        "type": "classes",
+        "line_range": "77-79,91,94,97,104,116,119,123,126"
+    },
+    {
+        "type": "classes",
+        "line_range": "145-152,236,243,247,252,263,270,276,283,291,337,352,357,409,504,515,518,530,538,639,725,750,754,758,792,811,820,856,905,917,925,973,1006,1013,1041,1047,1073,1091,1102,1122,1133,1178,1198,1327,1330,1347,1350,1378,1400,1413,1509,1611,1639,1647,1684,1755,1758,1761,1784,1788,1792,1795,1803,1811,1820,1824,1828,1835,1873,1898,1908,1935,1951,1983,1987,2007,2031,2050,2054,2062,2066,2077,2112,2131,2146,2220"
+    },
+    {
+        "type": "classes",
+        "line_range": "2273-2278,2293,2300"
+    },
+    {
+        "type": "imports",
+        "line_range": "9-45"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "1-8"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "47"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "65-68"
+    }
+]

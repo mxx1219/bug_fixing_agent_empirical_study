@@ -1,0 +1,26 @@
+
+django/contrib/auth/tokens.py
+
+ 78 ⋮ 78 │ 
+ 79 ⋮ 79 │     def _make_hash_value(self, user, timestamp):
+ 80 ⋮ 80 │         """
+ 81 ⋮    │-        Hash the user's primary key and some user state that's sure to change
+ 82 ⋮    │-        after a password reset to produce a token that invalidated when it's
+ 83 ⋮    │-        used:
+    ⋮ 81 │+        Hash the user's primary key, email (if available), and some user state
+    ⋮ 82 │+        that's sure to change after a password reset to produce a token that is
+    ⋮ 83 │+        invalidated when it's used:
+ 84 ⋮ 84 │         1. The password field will change upon a password reset (even if the
+ 85 ⋮ 85 │            same password is chosen, due to password salting).
+ 86 ⋮ 86 │         2. The last_login field will usually be updated very shortly after
+
+ 94 ⋮ 94 │         # Truncate microseconds so that tokens are consistent even if the
+ 95 ⋮ 95 │         # database doesn't support microseconds.
+ 96 ⋮ 96 │         login_timestamp = '' if user.last_login is None else user.last_login.replace(microsecond=0, tzinfo=None)
+ 97 ⋮    │-        return str(user.pk) + user.password + str(login_timestamp) + str(timestamp)
+    ⋮ 97 │+        email_field = user.get_email_field_name()
+    ⋮ 98 │+        email = getattr(user, email_field, '') or ''
+    ⋮ 99 │+        return f'{user.pk}{user.password}{login_timestamp}{timestamp}{email}'
+ 98 ⋮ 100│ 
+ 99 ⋮ 101│     def _num_seconds(self, dt):
+ 100⋮ 102│         return int((dt - datetime(2001, 1, 1)).total_seconds())

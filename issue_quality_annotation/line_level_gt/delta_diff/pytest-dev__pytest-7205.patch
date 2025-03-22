@@ -1,0 +1,17 @@
+
+src/_pytest/setuponly.py
+
+  1 ⋮  1 │ import pytest
+    ⋮  2 │+from _pytest._io.saferepr import saferepr
+  2 ⋮  3 │ 
+  3 ⋮  4 │ 
+  4 ⋮  5 │ def pytest_addoption(parser):
+
+ 66 ⋮ 67 │             tw.write(" (fixtures used: {})".format(", ".join(deps)))
+ 67 ⋮ 68 │ 
+ 68 ⋮ 69 │     if hasattr(fixturedef, "cached_param"):
+ 69 ⋮    │-        tw.write("[{}]".format(fixturedef.cached_param))
+    ⋮ 70 │+        tw.write("[{}]".format(saferepr(fixturedef.cached_param, maxsize=42)))
+ 70 ⋮ 71 │ 
+ 71 ⋮ 72 │     tw.flush()
+ 72 ⋮ 73 │ 

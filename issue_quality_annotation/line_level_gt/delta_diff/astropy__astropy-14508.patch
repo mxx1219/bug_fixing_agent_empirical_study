@@ -1,0 +1,39 @@
+
+astropy/io/fits/card.py
+
+1298⋮1298│ 
+1299⋮1299│ 
+1300⋮1300│ def _format_float(value):
+1301⋮    │-    """Format a floating number to make sure it gets the decimal point."""
+1302⋮    │-    value_str = f"{value:.16G}"
+1303⋮    │-    if "." not in value_str and "E" not in value_str:
+1304⋮    │-        value_str += ".0"
+1305⋮    │-    elif "E" in value_str:
+1306⋮    │-        # On some Windows builds of Python (and possibly other platforms?) the
+1307⋮    │-        # exponent is zero-padded out to, it seems, three digits.  Normalize
+1308⋮    │-        # the format to pad only to two digits.
+1309⋮    │-        significand, exponent = value_str.split("E")
+1310⋮    │-        if exponent[0] in ("+", "-"):
+1311⋮    │-            sign = exponent[0]
+1312⋮    │-            exponent = exponent[1:]
+1313⋮    │-        else:
+1314⋮    │-            sign = ""
+1315⋮    │-        value_str = f"{significand}E{sign}{int(exponent):02d}"
+    ⋮1301│+    """Format a floating number to make sure it is at most 20 characters."""
+    ⋮1302│+    value_str = str(value).replace("e", "E")
+1316⋮1303│ 
+1317⋮1304│     # Limit the value string to at most 20 characters.
+1318⋮    │-    str_len = len(value_str)
+1319⋮    │-
+1320⋮    │-    if str_len > 20:
+    ⋮1305│+    if (str_len := len(value_str)) > 20:
+1321⋮1306│         idx = value_str.find("E")
+1322⋮    │-
+1323⋮1307│         if idx < 0:
+    ⋮1308│+            # No scientific notation, truncate decimal places
+1324⋮1309│             value_str = value_str[:20]
+1325⋮1310│         else:
+    ⋮1311│+            # Scientific notation, truncate significand (mantissa)
+1326⋮1312│             value_str = value_str[: 20 - (str_len - idx)] + value_str[idx:]
+1327⋮1313│ 
+1328⋮1314│     return value_str

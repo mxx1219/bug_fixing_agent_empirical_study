@@ -1,0 +1,19 @@
+
+sphinx/ext/napoleon/__init__.py
+
+ 13 ⋮ 13 │ from sphinx import __display_version__ as __version__
+ 14 ⋮ 14 │ from sphinx.application import Sphinx
+ 15 ⋮ 15 │ from sphinx.ext.napoleon.docstring import GoogleDocstring, NumpyDocstring
+    ⋮ 16 │+from sphinx.util import inspect
+ 16 ⋮ 17 │ 
+ 17 ⋮ 18 │ 
+ 18 ⋮ 19 │ class Config:
+
+ 438⋮ 439│                         mod_path = cls_path.split('.')
+ 439⋮ 440│                         cls = functools.reduce(getattr, mod_path, mod)
+ 440⋮ 441│                     else:
+ 441⋮    │-                        cls = obj.__globals__[cls_path]
+    ⋮ 442│+                        cls = inspect.unwrap(obj).__globals__[cls_path]
+ 442⋮ 443│                 except Exception:
+ 443⋮ 444│                     cls_is_owner = False
+ 444⋮ 445│                 else:

@@ -1,0 +1,40 @@
+
+sympy/utilities/codegen.py
+
+ 695⋮ 695│         arg_list = []
+ 696⋮ 696│ 
+ 697⋮ 697│         # setup input argument list
+    ⋮ 698│+
+    ⋮ 699│+        # helper to get dimensions for data for array-like args
+    ⋮ 700│+        def dimensions(s):
+    ⋮ 701│+            return [(S.Zero, dim - 1) for dim in s.shape]
+    ⋮ 702│+
+ 698⋮ 703│         array_symbols = {}
+ 699⋮ 704│         for array in expressions.atoms(Indexed) | local_expressions.atoms(Indexed):
+ 700⋮ 705│             array_symbols[array.base.label] = array
+
+ 703⋮ 708│ 
+ 704⋮ 709│         for symbol in sorted(symbols, key=str):
+ 705⋮ 710│             if symbol in array_symbols:
+ 706⋮    │-                dims = []
+ 707⋮ 711│                 array = array_symbols[symbol]
+ 708⋮    │-                for dim in array.shape:
+ 709⋮    │-                    dims.append((S.Zero, dim - 1))
+ 710⋮    │-                metadata = {'dimensions': dims}
+    ⋮ 712│+                metadata = {'dimensions': dimensions(array)}
+ 711⋮ 713│             else:
+ 712⋮ 714│                 metadata = {}
+ 713⋮ 715│ 
+
+ 739⋮ 741│                 try:
+ 740⋮ 742│                     new_args.append(name_arg_dict[symbol])
+ 741⋮ 743│                 except KeyError:
+ 742⋮    │-                    new_args.append(InputArgument(symbol))
+    ⋮ 744│+                    if isinstance(symbol, (IndexedBase, MatrixSymbol)):
+    ⋮ 745│+                        metadata = {'dimensions': dimensions(symbol)}
+    ⋮ 746│+                    else:
+    ⋮ 747│+                        metadata = {}
+    ⋮ 748│+                    new_args.append(InputArgument(symbol, **metadata))
+ 743⋮ 749│             arg_list = new_args
+ 744⋮ 750│ 
+ 745⋮ 751│         return Routine(name, arg_list, return_val, local_vars, global_vars)

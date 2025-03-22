@@ -1,0 +1,11 @@
+
+django/contrib/sitemaps/__init__.py
+
+ 167⋮ 167│             return None
+ 168⋮ 168│         if callable(self.lastmod):
+ 169⋮ 169│             try:
+ 170⋮    │-                return max([self.lastmod(item) for item in self.items()])
+    ⋮ 170│+                return max([self.lastmod(item) for item in self.items()], default=None)
+ 171⋮ 171│             except TypeError:
+ 172⋮ 172│                 return None
+ 173⋮ 173│         else:

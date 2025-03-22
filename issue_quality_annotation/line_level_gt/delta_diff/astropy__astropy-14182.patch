@@ -1,0 +1,65 @@
+
+astropy/io/ascii/rst.py
+
+ 27 ⋮ 27 │ 
+ 28 ⋮ 28 │ 
+ 29 ⋮ 29 │ class SimpleRSTData(FixedWidthData):
+ 30 ⋮    │-    start_line = 3
+ 31 ⋮ 30 │     end_line = -1
+ 32 ⋮ 31 │     splitter_class = FixedWidthTwoLineDataSplitter
+ 33 ⋮ 32 │ 
+
+ 39 ⋮ 38 │ 
+ 40 ⋮ 39 │     Example::
+ 41 ⋮ 40 │ 
+ 42 ⋮    │-        ==== ===== ======
+ 43 ⋮    │-        Col1  Col2  Col3
+ 44 ⋮    │-        ==== ===== ======
+ 45 ⋮    │-          1    2.3  Hello
+ 46 ⋮    │-          2    4.5  Worlds
+ 47 ⋮    │-        ==== ===== ======
+    ⋮ 41 │+      >>> from astropy.table import QTable
+    ⋮ 42 │+      >>> import astropy.units as u
+    ⋮ 43 │+      >>> import sys
+    ⋮ 44 │+      >>> tbl = QTable({"wave": [350, 950] * u.nm, "response": [0.7, 1.2] * u.count})
+    ⋮ 45 │+      >>> tbl.write(sys.stdout,  format="ascii.rst")
+    ⋮ 46 │+      ===== ========
+    ⋮ 47 │+       wave response
+    ⋮ 48 │+      ===== ========
+    ⋮ 49 │+      350.0      0.7
+    ⋮ 50 │+      950.0      1.2
+    ⋮ 51 │+      ===== ========
+    ⋮ 52 │+
+    ⋮ 53 │+    Like other fixed-width formats, when writing a table you can provide ``header_rows``
+    ⋮ 54 │+    to specify a list of table rows to output as the header.  For example::
+    ⋮ 55 │+
+    ⋮ 56 │+      >>> tbl.write(sys.stdout,  format="ascii.rst", header_rows=['name', 'unit'])
+    ⋮ 57 │+      ===== ========
+    ⋮ 58 │+       wave response
+    ⋮ 59 │+         nm       ct
+    ⋮ 60 │+      ===== ========
+    ⋮ 61 │+      350.0      0.7
+    ⋮ 62 │+      950.0      1.2
+    ⋮ 63 │+      ===== ========
+ 48 ⋮ 64 │ 
+ 49 ⋮ 65 │     Currently there is no support for reading tables which utilize continuation lines,
+ 50 ⋮ 66 │     or for ones which define column spans through the use of an additional
+
+ 57 ⋮ 73 │     data_class = SimpleRSTData
+ 58 ⋮ 74 │     header_class = SimpleRSTHeader
+ 59 ⋮ 75 │ 
+ 60 ⋮    │-    def __init__(self):
+ 61 ⋮    │-        super().__init__(delimiter_pad=None, bookend=False)
+    ⋮ 76 │+    def __init__(self, header_rows=None):
+    ⋮ 77 │+        super().__init__(delimiter_pad=None, bookend=False, header_rows=header_rows)
+ 62 ⋮ 78 │ 
+ 63 ⋮ 79 │     def write(self, lines):
+ 64 ⋮ 80 │         lines = super().write(lines)
+ 65 ⋮    │-        lines = [lines[1]] + lines + [lines[1]]
+    ⋮ 81 │+        idx = len(self.header.header_rows)
+    ⋮ 82 │+        lines = [lines[idx]] + lines + [lines[idx]]
+ 66 ⋮ 83 │         return lines
+    ⋮ 84 │+
+    ⋮ 85 │+    def read(self, table):
+    ⋮ 86 │+        self.data.start_line = 2 + len(self.header.header_rows)
+    ⋮ 87 │+        return super().read(table)

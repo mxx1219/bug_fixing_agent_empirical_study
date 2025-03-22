@@ -1,0 +1,11 @@
+
+django/forms/models.py
+
+ 83 ⋮ 83 │     for f in chain(opts.concrete_fields, opts.private_fields, opts.many_to_many):
+ 84 ⋮ 84 │         if not getattr(f, 'editable', False):
+ 85 ⋮ 85 │             continue
+ 86 ⋮    │-        if fields and f.name not in fields:
+    ⋮ 86 │+        if fields is not None and f.name not in fields:
+ 87 ⋮ 87 │             continue
+ 88 ⋮ 88 │         if exclude and f.name in exclude:
+ 89 ⋮ 89 │             continue

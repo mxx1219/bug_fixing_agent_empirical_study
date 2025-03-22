@@ -1,0 +1,34 @@
+
+astropy/units/quantity.py
+
+ 215⋮ 215│     dtype : ~numpy.dtype, optional
+ 216⋮ 216│         The dtype of the resulting Numpy array or scalar that will
+ 217⋮ 217│         hold the value.  If not provided, it is determined from the input,
+ 218⋮    │-        except that any input that cannot represent float (integer and bool)
+ 219⋮    │-        is converted to float.
+    ⋮ 218│+        except that any integer and (non-Quantity) object inputs are converted
+    ⋮ 219│+        to float by default.
+ 220⋮ 220│ 
+ 221⋮ 221│     copy : bool, optional
+ 222⋮ 222│         If `True` (default), then the value is copied.  Otherwise, a copy will
+
+ 296⋮ 296│                 if not copy:
+ 297⋮ 297│                     return value
+ 298⋮ 298│ 
+ 299⋮    │-                if not (np.can_cast(np.float32, value.dtype) or
+ 300⋮    │-                        value.dtype.fields):
+    ⋮ 299│+                if value.dtype.kind in 'iu':
+ 301⋮ 300│                     dtype = float
+ 302⋮ 301│ 
+ 303⋮ 302│             return np.array(value, dtype=dtype, copy=copy, order=order,
+
+ 377⋮ 376│                             "Numpy numeric type.")
+ 378⋮ 377│ 
+ 379⋮ 378│         # by default, cast any integer, boolean, etc., to float
+ 380⋮    │-        if dtype is None and (not (np.can_cast(np.float32, value.dtype)
+ 381⋮    │-                                   or value.dtype.fields)
+ 382⋮    │-                              or value.dtype.kind == 'O'):
+    ⋮ 379│+        if dtype is None and value.dtype.kind in 'iuO':
+ 383⋮ 380│             value = value.astype(float)
+ 384⋮ 381│ 
+ 385⋮ 382│         value = value.view(cls)

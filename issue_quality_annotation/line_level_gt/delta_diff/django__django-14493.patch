@@ -1,0 +1,10 @@
+
+django/contrib/staticfiles/storage.py
+
+ 260⋮ 260│                 processed_adjustable_paths[name] = (name, hashed_name, processed)
+ 261⋮ 261│ 
+ 262⋮ 262│         paths = {path: paths[path] for path in adjustable_paths}
+    ⋮ 263│+        substitutions = False
+ 263⋮ 264│ 
+ 264⋮ 265│         for i in range(self.max_post_process_passes):
+ 265⋮ 266│             substitutions = False

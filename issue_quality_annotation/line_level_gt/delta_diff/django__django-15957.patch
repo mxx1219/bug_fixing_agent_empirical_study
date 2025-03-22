@@ -1,0 +1,63 @@
+
+django/db/models/fields/related_descriptors.py
+
+ 64 ⋮ 64 │ """
+ 65 ⋮ 65 │ 
+ 66 ⋮ 66 │ from django.core.exceptions import FieldError
+ 67 ⋮    │-from django.db import connections, router, transaction
+ 68 ⋮    │-from django.db.models import Q, signals
+    ⋮ 67 │+from django.db import DEFAULT_DB_ALIAS, connections, router, transaction
+    ⋮ 68 │+from django.db.models import Q, Window, signals
+    ⋮ 69 │+from django.db.models.functions import RowNumber
+    ⋮ 70 │+from django.db.models.lookups import GreaterThan, LessThanOrEqual
+ 69 ⋮ 71 │ from django.db.models.query import QuerySet
+ 70 ⋮ 72 │ from django.db.models.query_utils import DeferredAttribute
+ 71 ⋮ 73 │ from django.db.models.utils import resolve_callables
+
+ 81 ⋮ 83 │         instance.__dict__[self.field.attname] = value
+ 82 ⋮ 84 │ 
+ 83 ⋮ 85 │ 
+    ⋮ 86 │+def _filter_prefetch_queryset(queryset, field_name, instances):
+    ⋮ 87 │+    predicate = Q(**{f"{field_name}__in": instances})
+    ⋮ 88 │+    if queryset.query.is_sliced:
+    ⋮ 89 │+        low_mark, high_mark = queryset.query.low_mark, queryset.query.high_mark
+    ⋮ 90 │+        order_by = [
+    ⋮ 91 │+            expr
+    ⋮ 92 │+            for expr, _ in queryset.query.get_compiler(
+    ⋮ 93 │+                using=queryset._db or DEFAULT_DB_ALIAS
+    ⋮ 94 │+            ).get_order_by()
+    ⋮ 95 │+        ]
+    ⋮ 96 │+        window = Window(RowNumber(), partition_by=field_name, order_by=order_by)
+    ⋮ 97 │+        predicate &= GreaterThan(window, low_mark)
+    ⋮ 98 │+        if high_mark is not None:
+    ⋮ 99 │+            predicate &= LessThanOrEqual(window, high_mark)
+    ⋮ 100│+        queryset.query.clear_limits()
+    ⋮ 101│+    return queryset.filter(predicate)
+    ⋮ 102│+
+    ⋮ 103│+
+ 84 ⋮ 104│ class ForwardManyToOneDescriptor:
+ 85 ⋮ 105│     """
+ 86 ⋮ 106│     Accessor to the related object on the forward side of a many-to-one or
+
+ 718⋮ 738│             rel_obj_attr = self.field.get_local_related_value
+ 719⋮ 739│             instance_attr = self.field.get_foreign_related_value
+ 720⋮ 740│             instances_dict = {instance_attr(inst): inst for inst in instances}
+ 721⋮    │-            query = {"%s__in" % self.field.name: instances}
+ 722⋮    │-            queryset = queryset.filter(**query)
+    ⋮ 741│+            queryset = _filter_prefetch_queryset(queryset, self.field.name, instances)
+ 723⋮ 742│ 
+ 724⋮ 743│             # Since we just bypassed this class' get_queryset(), we must manage
+ 725⋮ 744│             # the reverse relation manually.
+
+1050⋮1069│ 
+1051⋮1070│             queryset._add_hints(instance=instances[0])
+1052⋮1071│             queryset = queryset.using(queryset._db or self._db)
+1053⋮    │-
+1054⋮    │-            query = {"%s__in" % self.query_field_name: instances}
+1055⋮    │-            queryset = queryset._next_is_sticky().filter(**query)
+    ⋮1072│+            queryset = _filter_prefetch_queryset(
+    ⋮1073│+                queryset._next_is_sticky(), self.query_field_name, instances
+    ⋮1074│+            )
+1056⋮1075│ 
+1057⋮1076│             # M2M: need to annotate the query in order to get the primary model
+1058⋮1077│             # that the secondary model was actually related to. We know that

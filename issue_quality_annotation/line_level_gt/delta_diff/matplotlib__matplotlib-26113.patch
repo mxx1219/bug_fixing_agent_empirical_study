@@ -1,0 +1,11 @@
+
+lib/matplotlib/axes/_axes.py
+
+5014⋮5014│             if mincnt is None:
+5015⋮5015│                 mincnt = 0
+5016⋮5016│             accum = np.array(
+5017⋮    │-                [reduce_C_function(acc) if len(acc) > mincnt else np.nan
+    ⋮5017│+                [reduce_C_function(acc) if len(acc) >= mincnt else np.nan
+5018⋮5018│                  for Cs_at_i in [Cs_at_i1, Cs_at_i2]
+5019⋮5019│                  for acc in Cs_at_i[1:]],  # [1:] drops out-of-range points.
+5020⋮5020│                 float)

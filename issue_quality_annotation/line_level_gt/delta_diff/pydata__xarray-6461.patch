@@ -1,0 +1,15 @@
+
+xarray/core/computation.py
+
+1825⋮1825│     """
+1826⋮1826│     if keep_attrs is None:
+1827⋮1827│         keep_attrs = _get_keep_attrs(default=False)
+1828⋮    │-
+1829⋮1828│     if keep_attrs is True:
+1830⋮1829│         # keep the attributes of x, the second parameter, by default to
+1831⋮1830│         # be consistent with the `where` method of `DataArray` and `Dataset`
+1832⋮    │-        keep_attrs = lambda attrs, context: attrs[1]
+    ⋮1831│+        keep_attrs = lambda attrs, context: getattr(x, "attrs", {})
+1833⋮1832│ 
+1834⋮1833│     # alignment for three arguments is complicated, so don't support it yet
+1835⋮1834│     return apply_ufunc(

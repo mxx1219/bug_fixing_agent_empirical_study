@@ -1,0 +1,61 @@
+
+django/contrib/admin/filters.py
+
+ 193⋮ 193│     def expected_parameters(self):
+ 194⋮ 194│         return [self.lookup_kwarg, self.lookup_kwarg_isnull]
+ 195⋮ 195│ 
+ 196⋮    │-    def field_choices(self, field, request, model_admin):
+ 197⋮    │-        ordering = ()
+    ⋮ 196│+    def field_admin_ordering(self, field, request, model_admin):
+    ⋮ 197│+        """
+    ⋮ 198│+        Return the model admin's ordering for related field, if provided.
+    ⋮ 199│+        """
+ 198⋮ 200│         related_admin = model_admin.admin_site._registry.get(field.remote_field.model)
+ 199⋮ 201│         if related_admin is not None:
+ 200⋮    │-            ordering = related_admin.get_ordering(request)
+    ⋮ 202│+            return related_admin.get_ordering(request)
+    ⋮ 203│+        return ()
+    ⋮ 204│+
+    ⋮ 205│+    def field_choices(self, field, request, model_admin):
+    ⋮ 206│+        ordering = self.field_admin_ordering(field, request, model_admin)
+ 201⋮ 207│         return field.get_choices(include_blank=False, ordering=ordering)
+ 202⋮ 208│ 
+ 203⋮ 209│     def choices(self, changelist):
+
+ 419⋮ 425│ class RelatedOnlyFieldListFilter(RelatedFieldListFilter):
+ 420⋮ 426│     def field_choices(self, field, request, model_admin):
+ 421⋮ 427│         pk_qs = model_admin.get_queryset(request).distinct().values_list('%s__pk' % self.field_path, flat=True)
+ 422⋮    │-        return field.get_choices(include_blank=False, limit_choices_to={'pk__in': pk_qs})
+    ⋮ 428│+        ordering = self.field_admin_ordering(field, request, model_admin)
+    ⋮ 429│+        return field.get_choices(include_blank=False, limit_choices_to={'pk__in': pk_qs}, ordering=ordering)
+
+django/db/models/fields/__init__.py
+
+ 825⋮ 825│             if hasattr(self.remote_field, 'get_related_field')
+ 826⋮ 826│             else 'pk'
+ 827⋮ 827│         )
+    ⋮ 828│+        qs = rel_model._default_manager.complex_filter(limit_choices_to)
+    ⋮ 829│+        if ordering:
+    ⋮ 830│+            qs = qs.order_by(*ordering)
+ 828⋮ 831│         return (blank_choice if include_blank else []) + [
+ 829⋮    │-            (choice_func(x), str(x))
+ 830⋮    │-            for x in rel_model._default_manager.complex_filter(limit_choices_to).order_by(*ordering)
+    ⋮ 832│+            (choice_func(x), str(x)) for x in qs
+ 831⋮ 833│         ]
+ 832⋮ 834│ 
+ 833⋮ 835│     def value_to_string(self, obj):
+
+django/db/models/fields/reverse_related.py
+
+ 122⋮ 122│         Analog of django.db.models.fields.Field.get_choices(), provided
+ 123⋮ 123│         initially for utilization by RelatedFieldListFilter.
+ 124⋮ 124│         """
+    ⋮ 125│+        qs = self.related_model._default_manager.all()
+    ⋮ 126│+        if ordering:
+    ⋮ 127│+            qs = qs.order_by(*ordering)
+ 125⋮ 128│         return (blank_choice if include_blank else []) + [
+ 126⋮    │-            (x.pk, str(x)) for x in self.related_model._default_manager.order_by(*ordering)
+    ⋮ 129│+            (x.pk, str(x)) for x in qs
+ 127⋮ 130│         ]
+ 128⋮ 131│ 
+ 129⋮ 132│     def is_hidden(self):

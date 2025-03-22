@@ -1,0 +1,12 @@
+
+django/http/response.py
+
+ 609⋮ 609│                 # Encoding isn't set to prevent browsers from automatically
+ 610⋮ 610│                 # uncompressing files.
+ 611⋮ 611│                 content_type = {
+    ⋮ 612│+                    "br": "application/x-brotli",
+ 612⋮ 613│                     "bzip2": "application/x-bzip",
+    ⋮ 614│+                    "compress": "application/x-compress",
+ 613⋮ 615│                     "gzip": "application/gzip",
+ 614⋮ 616│                     "xz": "application/x-xz",
+ 615⋮ 617│                 }.get(encoding, content_type)

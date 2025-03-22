@@ -1,0 +1,53 @@
+
+src/_pytest/python.py
+
+ 251⋮ 251│     @property
+ 252⋮ 252│     def obj(self):
+ 253⋮ 253│         """Underlying Python object."""
+ 254⋮    │-        self._mount_obj_if_needed()
+ 255⋮    │-        return self._obj
+ 256⋮    │-
+ 257⋮    │-    @obj.setter
+ 258⋮    │-    def obj(self, value):
+ 259⋮    │-        self._obj = value
+ 260⋮    │-
+ 261⋮    │-    def _mount_obj_if_needed(self):
+ 262⋮ 254│         obj = getattr(self, "_obj", None)
+ 263⋮ 255│         if obj is None:
+ 264⋮ 256│             self._obj = obj = self._getobj()
+ 265⋮ 257│             # XXX evil hack
+ 266⋮ 258│             # used to avoid Instance collector marker duplication
+ 267⋮ 259│             if self._ALLOW_MARKERS:
+ 268⋮    │-                self.own_markers.extend(get_unpacked_marks(obj))
+    ⋮ 260│+                self.own_markers.extend(get_unpacked_marks(self.obj))
+    ⋮ 261│+        return obj
+    ⋮ 262│+
+    ⋮ 263│+    @obj.setter
+    ⋮ 264│+    def obj(self, value):
+    ⋮ 265│+        self._obj = value
+ 269⋮ 266│ 
+ 270⋮ 267│     def _getobj(self):
+ 271⋮ 268│         """Gets the underlying Python object. May be overwritten by subclasses."""
+
+ 432⋮ 429│ class Module(nodes.File, PyCollector):
+ 433⋮ 430│     """ Collector for test classes and functions. """
+ 434⋮ 431│ 
+ 435⋮    │-    def __init__(self, fspath, parent=None, config=None, session=None, nodeid=None):
+ 436⋮    │-        if fspath.basename == "__init__.py":
+ 437⋮    │-            self._ALLOW_MARKERS = False
+ 438⋮    │-
+ 439⋮    │-        nodes.FSCollector.__init__(
+ 440⋮    │-            self, fspath, parent=parent, config=config, session=session, nodeid=nodeid
+ 441⋮    │-        )
+ 442⋮    │-
+ 443⋮ 432│     def _getobj(self):
+ 444⋮ 433│         return self._importtestmodule()
+ 445⋮ 434│ 
+
+ 639⋮ 628│         return path in self.session._initialpaths
+ 640⋮ 629│ 
+ 641⋮ 630│     def collect(self):
+ 642⋮    │-        self._mount_obj_if_needed()
+ 643⋮ 631│         this_path = self.fspath.dirpath()
+ 644⋮ 632│         init_module = this_path.join("__init__.py")
+ 645⋮ 633│         if init_module.check(file=1) and path_matches_patterns(

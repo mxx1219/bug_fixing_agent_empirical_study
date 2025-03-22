@@ -1,0 +1,11 @@
+
+django/db/models/query.py
+
+ 210⋮ 210│ 
+ 211⋮ 211│     @query.setter
+ 212⋮ 212│     def query(self, value):
+    ⋮ 213│+        if value.values_select:
+    ⋮ 214│+            self._iterable_class = ValuesIterable
+ 213⋮ 215│         self._query = value
+ 214⋮ 216│ 
+ 215⋮ 217│     def as_manager(cls):

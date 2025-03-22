@@ -1,0 +1,17 @@
+
+sympy/combinatorics/permutations.py
+
+ 895⋮ 895│         # counting starts from 1.
+ 896⋮ 896│ 
+ 897⋮ 897│         temp = flatten(args)
+ 898⋮    │-        if has_dups(temp):
+ 899⋮    │-            if is_cycle:
+ 900⋮    │-                raise ValueError('there were repeated elements; to resolve '
+ 901⋮    │-                'cycles use Cycle%s.' % ''.join([str(tuple(c)) for c in args]))
+ 902⋮    │-            else:
+ 903⋮    │-                raise ValueError('there were repeated elements.')
+    ⋮ 898│+        if has_dups(temp) and not is_cycle:
+    ⋮ 899│+            raise ValueError('there were repeated elements.')
+ 904⋮ 900│         temp = set(temp)
+ 905⋮ 901│ 
+ 906⋮ 902│         if not is_cycle and \

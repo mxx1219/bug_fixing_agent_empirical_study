@@ -1,0 +1,43 @@
+
+django/db/models/fields/__init__.py
+
+ 516⋮ 516│     def __eq__(self, other):
+ 517⋮ 517│         # Needed for @total_ordering
+ 518⋮ 518│         if isinstance(other, Field):
+ 519⋮    │-            return self.creation_counter == other.creation_counter
+    ⋮ 519│+            return (
+    ⋮ 520│+                self.creation_counter == other.creation_counter and
+    ⋮ 521│+                getattr(self, 'model', None) == getattr(other, 'model', None)
+    ⋮ 522│+            )
+ 520⋮ 523│         return NotImplemented
+ 521⋮ 524│ 
+ 522⋮ 525│     def __lt__(self, other):
+ 523⋮ 526│         # This is needed because bisect does not take a comparison function.
+    ⋮ 527│+        # Order by creation_counter first for backward compatibility.
+ 524⋮ 528│         if isinstance(other, Field):
+ 525⋮    │-            return self.creation_counter < other.creation_counter
+    ⋮ 529│+            if (
+    ⋮ 530│+                self.creation_counter != other.creation_counter or
+    ⋮ 531│+                not hasattr(self, 'model') and not hasattr(other, 'model')
+    ⋮ 532│+            ):
+    ⋮ 533│+                return self.creation_counter < other.creation_counter
+    ⋮ 534│+            elif hasattr(self, 'model') != hasattr(other, 'model'):
+    ⋮ 535│+                return not hasattr(self, 'model')  # Order no-model fields first
+    ⋮ 536│+            else:
+    ⋮ 537│+                # creation_counter's are equal, compare only models.
+    ⋮ 538│+                return (
+    ⋮ 539│+                    (self.model._meta.app_label, self.model._meta.model_name) <
+    ⋮ 540│+                    (other.model._meta.app_label, other.model._meta.model_name)
+    ⋮ 541│+                )
+ 526⋮ 542│         return NotImplemented
+ 527⋮ 543│ 
+ 528⋮ 544│     def __hash__(self):
+ 529⋮    │-        return hash(self.creation_counter)
+    ⋮ 545│+        return hash((
+    ⋮ 546│+            self.creation_counter,
+    ⋮ 547│+            self.model._meta.app_label if hasattr(self, 'model') else None,
+    ⋮ 548│+            self.model._meta.model_name if hasattr(self, 'model') else None,
+    ⋮ 549│+        ))
+ 530⋮ 550│ 
+ 531⋮ 551│     def __deepcopy__(self, memodict):
+ 532⋮ 552│         # We don't have to deepcopy very much here, since most things are not

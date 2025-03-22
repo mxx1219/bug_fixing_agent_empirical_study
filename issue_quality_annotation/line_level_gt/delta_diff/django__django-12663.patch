@@ -1,0 +1,12 @@
+
+django/db/models/sql/query.py
+
+ 233⋮ 233│     @property
+ 234⋮ 234│     def output_field(self):
+ 235⋮ 235│         if len(self.select) == 1:
+ 236⋮    │-            return self.select[0].field
+    ⋮ 236│+            select = self.select[0]
+    ⋮ 237│+            return getattr(select, 'target', None) or select.field
+ 237⋮ 238│         elif len(self.annotation_select) == 1:
+ 238⋮ 239│             return next(iter(self.annotation_select.values())).output_field
+ 239⋮ 240│ 

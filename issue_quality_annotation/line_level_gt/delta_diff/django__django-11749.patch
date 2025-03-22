@@ -1,0 +1,23 @@
+
+django/core/management/__init__.py
+
+ 130⋮ 130│                 yield opt
+ 131⋮ 131│ 
+ 132⋮ 132│     parser_actions = list(get_actions(parser))
+    ⋮ 133│+    mutually_exclusive_required_options = {
+    ⋮ 134│+        opt
+    ⋮ 135│+        for group in parser._mutually_exclusive_groups
+    ⋮ 136│+        for opt in group._group_actions if group.required
+    ⋮ 137│+    }
+ 133⋮ 138│     # Any required arguments which are passed in via **options must be passed
+ 134⋮ 139│     # to parse_args().
+ 135⋮ 140│     parse_args += [
+ 136⋮ 141│         '{}={}'.format(min(opt.option_strings), arg_options[opt.dest])
+ 137⋮    │-        for opt in parser_actions if opt.required and opt.dest in options
+    ⋮ 142│+        for opt in parser_actions if (
+    ⋮ 143│+            opt.dest in options and
+    ⋮ 144│+            (opt.required or opt in mutually_exclusive_required_options)
+    ⋮ 145│+        )
+ 138⋮ 146│     ]
+ 139⋮ 147│     defaults = parser.parse_args(args=parse_args)
+ 140⋮ 148│     defaults = dict(defaults._get_kwargs(), **arg_options)

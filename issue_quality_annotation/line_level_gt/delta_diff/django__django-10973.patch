@@ -1,0 +1,63 @@
+
+django/db/backends/postgresql/client.py
+
+  2 ⋮  2 │ import signal
+  3 ⋮  3 │ import subprocess
+  4 ⋮  4 │ 
+  5 ⋮    │-from django.core.files.temp import NamedTemporaryFile
+  6 ⋮  5 │ from django.db.backends.base.client import BaseDatabaseClient
+  7 ⋮  6 │ 
+  8 ⋮  7 │ 
+  9 ⋮    │-def _escape_pgpass(txt):
+ 10 ⋮    │-    """
+ 11 ⋮    │-    Escape a fragment of a PostgreSQL .pgpass file.
+ 12 ⋮    │-    """
+ 13 ⋮    │-    return txt.replace('\\', '\\\\').replace(':', '\\:')
+ 14 ⋮    │-
+ 15 ⋮    │-
+ 16 ⋮  8 │ class DatabaseClient(BaseDatabaseClient):
+ 17 ⋮  9 │     executable_name = 'psql'
+ 18 ⋮ 10 │ 
+
+ 34 ⋮ 26 │             args += ['-p', str(port)]
+ 35 ⋮ 27 │         args += [dbname]
+ 36 ⋮ 28 │ 
+ 37 ⋮    │-        temp_pgpass = None
+ 38 ⋮ 29 │         sigint_handler = signal.getsignal(signal.SIGINT)
+    ⋮ 30 │+        subprocess_env = os.environ.copy()
+    ⋮ 31 │+        if passwd:
+    ⋮ 32 │+            subprocess_env['PGPASSWORD'] = str(passwd)
+ 39 ⋮ 33 │         try:
+ 40 ⋮    │-            if passwd:
+ 41 ⋮    │-                # Create temporary .pgpass file.
+ 42 ⋮    │-                temp_pgpass = NamedTemporaryFile(mode='w+')
+ 43 ⋮    │-                try:
+ 44 ⋮    │-                    print(
+ 45 ⋮    │-                        _escape_pgpass(host) or '*',
+ 46 ⋮    │-                        str(port) or '*',
+ 47 ⋮    │-                        _escape_pgpass(dbname) or '*',
+ 48 ⋮    │-                        _escape_pgpass(user) or '*',
+ 49 ⋮    │-                        _escape_pgpass(passwd),
+ 50 ⋮    │-                        file=temp_pgpass,
+ 51 ⋮    │-                        sep=':',
+ 52 ⋮    │-                        flush=True,
+ 53 ⋮    │-                    )
+ 54 ⋮    │-                    os.environ['PGPASSFILE'] = temp_pgpass.name
+ 55 ⋮    │-                except UnicodeEncodeError:
+ 56 ⋮    │-                    # If the current locale can't encode the data, let the
+ 57 ⋮    │-                    # user input the password manually.
+ 58 ⋮    │-                    pass
+ 59 ⋮ 34 │             # Allow SIGINT to pass to psql to abort queries.
+ 60 ⋮ 35 │             signal.signal(signal.SIGINT, signal.SIG_IGN)
+ 61 ⋮    │-            subprocess.check_call(args)
+    ⋮ 36 │+            subprocess.run(args, check=True, env=subprocess_env)
+ 62 ⋮ 37 │         finally:
+ 63 ⋮ 38 │             # Restore the original SIGINT handler.
+ 64 ⋮ 39 │             signal.signal(signal.SIGINT, sigint_handler)
+ 65 ⋮    │-            if temp_pgpass:
+ 66 ⋮    │-                temp_pgpass.close()
+ 67 ⋮    │-                if 'PGPASSFILE' in os.environ:  # unit tests need cleanup
+ 68 ⋮    │-                    del os.environ['PGPASSFILE']
+ 69 ⋮ 40 │ 
+ 70 ⋮ 41 │     def runshell(self):
+ 71 ⋮ 42 │         DatabaseClient.runshell_db(self.connection.get_connection_params())

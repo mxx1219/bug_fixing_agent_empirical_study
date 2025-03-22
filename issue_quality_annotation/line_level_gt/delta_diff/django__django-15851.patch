@@ -1,0 +1,13 @@
+
+django/db/backends/postgresql/client.py
+
+ 32 ⋮ 32 │             args += ["-h", host]
+ 33 ⋮ 33 │         if port:
+ 34 ⋮ 34 │             args += ["-p", str(port)]
+    ⋮ 35 │+        args.extend(parameters)
+ 35 ⋮ 36 │         if dbname:
+ 36 ⋮ 37 │             args += [dbname]
+ 37 ⋮    │-        args.extend(parameters)
+ 38 ⋮ 38 │ 
+ 39 ⋮ 39 │         env = {}
+ 40 ⋮ 40 │         if passwd:

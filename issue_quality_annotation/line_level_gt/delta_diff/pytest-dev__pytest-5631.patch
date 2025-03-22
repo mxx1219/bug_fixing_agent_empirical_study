@@ -1,0 +1,28 @@
+
+src/_pytest/compat.py
+
+ 64 ⋮ 64 │     patchings = getattr(function, "patchings", None)
+ 65 ⋮ 65 │     if not patchings:
+ 66 ⋮ 66 │         return 0
+ 67 ⋮    │-    mock_modules = [sys.modules.get("mock"), sys.modules.get("unittest.mock")]
+ 68 ⋮    │-    if any(mock_modules):
+ 69 ⋮    │-        sentinels = [m.DEFAULT for m in mock_modules if m is not None]
+ 70 ⋮    │-        return len(
+ 71 ⋮    │-            [p for p in patchings if not p.attribute_name and p.new in sentinels]
+ 72 ⋮    │-        )
+ 73 ⋮    │-    return len(patchings)
+    ⋮ 67 │+
+    ⋮ 68 │+    mock_sentinel = getattr(sys.modules.get("mock"), "DEFAULT", object())
+    ⋮ 69 │+    ut_mock_sentinel = getattr(sys.modules.get("unittest.mock"), "DEFAULT", object())
+    ⋮ 70 │+
+    ⋮ 71 │+    return len(
+    ⋮ 72 │+        [
+    ⋮ 73 │+            p
+    ⋮ 74 │+            for p in patchings
+    ⋮ 75 │+            if not p.attribute_name
+    ⋮ 76 │+            and (p.new is mock_sentinel or p.new is ut_mock_sentinel)
+    ⋮ 77 │+        ]
+    ⋮ 78 │+    )
+ 74 ⋮ 79 │ 
+ 75 ⋮ 80 │ 
+ 76 ⋮ 81 │ def getfuncargnames(function, is_method=False, cls=None):

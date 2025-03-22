@@ -1,0 +1,43 @@
+
+xarray/core/computation.py
+
+1727⋮1727│     return result.transpose(*all_dims, missing_dims="ignore")
+1728⋮1728│ 
+1729⋮1729│ 
+1730⋮    │-def where(cond, x, y):
+    ⋮1730│+def where(cond, x, y, keep_attrs=None):
+1731⋮1731│     """Return elements from `x` or `y` depending on `cond`.
+1732⋮1732│ 
+1733⋮1733│     Performs xarray-like broadcasting across input arguments.
+
+1743⋮1743│         values to choose from where `cond` is True
+1744⋮1744│     y : scalar, array, Variable, DataArray or Dataset
+1745⋮1745│         values to choose from where `cond` is False
+    ⋮1746│+    keep_attrs : bool or str or callable, optional
+    ⋮1747│+        How to treat attrs. If True, keep the attrs of `x`.
+1746⋮1748│ 
+1747⋮1749│     Returns
+1748⋮1750│     -------
+
+1808⋮1810│     Dataset.where, DataArray.where :
+1809⋮1811│         equivalent methods
+1810⋮1812│     """
+    ⋮1813│+    if keep_attrs is None:
+    ⋮1814│+        keep_attrs = _get_keep_attrs(default=False)
+    ⋮1815│+
+    ⋮1816│+    if keep_attrs is True:
+    ⋮1817│+        # keep the attributes of x, the second parameter, by default to
+    ⋮1818│+        # be consistent with the `where` method of `DataArray` and `Dataset`
+    ⋮1819│+        keep_attrs = lambda attrs, context: attrs[1]
+    ⋮1820│+
+1811⋮1821│     # alignment for three arguments is complicated, so don't support it yet
+1812⋮1822│     return apply_ufunc(
+1813⋮1823│         duck_array_ops.where,
+
+1817⋮1827│         join="exact",
+1818⋮1828│         dataset_join="exact",
+1819⋮1829│         dask="allowed",
+    ⋮1830│+        keep_attrs=keep_attrs,
+1820⋮1831│     )
+1821⋮1832│ 
+1822⋮1833│ 

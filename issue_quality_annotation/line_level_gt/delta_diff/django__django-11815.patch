@@ -1,0 +1,16 @@
+
+django/db/migrations/serializer.py
+
+ 120⋮ 120│     def serialize(self):
+ 121⋮ 121│         enum_class = self.value.__class__
+ 122⋮ 122│         module = enum_class.__module__
+ 123⋮    │-        v_string, v_imports = serializer_factory(self.value.value).serialize()
+ 124⋮    │-        imports = {'import %s' % module, *v_imports}
+ 125⋮    │-        return "%s.%s(%s)" % (module, enum_class.__name__, v_string), imports
+    ⋮ 123│+        return (
+    ⋮ 124│+            '%s.%s[%r]' % (module, enum_class.__name__, self.value.name),
+    ⋮ 125│+            {'import %s' % module},
+    ⋮ 126│+        )
+ 126⋮ 127│ 
+ 127⋮ 128│ 
+ 128⋮ 129│ class FloatSerializer(BaseSimpleSerializer):

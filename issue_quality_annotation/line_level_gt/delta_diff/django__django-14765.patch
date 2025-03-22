@@ -1,0 +1,17 @@
+
+django/db/migrations/state.py
+
+ 91 ⋮ 91 │     def __init__(self, models=None, real_apps=None):
+ 92 ⋮ 92 │         self.models = models or {}
+ 93 ⋮ 93 │         # Apps to include from main registry, usually unmigrated ones
+ 94 ⋮    │-        if real_apps:
+ 95 ⋮    │-            self.real_apps = real_apps if isinstance(real_apps, set) else set(real_apps)
+    ⋮ 94 │+        if real_apps is None:
+    ⋮ 95 │+            real_apps = set()
+ 96 ⋮ 96 │         else:
+ 97 ⋮    │-            self.real_apps = set()
+    ⋮ 97 │+            assert isinstance(real_apps, set)
+    ⋮ 98 │+        self.real_apps = real_apps
+ 98 ⋮ 99 │         self.is_delayed = False
+ 99 ⋮ 100│         # {remote_model_key: {model_key: [(field_name, field)]}}
+ 100⋮ 101│         self.relations = None

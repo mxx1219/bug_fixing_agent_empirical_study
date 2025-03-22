@@ -1,0 +1,30 @@
+
+django/db/backends/ddl_references.py
+
+ 83 ⋮ 83 │ 
+ 84 ⋮ 84 │     def __str__(self):
+ 85 ⋮ 85 │         def col_str(column, idx):
+    ⋮ 86 │+            col = self.quote_name(column)
+ 86 ⋮ 87 │             try:
+ 87 ⋮    │-                return self.quote_name(column) + self.col_suffixes[idx]
+    ⋮ 88 │+                suffix = self.col_suffixes[idx]
+    ⋮ 89 │+                if suffix:
+    ⋮ 90 │+                    col = '{} {}'.format(col, suffix)
+ 88 ⋮ 91 │             except IndexError:
+ 89 ⋮    │-                return self.quote_name(column)
+    ⋮ 92 │+                pass
+    ⋮ 93 │+            return col
+ 90 ⋮ 94 │ 
+ 91 ⋮ 95 │         return ', '.join(col_str(column, idx) for idx, column in enumerate(self.columns))
+ 92 ⋮ 96 │ 
+
+ 114⋮ 118│             # length as self.columns.
+ 115⋮ 119│             col = '{} {}'.format(self.quote_name(column), self.opclasses[idx])
+ 116⋮ 120│             try:
+ 117⋮    │-                col = '{} {}'.format(col, self.col_suffixes[idx])
+    ⋮ 121│+                suffix = self.col_suffixes[idx]
+    ⋮ 122│+                if suffix:
+    ⋮ 123│+                    col = '{} {}'.format(col, suffix)
+ 118⋮ 124│             except IndexError:
+ 119⋮ 125│                 pass
+ 120⋮ 126│             return col

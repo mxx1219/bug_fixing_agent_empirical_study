@@ -1,0 +1,11 @@
+
+django/utils/decorators.py
+
+ 37 ⋮ 37 │         # 'self' argument, but it's a closure over self so it can call
+ 38 ⋮ 38 │         # 'func'. Also, wrap method.__get__() in a function because new
+ 39 ⋮ 39 │         # attributes can't be set on bound method objects, only on functions.
+ 40 ⋮    │-        bound_method = partial(method.__get__(self, type(self)))
+    ⋮ 40 │+        bound_method = wraps(method)(partial(method.__get__(self, type(self))))
+ 41 ⋮ 41 │         for dec in decorators:
+ 42 ⋮ 42 │             bound_method = dec(bound_method)
+ 43 ⋮ 43 │         return bound_method(*args, **kwargs)

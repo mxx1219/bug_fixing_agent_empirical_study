@@ -1,0 +1,25 @@
+
+django/core/handlers/base.py
+
+ 51 ⋮ 51 │                 middleware_is_async = middleware_can_async
+ 52 ⋮ 52 │             try:
+ 53 ⋮ 53 │                 # Adapt handler, if needed.
+ 54 ⋮    │-                handler = self.adapt_method_mode(
+    ⋮ 54 │+                adapted_handler = self.adapt_method_mode(
+ 55 ⋮ 55 │                     middleware_is_async, handler, handler_is_async,
+ 56 ⋮ 56 │                     debug=settings.DEBUG, name='middleware %s' % middleware_path,
+ 57 ⋮ 57 │                 )
+ 58 ⋮    │-                mw_instance = middleware(handler)
+    ⋮ 58 │+                mw_instance = middleware(adapted_handler)
+ 59 ⋮ 59 │             except MiddlewareNotUsed as exc:
+ 60 ⋮ 60 │                 if settings.DEBUG:
+ 61 ⋮ 61 │                     if str(exc):
+
+ 63 ⋮ 63 │                     else:
+ 64 ⋮ 64 │                         logger.debug('MiddlewareNotUsed: %r', middleware_path)
+ 65 ⋮ 65 │                 continue
+    ⋮ 66 │+            else:
+    ⋮ 67 │+                handler = adapted_handler
+ 66 ⋮ 68 │ 
+ 67 ⋮ 69 │             if mw_instance is None:
+ 68 ⋮ 70 │                 raise ImproperlyConfigured(

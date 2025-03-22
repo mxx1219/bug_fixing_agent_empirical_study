@@ -1,0 +1,13 @@
+
+django/utils/dateformat.py
+
+ 325⋮ 325│         return self.data.isocalendar()[1]
+ 326⋮ 326│ 
+ 327⋮ 327│     def y(self):
+ 328⋮    │-        "Year, 2 digits; e.g. '99'"
+ 329⋮    │-        return str(self.data.year)[2:]
+    ⋮ 328│+        """Year, 2 digits with leading zeros; e.g. '99'."""
+    ⋮ 329│+        return '%02d' % (self.data.year % 100)
+ 330⋮ 330│ 
+ 331⋮ 331│     def Y(self):
+ 332⋮ 332│         "Year, 4 digits; e.g. '1999'"

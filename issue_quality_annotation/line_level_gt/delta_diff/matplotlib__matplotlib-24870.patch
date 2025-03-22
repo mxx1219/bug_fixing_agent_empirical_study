@@ -1,0 +1,89 @@
+
+lib/matplotlib/contour.py
+
+1117⋮1117│ 
+1118⋮1118│         return lev[i0:i1]
+1119⋮1119│ 
+1120⋮    │-    def _process_contour_level_args(self, args):
+    ⋮1120│+    def _process_contour_level_args(self, args, z_dtype):
+1121⋮1121│         """
+1122⋮1122│         Determine the contour levels and store in self.levels.
+1123⋮1123│         """
+1124⋮1124│         if self.levels is None:
+1125⋮    │-            if len(args) == 0:
+1126⋮    │-                levels_arg = 7  # Default, hard-wired.
+1127⋮    │-            else:
+    ⋮1125│+            if args:
+1128⋮1126│                 levels_arg = args[0]
+    ⋮1127│+            elif np.issubdtype(z_dtype, bool):
+    ⋮1128│+                if self.filled:
+    ⋮1129│+                    levels_arg = [0, .5, 1]
+    ⋮1130│+                else:
+    ⋮1131│+                    levels_arg = [.5]
+    ⋮1132│+            else:
+    ⋮1133│+                levels_arg = 7  # Default, hard-wired.
+1129⋮1134│         else:
+1130⋮1135│             levels_arg = self.levels
+1131⋮1136│         if isinstance(levels_arg, Integral):
+
+1447⋮1452│             fn = 'contour'
+1448⋮1453│         nargs = len(args)
+1449⋮1454│         if nargs <= 2:
+1450⋮    │-            z = ma.asarray(args[0], dtype=np.float64)
+    ⋮1455│+            z, *args = args
+    ⋮1456│+            z = ma.asarray(z)
+1451⋮1457│             x, y = self._initialize_x_y(z)
+1452⋮    │-            args = args[1:]
+1453⋮1458│         elif nargs <= 4:
+1454⋮    │-            x, y, z = self._check_xyz(args[:3], kwargs)
+1455⋮    │-            args = args[3:]
+    ⋮1459│+            x, y, z_orig, *args = args
+    ⋮1460│+            x, y, z = self._check_xyz(x, y, z_orig, kwargs)
+1456⋮1461│         else:
+1457⋮1462│             raise _api.nargs_error(fn, takes="from 1 to 4", given=nargs)
+1458⋮1463│         z = ma.masked_invalid(z, copy=False)
+
+1462⋮1467│             z = ma.masked_where(z <= 0, z)
+1463⋮1468│             _api.warn_external('Log scale: values of z <= 0 have been masked')
+1464⋮1469│             self.zmin = float(z.min())
+1465⋮    │-        self._process_contour_level_args(args)
+    ⋮1470│+        self._process_contour_level_args(args, z.dtype)
+1466⋮1471│         return (x, y, z)
+1467⋮1472│ 
+1468⋮    │-    def _check_xyz(self, args, kwargs):
+    ⋮1473│+    def _check_xyz(self, x, y, z, kwargs):
+1469⋮1474│         """
+1470⋮1475│         Check that the shapes of the input arrays match; if x and y are 1D,
+1471⋮1476│         convert them to 2D using meshgrid.
+1472⋮1477│         """
+1473⋮    │-        x, y = args[:2]
+1474⋮1478│         x, y = self.axes._process_unit_info([("x", x), ("y", y)], kwargs)
+1475⋮1479│ 
+1476⋮1480│         x = np.asarray(x, dtype=np.float64)
+1477⋮1481│         y = np.asarray(y, dtype=np.float64)
+1478⋮    │-        z = ma.asarray(args[2], dtype=np.float64)
+    ⋮1482│+        z = ma.asarray(z)
+1479⋮1483│ 
+1480⋮1484│         if z.ndim != 2:
+1481⋮1485│             raise TypeError(f"Input z must be 2D, not {z.ndim}D")
+
+lib/matplotlib/tri/_tricontour.py
+
+ 53 ⋮ 53 │     def _contour_args(self, args, kwargs):
+ 54 ⋮ 54 │         tri, args, kwargs = Triangulation.get_from_args_and_kwargs(*args,
+ 55 ⋮ 55 │                                                                    **kwargs)
+ 56 ⋮    │-        z = np.ma.asarray(args[0])
+    ⋮ 56 │+        z, *args = args
+    ⋮ 57 │+        z = np.ma.asarray(z)
+ 57 ⋮ 58 │         if z.shape != tri.x.shape:
+ 58 ⋮ 59 │             raise ValueError('z array must have same length as triangulation x'
+ 59 ⋮ 60 │                              ' and y arrays')
+
+ 74 ⋮ 75 │         if self.logscale and self.zmin <= 0:
+ 75 ⋮ 76 │             func = 'contourf' if self.filled else 'contour'
+ 76 ⋮ 77 │             raise ValueError(f'Cannot {func} log of negative values.')
+ 77 ⋮    │-        self._process_contour_level_args(args[1:])
+    ⋮ 78 │+        self._process_contour_level_args(args, z.dtype)
+ 78 ⋮ 79 │         return (tri, z)
+ 79 ⋮ 80 │ 
+ 80 ⋮ 81 │ 

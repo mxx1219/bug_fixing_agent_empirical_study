@@ -1,0 +1,19 @@
+
+django/core/files/locks.py
+
+ 107⋮ 107│             return True
+ 108⋮ 108│     else:
+ 109⋮ 109│         def lock(f, flags):
+ 110⋮    │-            ret = fcntl.flock(_fd(f), flags)
+ 111⋮    │-            return ret == 0
+    ⋮ 110│+            try:
+    ⋮ 111│+                fcntl.flock(_fd(f), flags)
+    ⋮ 112│+                return True
+    ⋮ 113│+            except BlockingIOError:
+    ⋮ 114│+                return False
+ 112⋮ 115│ 
+ 113⋮ 116│         def unlock(f):
+ 114⋮    │-            ret = fcntl.flock(_fd(f), fcntl.LOCK_UN)
+ 115⋮    │-            return ret == 0
+    ⋮ 117│+            fcntl.flock(_fd(f), fcntl.LOCK_UN)
+    ⋮ 118│+            return True

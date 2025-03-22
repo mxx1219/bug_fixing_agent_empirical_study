@@ -1,0 +1,11 @@
+
+sklearn/linear_model/logistic.py
+
+ 922⋮ 922│         check_input=False, max_squared_sum=max_squared_sum,
+ 923⋮ 923│         sample_weight=sample_weight)
+ 924⋮ 924│ 
+ 925⋮    │-    log_reg = LogisticRegression(fit_intercept=fit_intercept)
+    ⋮ 925│+    log_reg = LogisticRegression(multi_class=multi_class)
+ 926⋮ 926│ 
+ 927⋮ 927│     # The score method of Logistic Regression has a classes_ attribute.
+ 928⋮ 928│     if multi_class == 'ovr':

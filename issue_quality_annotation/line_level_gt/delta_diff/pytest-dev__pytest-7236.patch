@@ -1,0 +1,38 @@
+
+src/_pytest/unittest.py
+
+ 41 ⋮ 41 │         if not getattr(cls, "__test__", True):
+ 42 ⋮ 42 │             return
+ 43 ⋮ 43 │ 
+ 44 ⋮    │-        skipped = getattr(cls, "__unittest_skip__", False)
+    ⋮ 44 │+        skipped = _is_skipped(cls)
+ 45 ⋮ 45 │         if not skipped:
+ 46 ⋮ 46 │             self._inject_setup_teardown_fixtures(cls)
+ 47 ⋮ 47 │             self._inject_setup_class_fixture()
+
+ 89 ⋮ 89 │ 
+ 90 ⋮ 90 │     @pytest.fixture(scope=scope, autouse=True)
+ 91 ⋮ 91 │     def fixture(self, request):
+ 92 ⋮    │-        if getattr(self, "__unittest_skip__", None):
+    ⋮ 92 │+        if _is_skipped(self):
+ 93 ⋮ 93 │             reason = self.__unittest_skip_why__
+ 94 ⋮ 94 │             pytest.skip(reason)
+ 95 ⋮ 95 │         if setup is not None:
+
+ 220⋮ 220│             # arguably we could always postpone tearDown(), but this changes the moment where the
+ 221⋮ 221│             # TestCase instance interacts with the results object, so better to only do it
+ 222⋮ 222│             # when absolutely needed
+ 223⋮    │-            if self.config.getoption("usepdb"):
+    ⋮ 223│+            if self.config.getoption("usepdb") and not _is_skipped(self.obj):
+ 224⋮ 224│                 self._explicit_tearDown = self._testcase.tearDown
+ 225⋮ 225│                 setattr(self._testcase, "tearDown", lambda *args: None)
+ 226⋮ 226│ 
+
+ 301⋮ 301│ 
+ 302⋮ 302│     classImplements(TestCaseFunction, IReporter)
+ 303⋮ 303│     done.append(1)
+    ⋮ 304│+
+    ⋮ 305│+
+    ⋮ 306│+def _is_skipped(obj) -> bool:
+    ⋮ 307│+    """Return True if the given object has been marked with @unittest.skip"""
+    ⋮ 308│+    return bool(getattr(obj, "__unittest_skip__", False))

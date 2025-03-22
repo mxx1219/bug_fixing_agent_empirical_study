@@ -1,0 +1,11 @@
+
+django/contrib/auth/forms.py
+
+ 141⋮ 141│         user.set_password(self.cleaned_data["password1"])
+ 142⋮ 142│         if commit:
+ 143⋮ 143│             user.save()
+    ⋮ 144│+            if hasattr(self, "save_m2m"):
+    ⋮ 145│+                self.save_m2m()
+ 144⋮ 146│         return user
+ 145⋮ 147│ 
+ 146⋮ 148│ 

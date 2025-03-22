@@ -1,0 +1,19 @@
+
+django/contrib/admin/sites.py
+
+ 420⋮ 420│     def catch_all_view(self, request, url):
+ 421⋮ 421│         if settings.APPEND_SLASH and not url.endswith('/'):
+ 422⋮ 422│             urlconf = getattr(request, 'urlconf', None)
+ 423⋮    │-            path = '%s/' % request.path_info
+ 424⋮ 423│             try:
+ 425⋮    │-                match = resolve(path, urlconf)
+    ⋮ 424│+                match = resolve('%s/' % request.path_info, urlconf)
+ 426⋮ 425│             except Resolver404:
+ 427⋮ 426│                 pass
+ 428⋮ 427│             else:
+ 429⋮ 428│                 if getattr(match.func, 'should_append_slash', True):
+ 430⋮    │-                    return HttpResponsePermanentRedirect(path)
+    ⋮ 429│+                    return HttpResponsePermanentRedirect('%s/' % request.path)
+ 431⋮ 430│         raise Http404
+ 432⋮ 431│ 
+ 433⋮ 432│     def _build_app_dict(self, request, label=None):

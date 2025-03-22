@@ -1,0 +1,10 @@
+
+django/db/models/sql/compiler.py
+
+ 426⋮ 426│                 # must have the same columns list. Set the selects defined on
+ 427⋮ 427│                 # the query on all combined queries, if not already set.
+ 428⋮ 428│                 if not compiler.query.values_select and self.query.values_select:
+    ⋮ 429│+                    compiler.query = compiler.query.clone()
+ 429⋮ 430│                     compiler.query.set_values((
+ 430⋮ 431│                         *self.query.extra_select,
+ 431⋮ 432│                         *self.query.values_select,

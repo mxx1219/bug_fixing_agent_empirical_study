@@ -1,0 +1,11 @@
+
+django/template/engine.py
+
+ 160⋮ 160│         if isinstance(context, Context):
+ 161⋮ 161│             return t.render(context)
+ 162⋮ 162│         else:
+ 163⋮    │-            return t.render(Context(context))
+    ⋮ 163│+            return t.render(Context(context, autoescape=self.autoescape))
+ 164⋮ 164│ 
+ 165⋮ 165│     def select_template(self, template_name_list):
+ 166⋮ 166│         """

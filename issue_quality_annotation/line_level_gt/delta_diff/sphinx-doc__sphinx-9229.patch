@@ -1,0 +1,35 @@
+
+sphinx/ext/autodoc/__init__.py
+
+1676⋮1676│     def get_doc(self, ignore: int = None) -> Optional[List[List[str]]]:
+1677⋮1677│         if self.doc_as_attr:
+1678⋮1678│             # Don't show the docstring of the class when it is an alias.
+1679⋮    │-            return None
+    ⋮1679│+            comment = self.get_variable_comment()
+    ⋮1680│+            if comment:
+    ⋮1681│+                return []
+    ⋮1682│+            else:
+    ⋮1683│+                return None
+1680⋮1684│ 
+1681⋮1685│         lines = getattr(self, '_new_docstrings', None)
+1682⋮1686│         if lines is not None:
+
+1721⋮1725│         tab_width = self.directive.state.document.settings.tab_width
+1722⋮1726│         return [prepare_docstring(docstring, ignore, tab_width) for docstring in docstrings]
+1723⋮1727│ 
+    ⋮1728│+    def get_variable_comment(self) -> Optional[List[str]]:
+    ⋮1729│+        try:
+    ⋮1730│+            key = ('', '.'.join(self.objpath))
+    ⋮1731│+            analyzer = ModuleAnalyzer.for_module(self.get_real_modname())
+    ⋮1732│+            analyzer.analyze()
+    ⋮1733│+            return list(self.analyzer.attr_docs.get(key, []))
+    ⋮1734│+        except PycodeError:
+    ⋮1735│+            return None
+    ⋮1736│+
+1724⋮1737│     def add_content(self, more_content: Optional[StringList], no_docstring: bool = False
+1725⋮1738│                     ) -> None:
+1726⋮    │-        if self.doc_as_attr:
+    ⋮1739│+        if self.doc_as_attr and not self.get_variable_comment():
+1727⋮1740│             try:
+1728⋮1741│                 more_content = StringList([_('alias of %s') % restify(self.object)], source='')
+1729⋮1742│             except AttributeError:

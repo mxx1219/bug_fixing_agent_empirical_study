@@ -1,0 +1,21 @@
+
+sklearn/model_selection/_split.py
+
+ 576⋮ 576│             ``n_splits`` default value will change from 3 to 5 in v0.22.
+ 577⋮ 577│ 
+ 578⋮ 578│     shuffle : boolean, optional
+ 579⋮    │-        Whether to shuffle each stratification of the data before splitting
+ 580⋮    │-        into batches.
+    ⋮ 579│+        Whether to shuffle each class's samples before splitting into batches.
+ 581⋮ 580│ 
+ 582⋮ 581│     random_state : int, RandomState instance or None, optional, default=None
+ 583⋮ 582│         If int, random_state is the seed used by the random number generator;
+
+ 620⋮ 619│         super().__init__(n_splits, shuffle, random_state)
+ 621⋮ 620│ 
+ 622⋮ 621│     def _make_test_folds(self, X, y=None):
+ 623⋮    │-        rng = self.random_state
+    ⋮ 622│+        rng = check_random_state(self.random_state)
+ 624⋮ 623│         y = np.asarray(y)
+ 625⋮ 624│         type_of_target_y = type_of_target(y)
+ 626⋮ 625│         allowed_target_types = ('binary', 'multiclass')

@@ -1,0 +1,129 @@
+
+lib/matplotlib/backends/backend_agg.py
+
+ 206⋮ 206│         # space) in the following call to draw_text_image).
+ 207⋮ 207│         font.set_text(s, 0, flags=get_hinting_flag())
+ 208⋮ 208│         font.draw_glyphs_to_bitmap(
+ 209⋮    │-            antialiased=mpl.rcParams['text.antialiased'])
+    ⋮ 209│+            antialiased=gc.get_antialiased())
+ 210⋮ 210│         d = font.get_descent() / 64.0
+ 211⋮ 211│         # The descent needs to be adjusted for the angle.
+ 212⋮ 212│         xo, yo = font.get_bitmap_offset()
+
+lib/matplotlib/backends/backend_cairo.py
+
+ 25 ⋮ 25 │             "cairo backend requires that pycairo>=1.14.0 or cairocffi "
+ 26 ⋮ 26 │             "is installed") from err
+ 27 ⋮ 27 │ 
+ 28 ⋮    │-import matplotlib as mpl
+ 29 ⋮ 28 │ from .. import _api, cbook, font_manager
+ 30 ⋮ 29 │ from matplotlib.backend_bases import (
+ 31 ⋮ 30 │     _Backend, FigureCanvasBase, FigureManagerBase, GraphicsContextBase,
+
+ 204⋮ 203│             ctx.select_font_face(*_cairo_font_args_from_font_prop(prop))
+ 205⋮ 204│             ctx.set_font_size(self.points_to_pixels(prop.get_size_in_points()))
+ 206⋮ 205│             opts = cairo.FontOptions()
+ 207⋮    │-            opts.set_antialias(
+ 208⋮    │-                cairo.ANTIALIAS_DEFAULT if mpl.rcParams["text.antialiased"]
+ 209⋮    │-                else cairo.ANTIALIAS_NONE)
+    ⋮ 206│+            opts.set_antialias(gc.get_antialiased())
+ 210⋮ 207│             ctx.set_font_options(opts)
+ 211⋮ 208│             if angle:
+ 212⋮ 209│                 ctx.rotate(np.deg2rad(-angle))
+
+ 312⋮ 309│         self.ctx.set_antialias(
+ 313⋮ 310│             cairo.ANTIALIAS_DEFAULT if b else cairo.ANTIALIAS_NONE)
+ 314⋮ 311│ 
+    ⋮ 312│+    def get_antialiased(self):
+    ⋮ 313│+        return self.ctx.get_antialias()
+    ⋮ 314│+
+ 315⋮ 315│     def set_capstyle(self, cs):
+ 316⋮ 316│         self.ctx.set_line_cap(_api.check_getitem(self._capd, capstyle=cs))
+ 317⋮ 317│         self._capstyle = cs
+
+lib/matplotlib/text.py
+
+ 115⋮ 115│                  wrap=False,
+ 116⋮ 116│                  transform_rotates_text=False,
+ 117⋮ 117│                  parse_math=None,    # defaults to rcParams['text.parse_math']
+    ⋮ 118│+                 antialiased=None,  # defaults to rcParams['text.antialiased']
+ 118⋮ 119│                  **kwargs
+ 119⋮ 120│                  ):
+ 120⋮ 121│         """
+
+ 135⋮ 136│         super().__init__()
+ 136⋮ 137│         self._x, self._y = x, y
+ 137⋮ 138│         self._text = ''
+    ⋮ 139│+        self._antialiased = mpl.rcParams['text.antialiased']
+ 138⋮ 140│         self._reset_visual_defaults(
+ 139⋮ 141│             text=text,
+ 140⋮ 142│             color=color,
+
+ 149⋮ 151│             transform_rotates_text=transform_rotates_text,
+ 150⋮ 152│             linespacing=linespacing,
+ 151⋮ 153│             rotation_mode=rotation_mode,
+    ⋮ 154│+            antialiased=antialiased
+ 152⋮ 155│         )
+ 153⋮ 156│         self.update(kwargs)
+ 154⋮ 157│ 
+
+ 167⋮ 170│         transform_rotates_text=False,
+ 168⋮ 171│         linespacing=None,
+ 169⋮ 172│         rotation_mode=None,
+    ⋮ 173│+        antialiased=None
+ 170⋮ 174│     ):
+ 171⋮ 175│         self.set_text(text)
+ 172⋮ 176│         self.set_color(
+
+ 187⋮ 191│             linespacing = 1.2  # Maybe use rcParam later.
+ 188⋮ 192│         self.set_linespacing(linespacing)
+ 189⋮ 193│         self.set_rotation_mode(rotation_mode)
+    ⋮ 194│+        if antialiased is not None:
+    ⋮ 195│+            self.set_antialiased(antialiased)
+ 190⋮ 196│ 
+ 191⋮ 197│     def update(self, kwargs):
+ 192⋮ 198│         # docstring inherited
+
+ 309⋮ 315│         """Return the text rotation mode."""
+ 310⋮ 316│         return self._rotation_mode
+ 311⋮ 317│ 
+    ⋮ 318│+    def set_antialiased(self, antialiased):
+    ⋮ 319│+        """
+    ⋮ 320│+        Set whether to use antialiased rendering.
+    ⋮ 321│+
+    ⋮ 322│+        Parameters
+    ⋮ 323│+        ----------
+    ⋮ 324│+        antialiased : bool
+    ⋮ 325│+
+    ⋮ 326│+        Notes
+    ⋮ 327│+        -----
+    ⋮ 328│+        Antialiasing will be determined by :rc:`text.antialiased`
+    ⋮ 329│+        and the parameter *antialiased* will have no effect if the text contains
+    ⋮ 330│+        math expressions.
+    ⋮ 331│+        """
+    ⋮ 332│+        self._antialiased = antialiased
+    ⋮ 333│+        self.stale = True
+    ⋮ 334│+
+    ⋮ 335│+    def get_antialiased(self):
+    ⋮ 336│+        """Return whether antialiased rendering is used."""
+    ⋮ 337│+        return self._antialiased
+    ⋮ 338│+
+ 312⋮ 339│     def update_from(self, other):
+ 313⋮ 340│         # docstring inherited
+ 314⋮ 341│         super().update_from(other)
+
+ 322⋮ 349│         self._transform_rotates_text = other._transform_rotates_text
+ 323⋮ 350│         self._picker = other._picker
+ 324⋮ 351│         self._linespacing = other._linespacing
+    ⋮ 352│+        self._antialiased = other._antialiased
+ 325⋮ 353│         self.stale = True
+ 326⋮ 354│ 
+ 327⋮ 355│     def _get_layout(self, renderer):
+
+ 737⋮ 765│             gc.set_foreground(self.get_color())
+ 738⋮ 766│             gc.set_alpha(self.get_alpha())
+ 739⋮ 767│             gc.set_url(self._url)
+    ⋮ 768│+            gc.set_antialiased(self._antialiased)
+ 740⋮ 769│             self._set_gc_clip(gc)
+ 741⋮ 770│ 
+ 742⋮ 771│             angle = self.get_rotation()

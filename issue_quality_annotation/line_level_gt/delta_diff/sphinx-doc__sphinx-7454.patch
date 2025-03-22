@@ -1,0 +1,17 @@
+
+sphinx/domains/python.py
+
+ 71 ⋮ 71 │ def _parse_annotation(annotation: str) -> List[Node]:
+ 72 ⋮ 72 │     """Parse type annotation."""
+ 73 ⋮ 73 │     def make_xref(text: str) -> addnodes.pending_xref:
+    ⋮ 74 │+        if text == 'None':
+    ⋮ 75 │+            reftype = 'obj'
+    ⋮ 76 │+        else:
+    ⋮ 77 │+            reftype = 'class'
+    ⋮ 78 │+
+ 74 ⋮ 79 │         return pending_xref('', nodes.Text(text),
+ 75 ⋮    │-                            refdomain='py', reftype='class', reftarget=text)
+    ⋮ 80 │+                            refdomain='py', reftype=reftype, reftarget=text)
+ 76 ⋮ 81 │ 
+ 77 ⋮ 82 │     def unparse(node: ast.AST) -> List[Node]:
+ 78 ⋮ 83 │         if isinstance(node, ast.Attribute):

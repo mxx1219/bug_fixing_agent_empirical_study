@@ -1,0 +1,44 @@
+
+lib/matplotlib/axis.py
+
+2253⋮2253│         )
+2254⋮2254│         self.label_position = 'bottom'
+2255⋮2255│ 
+    ⋮2256│+        if mpl.rcParams['xtick.labelcolor'] == 'inherit':
+    ⋮2257│+            tick_color = mpl.rcParams['xtick.color']
+    ⋮2258│+        else:
+    ⋮2259│+            tick_color = mpl.rcParams['xtick.labelcolor']
+    ⋮2260│+
+2256⋮2261│         self.offsetText.set(
+2257⋮2262│             x=1, y=0,
+2258⋮2263│             verticalalignment='top', horizontalalignment='right',
+2259⋮2264│             transform=mtransforms.blended_transform_factory(
+2260⋮2265│                 self.axes.transAxes, mtransforms.IdentityTransform()),
+2261⋮2266│             fontsize=mpl.rcParams['xtick.labelsize'],
+2262⋮    │-            color=mpl.rcParams['xtick.color'],
+    ⋮2267│+            color=tick_color
+2263⋮2268│         )
+2264⋮2269│         self.offset_text_position = 'bottom'
+2265⋮2270│ 
+
+2512⋮2517│                 mtransforms.IdentityTransform(), self.axes.transAxes),
+2513⋮2518│         )
+2514⋮2519│         self.label_position = 'left'
+    ⋮2520│+
+    ⋮2521│+        if mpl.rcParams['ytick.labelcolor'] == 'inherit':
+    ⋮2522│+            tick_color = mpl.rcParams['ytick.color']
+    ⋮2523│+        else:
+    ⋮2524│+            tick_color = mpl.rcParams['ytick.labelcolor']
+    ⋮2525│+
+2515⋮2526│         # x in axes coords, y in display coords(!).
+2516⋮2527│         self.offsetText.set(
+2517⋮2528│             x=0, y=0.5,
+
+2519⋮2530│             transform=mtransforms.blended_transform_factory(
+2520⋮2531│                 self.axes.transAxes, mtransforms.IdentityTransform()),
+2521⋮2532│             fontsize=mpl.rcParams['ytick.labelsize'],
+2522⋮    │-            color=mpl.rcParams['ytick.color'],
+    ⋮2533│+            color=tick_color
+2523⋮2534│         )
+2524⋮2535│         self.offset_text_position = 'left'
+2525⋮2536│ 

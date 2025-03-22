@@ -1,0 +1,24 @@
+
+django/db/models/query.py
+
+ 541⋮ 541│         if any(f.primary_key for f in fields):
+ 542⋮ 542│             raise ValueError('bulk_update() cannot be used with primary key fields.')
+ 543⋮ 543│         if not objs:
+ 544⋮    │-            return
+    ⋮ 544│+            return 0
+ 545⋮ 545│         # PK is used twice in the resulting update query, once in the filter
+ 546⋮ 546│         # and once in the WHEN. Each field will also have one CAST.
+ 547⋮ 547│         max_batch_size = connections[self.db].ops.bulk_batch_size(['pk', 'pk'] + fields, objs)
+
+ 563⋮ 563│                     case_statement = Cast(case_statement, output_field=field)
+ 564⋮ 564│                 update_kwargs[field.attname] = case_statement
+ 565⋮ 565│             updates.append(([obj.pk for obj in batch_objs], update_kwargs))
+    ⋮ 566│+        rows_updated = 0
+ 566⋮ 567│         with transaction.atomic(using=self.db, savepoint=False):
+ 567⋮ 568│             for pks, update_kwargs in updates:
+ 568⋮    │-                self.filter(pk__in=pks).update(**update_kwargs)
+    ⋮ 569│+                rows_updated += self.filter(pk__in=pks).update(**update_kwargs)
+    ⋮ 570│+        return rows_updated
+ 569⋮ 571│     bulk_update.alters_data = True
+ 570⋮ 572│ 
+ 571⋮ 573│     def get_or_create(self, defaults=None, **kwargs):

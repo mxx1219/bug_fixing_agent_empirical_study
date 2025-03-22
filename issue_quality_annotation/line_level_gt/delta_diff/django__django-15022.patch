@@ -1,0 +1,20 @@
+
+django/contrib/admin/options.py
+
+1031⋮1031│         if search_fields and search_term:
+1032⋮1032│             orm_lookups = [construct_search(str(search_field))
+1033⋮1033│                            for search_field in search_fields]
+    ⋮1034│+            term_queries = []
+1034⋮1035│             for bit in smart_split(search_term):
+1035⋮1036│                 if bit.startswith(('"', "'")) and bit[0] == bit[-1]:
+1036⋮1037│                     bit = unescape_string_literal(bit)
+
+1038⋮1039│                     *((orm_lookup, bit) for orm_lookup in orm_lookups),
+1039⋮1040│                     _connector=models.Q.OR,
+1040⋮1041│                 )
+1041⋮    │-                queryset = queryset.filter(or_queries)
+    ⋮1042│+                term_queries.append(or_queries)
+    ⋮1043│+            queryset = queryset.filter(models.Q(*term_queries))
+1042⋮1044│             may_have_duplicates |= any(
+1043⋮1045│                 lookup_spawns_duplicates(self.opts, search_spec)
+1044⋮1046│                 for search_spec in orm_lookups

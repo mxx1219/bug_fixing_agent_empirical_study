@@ -1,0 +1,11 @@
+
+django/db/models/fields/__init__.py
+
+1501⋮1501│             return self.context.create_decimal_from_float(value)
+1502⋮1502│         try:
+1503⋮1503│             return decimal.Decimal(value)
+1504⋮    │-        except decimal.InvalidOperation:
+    ⋮1504│+        except (decimal.InvalidOperation, TypeError, ValueError):
+1505⋮1505│             raise exceptions.ValidationError(
+1506⋮1506│                 self.error_messages['invalid'],
+1507⋮1507│                 code='invalid',

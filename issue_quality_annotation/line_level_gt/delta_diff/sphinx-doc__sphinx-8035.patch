@@ -1,0 +1,100 @@
+
+sphinx/ext/autodoc/__init__.py
+
+ 125⋮ 125│ 
+ 126⋮ 126│ def merge_special_members_option(options: Dict) -> None:
+ 127⋮ 127│     """Merge :special-members: option to :members: option."""
+    ⋮ 128│+    warnings.warn("merge_special_members_option() is deprecated.",
+    ⋮ 129│+                  RemovedInSphinx50Warning, stacklevel=2)
+ 128⋮ 130│     if 'special-members' in options and options['special-members'] is not ALL:
+ 129⋮ 131│         if options.get('members') is ALL:
+ 130⋮ 132│             pass
+
+ 136⋮ 138│             options['members'] = options['special-members']
+ 137⋮ 139│ 
+ 138⋮ 140│ 
+    ⋮ 141│+def merge_members_option(options: Dict) -> None:
+    ⋮ 142│+    """Merge :*-members: option to the :members: option."""
+    ⋮ 143│+    if options.get('members') is ALL:
+    ⋮ 144│+        # merging is not needed when members: ALL
+    ⋮ 145│+        return
+    ⋮ 146│+
+    ⋮ 147│+    members = options.setdefault('members', [])
+    ⋮ 148│+    for key in {'private-members', 'special-members'}:
+    ⋮ 149│+        if key in options and options[key] is not ALL:
+    ⋮ 150│+            for member in options[key]:
+    ⋮ 151│+                if member not in members:
+    ⋮ 152│+                    members.append(member)
+    ⋮ 153│+
+    ⋮ 154│+
+ 139⋮ 155│ # Some useful event listener factories for autodoc-process-docstring.
+ 140⋮ 156│ 
+ 141⋮ 157│ def cut_lines(pre: int, post: int = 0, what: str = None) -> Callable:
+
+ 648⋮ 664│                         keep = has_doc or self.options.undoc_members
+ 649⋮ 665│             elif (namespace, membername) in attr_docs:
+ 650⋮ 666│                 if want_all and isprivate:
+ 651⋮    │-                    # ignore members whose name starts with _ by default
+ 652⋮    │-                    keep = self.options.private_members
+    ⋮ 667│+                    if self.options.private_members is None:
+    ⋮ 668│+                        keep = False
+    ⋮ 669│+                    elif self.options.private_members is ALL:
+    ⋮ 670│+                        keep = True
+    ⋮ 671│+                    else:
+    ⋮ 672│+                        keep = membername in self.options.private_members
+ 653⋮ 673│                 else:
+ 654⋮ 674│                     # keep documented attributes
+ 655⋮ 675│                     keep = True
+ 656⋮ 676│                 isattr = True
+ 657⋮ 677│             elif want_all and isprivate:
+ 658⋮    │-                # ignore members whose name starts with _ by default
+ 659⋮    │-                keep = self.options.private_members and \
+ 660⋮    │-                    (has_doc or self.options.undoc_members)
+    ⋮ 678│+                if has_doc or self.options.undoc_members:
+    ⋮ 679│+                    if self.options.private_members is None:
+    ⋮ 680│+                        keep = False
+    ⋮ 681│+                    elif self.options.private_members is ALL:
+    ⋮ 682│+                        keep = True
+    ⋮ 683│+                    elif is_filtered_inherited_member(membername):
+    ⋮ 684│+                        keep = False
+    ⋮ 685│+                    else:
+    ⋮ 686│+                        keep = membername in self.options.private_members
+    ⋮ 687│+                else:
+    ⋮ 688│+                    keep = False
+ 661⋮ 689│             else:
+ 662⋮ 690│                 if self.options.members is ALL and is_filtered_inherited_member(membername):
+ 663⋮ 691│                     keep = False
+
+ 859⋮ 887│         'show-inheritance': bool_option, 'synopsis': identity,
+ 860⋮ 888│         'platform': identity, 'deprecated': bool_option,
+ 861⋮ 889│         'member-order': member_order_option, 'exclude-members': members_set_option,
+ 862⋮    │-        'private-members': bool_option, 'special-members': members_option,
+    ⋮ 890│+        'private-members': members_option, 'special-members': members_option,
+ 863⋮ 891│         'imported-members': bool_option, 'ignore-module-all': bool_option
+ 864⋮ 892│     }  # type: Dict[str, Callable]
+ 865⋮ 893│ 
+ 866⋮ 894│     def __init__(self, *args: Any) -> None:
+ 867⋮ 895│         super().__init__(*args)
+ 868⋮    │-        merge_special_members_option(self.options)
+    ⋮ 896│+        merge_members_option(self.options)
+ 869⋮ 897│         self.__all__ = None
+ 870⋮ 898│ 
+ 871⋮ 899│     @classmethod
+
+1279⋮1307│         'noindex': bool_option, 'inherited-members': inherited_members_option,
+1280⋮1308│         'show-inheritance': bool_option, 'member-order': member_order_option,
+1281⋮1309│         'exclude-members': members_set_option,
+1282⋮    │-        'private-members': bool_option, 'special-members': members_option,
+    ⋮1310│+        'private-members': members_option, 'special-members': members_option,
+1283⋮1311│     }  # type: Dict[str, Callable]
+1284⋮1312│ 
+1285⋮1313│     _signature_class = None  # type: Any
+
+1287⋮1315│ 
+1288⋮1316│     def __init__(self, *args: Any) -> None:
+1289⋮1317│         super().__init__(*args)
+1290⋮    │-        merge_special_members_option(self.options)
+    ⋮1318│+        merge_members_option(self.options)
+1291⋮1319│ 
+1292⋮1320│     @classmethod
+1293⋮1321│     def can_document_member(cls, member: Any, membername: str, isattr: bool, parent: Any

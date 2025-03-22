@@ -1,0 +1,14 @@
+
+xarray/core/rolling.py
+
+ 973⋮ 973│             else:
+ 974⋮ 974│                 reshaped[key] = var
+ 975⋮ 975│ 
+ 976⋮    │-        should_be_coords = set(window_dim) & set(self.obj.coords)
+    ⋮ 976│+        # should handle window_dim being unindexed
+    ⋮ 977│+        should_be_coords = (set(window_dim) & set(self.obj.coords)) | set(
+    ⋮ 978│+            self.obj.coords
+    ⋮ 979│+        )
+ 977⋮ 980│         result = reshaped.set_coords(should_be_coords)
+ 978⋮ 981│         if isinstance(self.obj, DataArray):
+ 979⋮ 982│             return self.obj._from_temp_dataset(result)

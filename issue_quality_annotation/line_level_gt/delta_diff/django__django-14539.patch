@@ -1,0 +1,14 @@
+
+django/utils/html.py
+
+ 283⋮ 283│             middle_unescaped = html.unescape(middle)
+ 284⋮ 284│             stripped = middle_unescaped.rstrip(TRAILING_PUNCTUATION_CHARS)
+ 285⋮ 285│             if middle_unescaped != stripped:
+ 286⋮    │-                trail = middle[len(stripped):] + trail
+ 287⋮    │-                middle = middle[:len(stripped) - len(middle_unescaped)]
+    ⋮ 286│+                punctuation_count = len(middle_unescaped) - len(stripped)
+    ⋮ 287│+                trail = middle[-punctuation_count:] + trail
+    ⋮ 288│+                middle = middle[:-punctuation_count]
+ 288⋮ 289│                 trimmed_something = True
+ 289⋮ 290│         return lead, middle, trail
+ 290⋮ 291│ 

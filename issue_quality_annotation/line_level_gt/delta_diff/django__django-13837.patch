@@ -1,0 +1,22 @@
+
+django/utils/autoreload.py
+
+ 216⋮ 216│     executable is reported to not have the .exe extension which can cause bugs
+ 217⋮ 217│     on reloading.
+ 218⋮ 218│     """
+ 219⋮    │-    import django.__main__
+ 220⋮    │-    django_main_path = Path(django.__main__.__file__)
+    ⋮ 219│+    import __main__
+ 221⋮ 220│     py_script = Path(sys.argv[0])
+ 222⋮ 221│ 
+ 223⋮ 222│     args = [sys.executable] + ['-W%s' % o for o in sys.warnoptions]
+ 224⋮    │-    if py_script == django_main_path:
+ 225⋮    │-        # The server was started with `python -m django runserver`.
+ 226⋮    │-        args += ['-m', 'django']
+    ⋮ 223│+    # __spec__ is set when the server was started with the `-m` option,
+    ⋮ 224│+    # see https://docs.python.org/3/reference/import.html#main-spec
+    ⋮ 225│+    if __main__.__spec__ is not None and __main__.__spec__.parent:
+    ⋮ 226│+        args += ['-m', __main__.__spec__.parent]
+ 227⋮ 227│         args += sys.argv[1:]
+ 228⋮ 228│     elif not py_script.exists():
+ 229⋮ 229│         # sys.argv[0] may not exist for several reasons on Windows.

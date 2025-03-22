@@ -1,0 +1,11 @@
+
+sphinx/builders/html/transforms.py
+
+ 37 ⋮ 37 │     """
+ 38 ⋮ 38 │     default_priority = 400
+ 39 ⋮ 39 │     builders = ('html',)
+ 40 ⋮    │-    pattern = re.compile(r'(-|\+|\^|\s+)')
+    ⋮ 40 │+    pattern = re.compile(r'(?<=.)(-|\+|\^|\s+)(?=.)')
+ 41 ⋮ 41 │ 
+ 42 ⋮ 42 │     def run(self, **kwargs: Any) -> None:
+ 43 ⋮ 43 │         matcher = NodeMatcher(nodes.literal, classes=["kbd"])

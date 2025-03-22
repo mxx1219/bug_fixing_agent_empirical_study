@@ -1,0 +1,11 @@
+
+django/db/models/fields/__init__.py
+
+2524⋮2524│         return isinstance(instance, self._subclasses) or super().__instancecheck__(instance)
+2525⋮2525│ 
+2526⋮2526│     def __subclasscheck__(self, subclass):
+2527⋮    │-        return subclass in self._subclasses or super().__subclasscheck__(subclass)
+    ⋮2527│+        return issubclass(subclass, self._subclasses) or super().__subclasscheck__(subclass)
+2528⋮2528│ 
+2529⋮2529│ 
+2530⋮2530│ class AutoField(AutoFieldMixin, IntegerField, metaclass=AutoFieldMeta):

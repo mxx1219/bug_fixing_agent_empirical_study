@@ -1,0 +1,11 @@
+
+lib/mpl_toolkits/mplot3d/axes3d.py
+
+ 387⋮ 387│ 
+ 388⋮ 388│     @martist.allow_rasterization
+ 389⋮ 389│     def draw(self, renderer):
+    ⋮ 390│+        if not self.get_visible():
+    ⋮ 391│+            return
+ 390⋮ 392│         self._unstale_viewLim()
+ 391⋮ 393│ 
+ 392⋮ 394│         # draw the background patch

@@ -1,0 +1,82 @@
+
+sphinx/ext/autodoc/__init__.py
+
+1584⋮1584│                 self.add_line('   ' + _('Bases: %s') % ', '.join(bases), sourcename)
+1585⋮1585│ 
+1586⋮1586│     def get_object_members(self, want_all: bool) -> Tuple[bool, ObjectMembers]:
+1587⋮    │-        members = get_class_members(self.object, self.objpath, self.get_attr, self.analyzer)
+    ⋮1587│+        members = get_class_members(self.object, self.objpath, self.get_attr)
+1588⋮1588│         if not want_all:
+1589⋮1589│             if not self.options.members:
+1590⋮1590│                 return False, []  # type: ignore
+
+sphinx/ext/autodoc/importer.py
+
+ 14 ⋮ 14 │ from typing import Any, Callable, Dict, List, Mapping, NamedTuple, Optional, Tuple
+ 15 ⋮ 15 │ 
+ 16 ⋮ 16 │ from sphinx.deprecation import RemovedInSphinx40Warning, deprecated_alias
+ 17 ⋮    │-from sphinx.pycode import ModuleAnalyzer
+    ⋮ 17 │+from sphinx.pycode import ModuleAnalyzer, PycodeError
+ 18 ⋮ 18 │ from sphinx.util import logging
+ 19 ⋮ 19 │ from sphinx.util.inspect import (getannotations, getmro, getslots, isclass, isenumclass,
+ 20 ⋮ 20 │                                  safe_getattr)
+
+ 251⋮ 251│         self.docstring = docstring
+ 252⋮ 252│ 
+ 253⋮ 253│ 
+ 254⋮    │-def get_class_members(subject: Any, objpath: List[str], attrgetter: Callable,
+ 255⋮    │-                      analyzer: ModuleAnalyzer = None) -> Dict[str, ClassAttribute]:
+    ⋮ 254│+def get_class_members(subject: Any, objpath: List[str], attrgetter: Callable
+    ⋮ 255│+                      ) -> Dict[str, ClassAttribute]:
+ 256⋮ 256│     """Get members and attributes of target class."""
+ 257⋮ 257│     from sphinx.ext.autodoc import INSTANCEATTR
+ 258⋮ 258│ 
+
+ 297⋮ 297│         except AttributeError:
+ 298⋮ 298│             continue
+ 299⋮ 299│ 
+ 300⋮    │-    # annotation only member (ex. attr: int)
+ 301⋮    │-    for cls in getmro(subject):
+ 302⋮    │-        try:
+ 303⋮    │-            for name in getannotations(cls):
+ 304⋮    │-                name = unmangle(cls, name)
+ 305⋮    │-                if name and name not in members:
+ 306⋮    │-                    members[name] = ClassAttribute(cls, name, INSTANCEATTR)
+ 307⋮    │-        except AttributeError:
+ 308⋮    │-            pass
+ 309⋮    │-
+ 310⋮    │-    if analyzer:
+ 311⋮    │-        # append instance attributes (cf. self.attr1) if analyzer knows
+ 312⋮    │-        namespace = '.'.join(objpath)
+ 313⋮    │-        for (ns, name), docstring in analyzer.attr_docs.items():
+ 314⋮    │-            if namespace == ns and name not in members:
+ 315⋮    │-                members[name] = ClassAttribute(subject, name, INSTANCEATTR,
+ 316⋮    │-                                               '\n'.join(docstring))
+    ⋮ 300│+    try:
+    ⋮ 301│+        for cls in getmro(subject):
+    ⋮ 302│+            # annotation only member (ex. attr: int)
+    ⋮ 303│+            try:
+    ⋮ 304│+                for name in getannotations(cls):
+    ⋮ 305│+                    name = unmangle(cls, name)
+    ⋮ 306│+                    if name and name not in members:
+    ⋮ 307│+                        members[name] = ClassAttribute(cls, name, INSTANCEATTR)
+    ⋮ 308│+            except AttributeError:
+    ⋮ 309│+                pass
+    ⋮ 310│+
+    ⋮ 311│+            # append instance attributes (cf. self.attr1) if analyzer knows
+    ⋮ 312│+            try:
+    ⋮ 313│+                modname = safe_getattr(cls, '__module__')
+    ⋮ 314│+                qualname = safe_getattr(cls, '__qualname__')
+    ⋮ 315│+                analyzer = ModuleAnalyzer.for_module(modname)
+    ⋮ 316│+                analyzer.analyze()
+    ⋮ 317│+                for (ns, name), docstring in analyzer.attr_docs.items():
+    ⋮ 318│+                    if ns == qualname and name not in members:
+    ⋮ 319│+                        members[name] = ClassAttribute(cls, name, INSTANCEATTR,
+    ⋮ 320│+                                                       '\n'.join(docstring))
+    ⋮ 321│+            except (AttributeError, PycodeError):
+    ⋮ 322│+                pass
+    ⋮ 323│+    except AttributeError:
+    ⋮ 324│+        pass
+ 317⋮ 325│ 
+ 318⋮ 326│     return members
+ 319⋮ 327│ 

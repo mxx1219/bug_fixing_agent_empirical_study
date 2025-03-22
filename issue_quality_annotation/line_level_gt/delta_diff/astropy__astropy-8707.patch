@@ -1,0 +1,132 @@
+
+astropy/io/fits/card.py
+
+ 554⋮ 554│         """
+ 555⋮ 555│ 
+ 556⋮ 556│         card = cls()
+    ⋮ 557│+        if isinstance(image, bytes):
+    ⋮ 558│+            # FITS supports only ASCII, but decode as latin1 and just take all
+    ⋮ 559│+            # bytes for now; if it results in mojibake due to e.g. UTF-8
+    ⋮ 560│+            # encoded data in a FITS header that's OK because it shouldn't be
+    ⋮ 561│+            # there in the first place
+    ⋮ 562│+            image = image.decode('latin1')
+    ⋮ 563│+
+ 557⋮ 564│         card._image = _pad(image)
+ 558⋮ 565│         card._verified = False
+ 559⋮ 566│         return card
+
+astropy/io/fits/header.py
+
+ 34 ⋮ 34 │ END_CARD = 'END' + ' ' * 77
+ 35 ⋮ 35 │ 
+ 36 ⋮ 36 │ 
+ 37 ⋮    │-__doctest_skip__ = ['Header', 'Header.*']
+    ⋮ 37 │+__doctest_skip__ = ['Header', 'Header.comments', 'Header.fromtextfile',
+    ⋮ 38 │+                    'Header.totextfile', 'Header.set', 'Header.update']
+ 38 ⋮ 39 │ 
+ 39 ⋮ 40 │ 
+ 40 ⋮ 41 │ class Header:
+
+ 334⋮ 335│ 
+ 335⋮ 336│         Parameters
+ 336⋮ 337│         ----------
+ 337⋮    │-        data : str
+ 338⋮    │-           String containing the entire header.
+    ⋮ 338│+        data : str or bytes
+    ⋮ 339│+           String or bytes containing the entire header.  In the case of bytes
+    ⋮ 340│+           they will be decoded using latin-1 (only plain ASCII characters are
+    ⋮ 341│+           allowed in FITS headers but latin-1 allows us to retain any invalid
+    ⋮ 342│+           bytes that might appear in malformatted FITS files).
+ 339⋮ 343│ 
+ 340⋮ 344│         sep : str, optional
+ 341⋮ 345│             The string separating cards from each other, such as a newline.  By
+ 342⋮ 346│             default there is no card separator (as is the case in a raw FITS
+ 343⋮    │-            file).
+    ⋮ 347│+            file).  In general this is only used in cases where a header was
+    ⋮ 348│+            printed as text (e.g. with newlines after each card) and you want
+    ⋮ 349│+            to create a new `Header` from it by copy/pasting.
+    ⋮ 350│+
+    ⋮ 351│+        Examples
+    ⋮ 352│+        --------
+    ⋮ 353│+
+    ⋮ 354│+        >>> from astropy.io.fits import Header
+    ⋮ 355│+        >>> hdr = Header({'SIMPLE': True})
+    ⋮ 356│+        >>> Header.fromstring(hdr.tostring()) == hdr
+    ⋮ 357│+        True
+    ⋮ 358│+
+    ⋮ 359│+        If you want to create a `Header` from printed text it's not necessary
+    ⋮ 360│+        to have the exact binary structure as it would appear in a FITS file,
+    ⋮ 361│+        with the full 80 byte card length.  Rather, each "card" can end in a
+    ⋮ 362│+        newline and does not have to be padded out to a full card length as
+    ⋮ 363│+        long as it "looks like" a FITS header:
+    ⋮ 364│+
+    ⋮ 365│+        >>> hdr = Header.fromstring(\"\"\"\\
+    ⋮ 366│+        ... SIMPLE  =                    T / conforms to FITS standard
+    ⋮ 367│+        ... BITPIX  =                    8 / array data type
+    ⋮ 368│+        ... NAXIS   =                    0 / number of array dimensions
+    ⋮ 369│+        ... EXTEND  =                    T
+    ⋮ 370│+        ... \"\"\", sep='\\n')
+    ⋮ 371│+        >>> hdr['SIMPLE']
+    ⋮ 372│+        True
+    ⋮ 373│+        >>> hdr['BITPIX']
+    ⋮ 374│+        8
+    ⋮ 375│+        >>> len(hdr)
+    ⋮ 376│+        4
+ 344⋮ 377│ 
+ 345⋮ 378│         Returns
+ 346⋮ 379│         -------
+
+ 357⋮ 390│         # immediately at the separator
+ 358⋮ 391│         require_full_cardlength = set(sep).issubset(VALID_HEADER_CHARS)
+ 359⋮ 392│ 
+    ⋮ 393│+        if isinstance(data, bytes):
+    ⋮ 394│+            # FITS supports only ASCII, but decode as latin1 and just take all
+    ⋮ 395│+            # bytes for now; if it results in mojibake due to e.g. UTF-8
+    ⋮ 396│+            # encoded data in a FITS header that's OK because it shouldn't be
+    ⋮ 397│+            # there in the first place--accepting it here still gives us the
+    ⋮ 398│+            # opportunity to display warnings later during validation
+    ⋮ 399│+            CONTINUE = b'CONTINUE'
+    ⋮ 400│+            END = b'END'
+    ⋮ 401│+            end_card = END_CARD.encode('ascii')
+    ⋮ 402│+            sep = sep.encode('latin1')
+    ⋮ 403│+            empty = b''
+    ⋮ 404│+        else:
+    ⋮ 405│+            CONTINUE = 'CONTINUE'
+    ⋮ 406│+            END = 'END'
+    ⋮ 407│+            end_card = END_CARD
+    ⋮ 408│+            empty = ''
+    ⋮ 409│+
+ 360⋮ 410│         # Split the header into individual cards
+ 361⋮ 411│         idx = 0
+ 362⋮ 412│         image = []
+
+ 374⋮ 424│             idx = end_idx + len(sep)
+ 375⋮ 425│ 
+ 376⋮ 426│             if image:
+ 377⋮    │-                if next_image[:8] == 'CONTINUE':
+    ⋮ 427│+                if next_image[:8] == CONTINUE:
+ 378⋮ 428│                     image.append(next_image)
+ 379⋮ 429│                     continue
+ 380⋮    │-                cards.append(Card.fromstring(''.join(image)))
+    ⋮ 430│+                cards.append(Card.fromstring(empty.join(image)))
+ 381⋮ 431│ 
+ 382⋮ 432│             if require_full_cardlength:
+ 383⋮    │-                if next_image == END_CARD:
+    ⋮ 433│+                if next_image == end_card:
+ 384⋮ 434│                     image = []
+ 385⋮ 435│                     break
+ 386⋮ 436│             else:
+ 387⋮    │-                if next_image.split(sep)[0].rstrip() == 'END':
+    ⋮ 437│+                if next_image.split(sep)[0].rstrip() == END:
+ 388⋮ 438│                     image = []
+ 389⋮ 439│                     break
+ 390⋮ 440│ 
+
+ 392⋮ 442│ 
+ 393⋮ 443│         # Add the last image that was found before the end, if any
+ 394⋮ 444│         if image:
+ 395⋮    │-            cards.append(Card.fromstring(''.join(image)))
+    ⋮ 445│+            cards.append(Card.fromstring(empty.join(image)))
+ 396⋮ 446│ 
+ 397⋮ 447│         return cls._fromcards(cards)
+ 398⋮ 448│ 

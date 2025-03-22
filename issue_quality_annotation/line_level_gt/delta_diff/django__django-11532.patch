@@ -1,0 +1,113 @@
+
+django/core/mail/message.py
+
+ 16 ⋮ 16 │ 
+ 17 ⋮ 17 │ from django.conf import settings
+ 18 ⋮ 18 │ from django.core.mail.utils import DNS_NAME
+ 19 ⋮    │-from django.utils.encoding import force_str
+    ⋮ 19 │+from django.utils.encoding import force_str, punycode
+ 20 ⋮ 20 │ 
+ 21 ⋮ 21 │ # Don't BASE64-encode UTF-8 messages so that we avoid unwanted attention from
+ 22 ⋮ 22 │ # some spam filters.
+
+ 102⋮ 102│         localpart.encode('ascii')
+ 103⋮ 103│     except UnicodeEncodeError:
+ 104⋮ 104│         localpart = Header(localpart, encoding).encode()
+ 105⋮    │-    try:
+ 106⋮    │-        domain.encode('ascii')
+ 107⋮    │-    except UnicodeEncodeError:
+ 108⋮    │-        domain = domain.encode('idna').decode('ascii')
+    ⋮ 105│+    domain = punycode(domain)
+ 109⋮ 106│ 
+ 110⋮ 107│     parsed_address = Address(nm, username=localpart, domain=domain)
+ 111⋮ 108│     return str(parsed_address)
+
+django/core/mail/utils.py
+
+  4 ⋮  4 │ 
+  5 ⋮  5 │ import socket
+  6 ⋮  6 │ 
+    ⋮  7 │+from django.utils.encoding import punycode
+    ⋮  8 │+
+  7 ⋮  9 │ 
+  8 ⋮ 10 │ # Cache the hostname, but do it lazily: socket.getfqdn() can take a couple of
+  9 ⋮ 11 │ # seconds, which slows down the restart of the server.
+
+ 13 ⋮ 15 │ 
+ 14 ⋮ 16 │     def get_fqdn(self):
+ 15 ⋮ 17 │         if not hasattr(self, '_fqdn'):
+ 16 ⋮    │-            self._fqdn = socket.getfqdn()
+    ⋮ 18 │+            self._fqdn = punycode(socket.getfqdn())
+ 17 ⋮ 19 │         return self._fqdn
+ 18 ⋮ 20 │ 
+ 19 ⋮ 21 │ 
+
+django/core/validators.py
+
+  5 ⋮  5 │ 
+  6 ⋮  6 │ from django.core.exceptions import ValidationError
+  7 ⋮  7 │ from django.utils.deconstruct import deconstructible
+    ⋮  8 │+from django.utils.encoding import punycode
+  8 ⋮  9 │ from django.utils.functional import SimpleLazyObject
+  9 ⋮ 10 │ from django.utils.ipv6 import is_valid_ipv6_address
+ 10 ⋮ 11 │ from django.utils.translation import gettext_lazy as _, ngettext_lazy
+
+ 124⋮ 125│                 except ValueError:  # for example, "Invalid IPv6 URL"
+ 125⋮ 126│                     raise ValidationError(self.message, code=self.code)
+ 126⋮ 127│                 try:
+ 127⋮    │-                    netloc = netloc.encode('idna').decode('ascii')  # IDN -> ACE
+    ⋮ 128│+                    netloc = punycode(netloc)  # IDN -> ACE
+ 128⋮ 129│                 except UnicodeError:  # invalid domain part
+ 129⋮ 130│                     raise e
+ 130⋮ 131│                 url = urlunsplit((scheme, netloc, path, query, fragment))
+
+ 199⋮ 200│                 not self.validate_domain_part(domain_part)):
+ 200⋮ 201│             # Try for possible IDN domain-part
+ 201⋮ 202│             try:
+ 202⋮    │-                domain_part = domain_part.encode('idna').decode('ascii')
+    ⋮ 203│+                domain_part = punycode(domain_part)
+ 203⋮ 204│             except UnicodeError:
+ 204⋮ 205│                 pass
+ 205⋮ 206│             else:
+
+django/utils/encoding.py
+
+ 218⋮ 218│     return quote(path, safe="/:@&+$,-_.!~*'()")
+ 219⋮ 219│ 
+ 220⋮ 220│ 
+    ⋮ 221│+def punycode(domain):
+    ⋮ 222│+    """Return the Punycode of the given domain if it's non-ASCII."""
+    ⋮ 223│+    return domain.encode('idna').decode('ascii')
+    ⋮ 224│+
+    ⋮ 225│+
+ 221⋮ 226│ def repercent_broken_unicode(path):
+ 222⋮ 227│     """
+ 223⋮ 228│     As per section 3.2 of RFC 3987, step three of converting a URI into an IRI,
+
+django/utils/html.py
+
+  8 ⋮  8 │     parse_qsl, quote, unquote, urlencode, urlsplit, urlunsplit,
+  9 ⋮  9 │ )
+ 10 ⋮ 10 │ 
+    ⋮ 11 │+from django.utils.encoding import punycode
+ 11 ⋮ 12 │ from django.utils.functional import Promise, keep_lazy, keep_lazy_text
+ 12 ⋮ 13 │ from django.utils.http import RFC3986_GENDELIMS, RFC3986_SUBDELIMS
+ 13 ⋮ 14 │ from django.utils.safestring import SafeData, SafeString, mark_safe
+
+ 210⋮ 211│         return unquote_quote(url)
+ 211⋮ 212│ 
+ 212⋮ 213│     try:
+ 213⋮    │-        netloc = netloc.encode('idna').decode('ascii')  # IDN -> ACE
+    ⋮ 214│+        netloc = punycode(netloc)  # IDN -> ACE
+ 214⋮ 215│     except UnicodeError:  # invalid domain part
+ 215⋮ 216│         return unquote_quote(url)
+ 216⋮ 217│ 
+
+ 319⋮ 320│             elif ':' not in middle and is_email_simple(middle):
+ 320⋮ 321│                 local, domain = middle.rsplit('@', 1)
+ 321⋮ 322│                 try:
+ 322⋮    │-                    domain = domain.encode('idna').decode('ascii')
+    ⋮ 323│+                    domain = punycode(domain)
+ 323⋮ 324│                 except UnicodeError:
+ 324⋮ 325│                     continue
+ 325⋮ 326│                 url = 'mailto:%s@%s' % (local, domain)

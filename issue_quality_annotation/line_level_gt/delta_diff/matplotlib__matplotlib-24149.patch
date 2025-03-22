@@ -1,0 +1,22 @@
+
+lib/matplotlib/axes/_axes.py
+
+2182⋮2182│                 x0 = cbook._safe_first_finite(x0)
+2183⋮2183│             except (TypeError, IndexError, KeyError):
+2184⋮2184│                 pass
+    ⋮2185│+            except StopIteration:
+    ⋮2186│+                # this means we found no finite element, fall back to first
+    ⋮2187│+                # element unconditionally
+    ⋮2188│+                x0 = cbook.safe_first_element(x0)
+2185⋮2189│ 
+2186⋮2190│             try:
+2187⋮2191│                 x = cbook._safe_first_finite(xconv)
+2188⋮2192│             except (TypeError, IndexError, KeyError):
+2189⋮2193│                 x = xconv
+    ⋮2194│+            except StopIteration:
+    ⋮2195│+                # this means we found no finite element, fall back to first
+    ⋮2196│+                # element unconditionally
+    ⋮2197│+                x = cbook.safe_first_element(xconv)
+2190⋮2198│ 
+2191⋮2199│             delist = False
+2192⋮2200│             if not np.iterable(dx):

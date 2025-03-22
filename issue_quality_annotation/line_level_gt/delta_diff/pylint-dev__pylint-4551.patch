@@ -1,0 +1,183 @@
+
+pylint/pyreverse/diagrams.py
+
+ 122⋮ 122│             if isinstance(node, astroid.Instance):
+ 123⋮ 123│                 node = node._proxied
+ 124⋮ 124│             if (
+ 125⋮    │-                isinstance(node, astroid.ClassDef)
+    ⋮ 125│+                isinstance(node, (astroid.ClassDef, astroid.Name, astroid.Subscript))
+ 126⋮ 126│                 and hasattr(node, "name")
+ 127⋮ 127│                 and not self.has_node(node)
+ 128⋮ 128│             ):
+
+pylint/pyreverse/inspector.py
+
+ 205⋮ 205│             # the name has been defined as 'global' in the frame and belongs
+ 206⋮ 206│             # there.
+ 207⋮ 207│             frame = node.root()
+ 208⋮    │-        try:
+ 209⋮    │-            if not hasattr(frame, "locals_type"):
+ 210⋮    │-                # If the frame doesn't have a locals_type yet,
+ 211⋮    │-                # it means it wasn't yet visited. Visit it now
+ 212⋮    │-                # to add what's missing from it.
+ 213⋮    │-                if isinstance(frame, astroid.ClassDef):
+ 214⋮    │-                    self.visit_classdef(frame)
+ 215⋮    │-                elif isinstance(frame, astroid.FunctionDef):
+ 216⋮    │-                    self.visit_functiondef(frame)
+ 217⋮    │-                else:
+ 218⋮    │-                    self.visit_module(frame)
+ 219⋮    │-
+ 220⋮    │-            current = frame.locals_type[node.name]
+ 221⋮    │-            values = set(node.infer())
+ 222⋮    │-            frame.locals_type[node.name] = list(set(current) | values)
+ 223⋮    │-        except astroid.InferenceError:
+ 224⋮    │-            pass
+    ⋮ 208│+        if not hasattr(frame, "locals_type"):
+    ⋮ 209│+            # If the frame doesn't have a locals_type yet,
+    ⋮ 210│+            # it means it wasn't yet visited. Visit it now
+    ⋮ 211│+            # to add what's missing from it.
+    ⋮ 212│+            if isinstance(frame, astroid.ClassDef):
+    ⋮ 213│+                self.visit_classdef(frame)
+    ⋮ 214│+            elif isinstance(frame, astroid.FunctionDef):
+    ⋮ 215│+                self.visit_functiondef(frame)
+    ⋮ 216│+            else:
+    ⋮ 217│+                self.visit_module(frame)
+    ⋮ 218│+
+    ⋮ 219│+        current = frame.locals_type[node.name]
+    ⋮ 220│+        frame.locals_type[node.name] = list(set(current) | utils.infer_node(node))
+ 225⋮ 221│ 
+ 226⋮ 222│     @staticmethod
+ 227⋮ 223│     def handle_assignattr_type(node, parent):
+
+ 229⋮ 225│ 
+ 230⋮ 226│         handle instance_attrs_type
+ 231⋮ 227│         """
+ 232⋮    │-        try:
+ 233⋮    │-            values = set(node.infer())
+ 234⋮    │-            current = set(parent.instance_attrs_type[node.attrname])
+ 235⋮    │-            parent.instance_attrs_type[node.attrname] = list(current | values)
+ 236⋮    │-        except astroid.InferenceError:
+ 237⋮    │-            pass
+    ⋮ 228│+        current = set(parent.instance_attrs_type[node.attrname])
+    ⋮ 229│+        parent.instance_attrs_type[node.attrname] = list(
+    ⋮ 230│+            current | utils.infer_node(node)
+    ⋮ 231│+        )
+ 238⋮ 232│ 
+ 239⋮ 233│     def visit_import(self, node):
+ 240⋮ 234│         """visit an astroid.Import node
+
+pylint/pyreverse/utils.py
+
+ 19 ⋮ 19 │ import os
+ 20 ⋮ 20 │ import re
+ 21 ⋮ 21 │ import sys
+    ⋮ 22 │+from typing import Optional, Union
+    ⋮ 23 │+
+    ⋮ 24 │+import astroid
+ 22 ⋮ 25 │ 
+ 23 ⋮ 26 │ RCFILE = ".pyreverserc"
+ 24 ⋮ 27 │ 
+
+ 213⋮ 216│         if methods[1] is not None:
+ 214⋮ 217│             return methods[1](node)
+ 215⋮ 218│         return None
+    ⋮ 219│+
+    ⋮ 220│+
+    ⋮ 221│+def get_annotation_label(ann: Union[astroid.Name, astroid.Subscript]) -> str:
+    ⋮ 222│+    label = ""
+    ⋮ 223│+    if isinstance(ann, astroid.Subscript):
+    ⋮ 224│+        label = ann.as_string()
+    ⋮ 225│+    elif isinstance(ann, astroid.Name):
+    ⋮ 226│+        label = ann.name
+    ⋮ 227│+    return label
+    ⋮ 228│+
+    ⋮ 229│+
+    ⋮ 230│+def get_annotation(
+    ⋮ 231│+    node: Union[astroid.AssignAttr, astroid.AssignName]
+    ⋮ 232│+) -> Optional[Union[astroid.Name, astroid.Subscript]]:
+    ⋮ 233│+    """return the annotation for `node`"""
+    ⋮ 234│+    ann = None
+    ⋮ 235│+    if isinstance(node.parent, astroid.AnnAssign):
+    ⋮ 236│+        ann = node.parent.annotation
+    ⋮ 237│+    elif isinstance(node, astroid.AssignAttr):
+    ⋮ 238│+        init_method = node.parent.parent
+    ⋮ 239│+        try:
+    ⋮ 240│+            annotations = dict(zip(init_method.locals, init_method.args.annotations))
+    ⋮ 241│+            ann = annotations.get(node.parent.value.name)
+    ⋮ 242│+        except AttributeError:
+    ⋮ 243│+            pass
+    ⋮ 244│+    else:
+    ⋮ 245│+        return ann
+    ⋮ 246│+
+    ⋮ 247│+    try:
+    ⋮ 248│+        default, *_ = node.infer()
+    ⋮ 249│+    except astroid.InferenceError:
+    ⋮ 250│+        default = ""
+    ⋮ 251│+
+    ⋮ 252│+    label = get_annotation_label(ann)
+    ⋮ 253│+    if ann:
+    ⋮ 254│+        label = (
+    ⋮ 255│+            rf"Optional[{label}]"
+    ⋮ 256│+            if getattr(default, "value", "value") is None
+    ⋮ 257│+            and not label.startswith("Optional")
+    ⋮ 258│+            else label
+    ⋮ 259│+        )
+    ⋮ 260│+    if label:
+    ⋮ 261│+        ann.name = label
+    ⋮ 262│+    return ann
+    ⋮ 263│+
+    ⋮ 264│+
+    ⋮ 265│+def infer_node(node: Union[astroid.AssignAttr, astroid.AssignName]) -> set:
+    ⋮ 266│+    """Return a set containing the node annotation if it exists
+    ⋮ 267│+    otherwise return a set of the inferred types using the NodeNG.infer method"""
+    ⋮ 268│+
+    ⋮ 269│+    ann = get_annotation(node)
+    ⋮ 270│+    if ann:
+    ⋮ 271│+        return {ann}
+    ⋮ 272│+    try:
+    ⋮ 273│+        return set(node.infer())
+    ⋮ 274│+    except astroid.InferenceError:
+    ⋮ 275│+        return set()
+
+pylint/pyreverse/writer.py
+
+ 19 ⋮ 19 │ import os
+ 20 ⋮ 20 │ 
+ 21 ⋮ 21 │ from pylint.graph import DotBackend
+ 22 ⋮    │-from pylint.pyreverse.utils import is_exception
+    ⋮ 22 │+from pylint.pyreverse.utils import get_annotation_label, is_exception
+ 23 ⋮ 23 │ from pylint.pyreverse.vcgutils import VCGPrinter
+ 24 ⋮ 24 │ 
+ 25 ⋮ 25 │ 
+
+ 134⋮ 134│         if not self.config.only_classnames:
+ 135⋮ 135│             label = r"{}|{}\l|".format(label, r"\l".join(obj.attrs))
+ 136⋮ 136│             for func in obj.methods:
+    ⋮ 137│+                return_type = (
+    ⋮ 138│+                    f": {get_annotation_label(func.returns)}" if func.returns else ""
+    ⋮ 139│+                )
+    ⋮ 140│+
+ 137⋮ 141│                 if func.args.args:
+ 138⋮    │-                    args = [arg.name for arg in func.args.args if arg.name != "self"]
+    ⋮ 142│+                    args = [arg for arg in func.args.args if arg.name != "self"]
+ 139⋮ 143│                 else:
+ 140⋮ 144│                     args = []
+ 141⋮    │-                label = r"{}{}({})\l".format(label, func.name, ", ".join(args))
+    ⋮ 145│+
+    ⋮ 146│+                annotations = dict(zip(args, func.args.annotations[1:]))
+    ⋮ 147│+                for arg in args:
+    ⋮ 148│+                    annotation_label = ""
+    ⋮ 149│+                    ann = annotations.get(arg)
+    ⋮ 150│+                    if ann:
+    ⋮ 151│+                        annotation_label = get_annotation_label(ann)
+    ⋮ 152│+                    annotations[arg] = annotation_label
+    ⋮ 153│+
+    ⋮ 154│+                args = ", ".join(
+    ⋮ 155│+                    f"{arg.name}: {ann}" if ann else f"{arg.name}"
+    ⋮ 156│+                    for arg, ann in annotations.items()
+    ⋮ 157│+                )
+    ⋮ 158│+
+    ⋮ 159│+                label = fr"{label}{func.name}({args}){return_type}\l"
+ 142⋮ 160│             label = "{%s}" % label
+ 143⋮ 161│         if is_exception(obj.node):
+ 144⋮ 162│             return dict(fontcolor="red", label=label, shape="record")

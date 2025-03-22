@@ -1,0 +1,14 @@
+
+django/utils/autoreload.py
+
+ 220⋮ 220│     py_script = Path(sys.argv[0])
+ 221⋮ 221│ 
+ 222⋮ 222│     args = [sys.executable] + ['-W%s' % o for o in sys.warnoptions]
+    ⋮ 223│+    if sys.implementation.name == 'cpython':
+    ⋮ 224│+        args.extend(
+    ⋮ 225│+            f'-X{key}' if value is True else f'-X{key}={value}'
+    ⋮ 226│+            for key, value in sys._xoptions.items()
+    ⋮ 227│+        )
+ 223⋮ 228│     # __spec__ is set when the server was started with the `-m` option,
+ 224⋮ 229│     # see https://docs.python.org/3/reference/import.html#main-spec
+ 225⋮ 230│     # __spec__ may not exist, e.g. when running in a Conda env.

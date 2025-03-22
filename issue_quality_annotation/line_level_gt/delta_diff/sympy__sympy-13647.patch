@@ -1,0 +1,11 @@
+
+sympy/matrices/common.py
+
+ 86 ⋮ 86 │                 return self[i, j]
+ 87 ⋮ 87 │             elif pos <= j < pos + other.cols:
+ 88 ⋮ 88 │                 return other[i, j - pos]
+ 89 ⋮    │-            return self[i, j - pos - other.cols]
+    ⋮ 89 │+            return self[i, j - other.cols]
+ 90 ⋮ 90 │ 
+ 91 ⋮ 91 │         return self._new(self.rows, self.cols + other.cols,
+ 92 ⋮ 92 │                          lambda i, j: entry(i, j))

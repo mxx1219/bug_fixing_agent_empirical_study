@@ -1,0 +1,25 @@
+
+django/db/models/fields/files.py
+
+ 441⋮ 441│         # after their corresponding image field don't stay cleared by
+ 442⋮ 442│         # Model.__init__, see bug #11196.
+ 443⋮ 443│         # Only run post-initialization dimension update on non-abstract models
+ 444⋮    │-        if not cls._meta.abstract:
+    ⋮ 444│+        # with width_field/height_field.
+    ⋮ 445│+        if not cls._meta.abstract and (self.width_field or self.height_field):
+ 445⋮ 446│             signals.post_init.connect(self.update_dimension_fields, sender=cls)
+ 446⋮ 447│ 
+ 447⋮ 448│     def update_dimension_fields(self, instance, force=False, *args, **kwargs):
+
+ 457⋮ 458│         Dimensions can be forced to update with force=True, which is how
+ 458⋮ 459│         ImageFileDescriptor.__set__ calls this method.
+ 459⋮ 460│         """
+ 460⋮    │-        # Nothing to update if the field doesn't have dimension fields or if
+ 461⋮    │-        # the field is deferred.
+ 462⋮    │-        has_dimension_fields = self.width_field or self.height_field
+ 463⋮    │-        if not has_dimension_fields or self.attname not in instance.__dict__:
+    ⋮ 461│+        # Nothing to update if the field is deferred.
+    ⋮ 462│+        if self.attname not in instance.__dict__:
+ 464⋮ 463│             return
+ 465⋮ 464│ 
+ 466⋮ 465│         # getattr will call the ImageFileDescriptor's __get__ method, which

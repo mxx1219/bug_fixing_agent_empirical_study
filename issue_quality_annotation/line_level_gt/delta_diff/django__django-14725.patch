@@ -1,0 +1,50 @@
+
+django/forms/models.py
+
+ 676⋮ 676│                 for form in self.saved_forms:
+ 677⋮ 677│                     form.save_m2m()
+ 678⋮ 678│             self.save_m2m = save_m2m
+ 679⋮    │-        return self.save_existing_objects(commit) + self.save_new_objects(commit)
+    ⋮ 679│+        if self.edit_only:
+    ⋮ 680│+            return self.save_existing_objects(commit)
+    ⋮ 681│+        else:
+    ⋮ 682│+            return self.save_existing_objects(commit) + self.save_new_objects(commit)
+ 680⋮ 683│ 
+ 681⋮ 684│     save.alters_data = True
+ 682⋮ 685│ 
+
+ 875⋮ 878│                          widgets=None, validate_max=False, localized_fields=None,
+ 876⋮ 879│                          labels=None, help_texts=None, error_messages=None,
+ 877⋮ 880│                          min_num=None, validate_min=False, field_classes=None,
+ 878⋮    │-                         absolute_max=None, can_delete_extra=True, renderer=None):
+    ⋮ 881│+                         absolute_max=None, can_delete_extra=True, renderer=None,
+    ⋮ 882│+                         edit_only=False):
+ 879⋮ 883│     """Return a FormSet class for the given Django model class."""
+ 880⋮ 884│     meta = getattr(form, 'Meta', None)
+ 881⋮ 885│     if (getattr(meta, 'fields', fields) is None and
+
+ 896⋮ 900│                               absolute_max=absolute_max, can_delete_extra=can_delete_extra,
+ 897⋮ 901│                               renderer=renderer)
+ 898⋮ 902│     FormSet.model = model
+    ⋮ 903│+    FormSet.edit_only = edit_only
+ 899⋮ 904│     return FormSet
+ 900⋮ 905│ 
+ 901⋮ 906│ 
+
+1076⋮1081│                           widgets=None, validate_max=False, localized_fields=None,
+1077⋮1082│                           labels=None, help_texts=None, error_messages=None,
+1078⋮1083│                           min_num=None, validate_min=False, field_classes=None,
+1079⋮    │-                          absolute_max=None, can_delete_extra=True, renderer=None):
+    ⋮1084│+                          absolute_max=None, can_delete_extra=True, renderer=None,
+    ⋮1085│+                          edit_only=False):
+1080⋮1086│     """
+1081⋮1087│     Return an ``InlineFormSet`` for the given kwargs.
+1082⋮1088│ 
+
+1109⋮1115│         'absolute_max': absolute_max,
+1110⋮1116│         'can_delete_extra': can_delete_extra,
+1111⋮1117│         'renderer': renderer,
+    ⋮1118│+        'edit_only': edit_only,
+1112⋮1119│     }
+1113⋮1120│     FormSet = modelformset_factory(model, **kwargs)
+1114⋮1121│     FormSet.fk = fk

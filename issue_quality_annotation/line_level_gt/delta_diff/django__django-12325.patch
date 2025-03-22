@@ -1,0 +1,33 @@
+
+django/db/models/base.py
+
+ 202⋮ 202│                 continue
+ 203⋮ 203│             # Locate OneToOneField instances.
+ 204⋮ 204│             for field in base._meta.local_fields:
+ 205⋮    │-                if isinstance(field, OneToOneField):
+    ⋮ 205│+                if isinstance(field, OneToOneField) and field.remote_field.parent_link:
+ 206⋮ 206│                     related = resolve_relation(new_class, field.remote_field.model)
+ 207⋮ 207│                     parent_links[make_model_tuple(related)] = field
+ 208⋮ 208│ 
+
+django/db/models/options.py
+
+  5 ⋮  5 │ 
+  6 ⋮  6 │ from django.apps import apps
+  7 ⋮  7 │ from django.conf import settings
+  8 ⋮    │-from django.core.exceptions import FieldDoesNotExist, ImproperlyConfigured
+    ⋮  8 │+from django.core.exceptions import FieldDoesNotExist
+  9 ⋮  9 │ from django.db import connections
+ 10 ⋮ 10 │ from django.db.models import Manager
+ 11 ⋮ 11 │ from django.db.models.fields import AutoField
+
+ 251⋮ 251│                     field = already_created[0]
+ 252⋮ 252│                 field.primary_key = True
+ 253⋮ 253│                 self.setup_pk(field)
+ 254⋮    │-                if not field.remote_field.parent_link:
+ 255⋮    │-                    raise ImproperlyConfigured(
+ 256⋮    │-                        'Add parent_link=True to %s.' % field,
+ 257⋮    │-                    )
+ 258⋮ 254│             else:
+ 259⋮ 255│                 auto = AutoField(verbose_name='ID', primary_key=True, auto_created=True)
+ 260⋮ 256│                 model.add_to_class('id', auto)

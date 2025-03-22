@@ -1,0 +1,32 @@
+
+sympy/parsing/sympy_parser.py
+
+1119⋮1119│         'exp', 'ln', 'log', 'sqrt', 'cbrt',
+1120⋮1120│     )
+1121⋮1121│ 
+    ⋮1122│+    relational_operators = {
+    ⋮1123│+        ast.NotEq: 'Ne',
+    ⋮1124│+        ast.Lt: 'Lt',
+    ⋮1125│+        ast.LtE: 'Le',
+    ⋮1126│+        ast.Gt: 'Gt',
+    ⋮1127│+        ast.GtE: 'Ge',
+    ⋮1128│+        ast.Eq: 'Eq'
+    ⋮1129│+    }
+    ⋮1130│+    def visit_Compare(self, node):
+    ⋮1131│+        if node.ops[0].__class__ in self.relational_operators:
+    ⋮1132│+            sympy_class = self.relational_operators[node.ops[0].__class__]
+    ⋮1133│+            right = self.visit(node.comparators[0])
+    ⋮1134│+            left = self.visit(node.left)
+    ⋮1135│+            new_node = ast.Call(
+    ⋮1136│+                func=ast.Name(id=sympy_class, ctx=ast.Load()),
+    ⋮1137│+                args=[left, right],
+    ⋮1138│+                keywords=[ast.keyword(arg='evaluate', value=ast.NameConstant(value=False, ctx=ast.Load()))],
+    ⋮1139│+                starargs=None,
+    ⋮1140│+                kwargs=None
+    ⋮1141│+            )
+    ⋮1142│+            return new_node
+    ⋮1143│+        return node
+    ⋮1144│+
+1122⋮1145│     def flatten(self, args, func):
+1123⋮1146│         result = []
+1124⋮1147│         for arg in args:

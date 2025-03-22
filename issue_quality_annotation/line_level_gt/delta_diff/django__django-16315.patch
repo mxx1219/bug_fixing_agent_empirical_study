@@ -1,0 +1,46 @@
+
+django/db/models/query.py
+
+ 720⋮ 720│                     "Unique fields that can trigger the upsert must be provided."
+ 721⋮ 721│                 )
+ 722⋮ 722│             # Updating primary keys and non-concrete fields is forbidden.
+ 723⋮    │-            update_fields = [self.model._meta.get_field(name) for name in update_fields]
+ 724⋮ 723│             if any(not f.concrete or f.many_to_many for f in update_fields):
+ 725⋮ 724│                 raise ValueError(
+ 726⋮ 725│                     "bulk_create() can only be used with concrete fields in "
+
+ 732⋮ 731│                     "update_fields."
+ 733⋮ 732│                 )
+ 734⋮ 733│             if unique_fields:
+ 735⋮    │-                unique_fields = [
+ 736⋮    │-                    self.model._meta.get_field(name) for name in unique_fields
+ 737⋮    │-                ]
+ 738⋮ 734│                 if any(not f.concrete or f.many_to_many for f in unique_fields):
+ 739⋮ 735│                     raise ValueError(
+ 740⋮ 736│                         "bulk_create() can only be used with concrete fields "
+
+ 786⋮ 782│         if unique_fields:
+ 787⋮ 783│             # Primary key is allowed in unique_fields.
+ 788⋮ 784│             unique_fields = [
+ 789⋮    │-                opts.pk.name if name == "pk" else name for name in unique_fields
+    ⋮ 785│+                self.model._meta.get_field(opts.pk.name if name == "pk" else name)
+    ⋮ 786│+                for name in unique_fields
+ 790⋮ 787│             ]
+    ⋮ 788│+        if update_fields:
+    ⋮ 789│+            update_fields = [self.model._meta.get_field(name) for name in update_fields]
+ 791⋮ 790│         on_conflict = self._check_bulk_create_options(
+ 792⋮ 791│             ignore_conflicts,
+ 793⋮ 792│             update_conflicts,
+
+django/db/models/sql/compiler.py
+
+1725⋮1725│         on_conflict_suffix_sql = self.connection.ops.on_conflict_suffix_sql(
+1726⋮1726│             fields,
+1727⋮1727│             self.query.on_conflict,
+1728⋮    │-            self.query.update_fields,
+1729⋮    │-            self.query.unique_fields,
+    ⋮1728│+            (f.column for f in self.query.update_fields),
+    ⋮1729│+            (f.column for f in self.query.unique_fields),
+1730⋮1730│         )
+1731⋮1731│         if (
+1732⋮1732│             self.returning_fields

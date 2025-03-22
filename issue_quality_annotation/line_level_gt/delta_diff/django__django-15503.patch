@@ -1,0 +1,70 @@
+
+django/db/models/fields/json.py
+
+ 172⋮ 172│ class HasKeyLookup(PostgresOperatorLookup):
+ 173⋮ 173│     logical_operator = None
+ 174⋮ 174│ 
+    ⋮ 175│+    def compile_json_path_final_key(self, key_transform):
+    ⋮ 176│+        # Compile the final key without interpreting ints as array elements.
+    ⋮ 177│+        return ".%s" % json.dumps(key_transform)
+    ⋮ 178│+
+ 175⋮ 179│     def as_sql(self, compiler, connection, template=None):
+ 176⋮ 180│         # Process JSON path from the left-hand side.
+ 177⋮ 181│         if isinstance(self.lhs, KeyTransform):
+
+ 193⋮ 197│                 *_, rhs_key_transforms = key.preprocess_lhs(compiler, connection)
+ 194⋮ 198│             else:
+ 195⋮ 199│                 rhs_key_transforms = [key]
+ 196⋮    │-            rhs_params.append(
+ 197⋮    │-                "%s%s"
+ 198⋮    │-                % (
+ 199⋮    │-                    lhs_json_path,
+ 200⋮    │-                    compile_json_path(rhs_key_transforms, include_root=False),
+ 201⋮    │-                )
+ 202⋮    │-            )
+    ⋮ 200│+            *rhs_key_transforms, final_key = rhs_key_transforms
+    ⋮ 201│+            rhs_json_path = compile_json_path(rhs_key_transforms, include_root=False)
+    ⋮ 202│+            rhs_json_path += self.compile_json_path_final_key(final_key)
+    ⋮ 203│+            rhs_params.append(lhs_json_path + rhs_json_path)
+ 203⋮ 204│         # Add condition for each key.
+ 204⋮ 205│         if self.logical_operator:
+ 205⋮ 206│             sql = "(%s)" % self.logical_operator.join([sql] * len(rhs_params))
+
+ 253⋮ 254│     logical_operator = " OR "
+ 254⋮ 255│ 
+ 255⋮ 256│ 
+    ⋮ 257│+class HasKeyOrArrayIndex(HasKey):
+    ⋮ 258│+    def compile_json_path_final_key(self, key_transform):
+    ⋮ 259│+        return compile_json_path([key_transform], include_root=False)
+    ⋮ 260│+
+    ⋮ 261│+
+ 256⋮ 262│ class CaseInsensitiveMixin:
+ 257⋮ 263│     """
+ 258⋮ 264│     Mixin to allow case-insensitive comparison of JSON values on MySQL.
+
+ 387⋮ 393│ class KeyTransformIsNull(lookups.IsNull):
+ 388⋮ 394│     # key__isnull=False is the same as has_key='key'
+ 389⋮ 395│     def as_oracle(self, compiler, connection):
+ 390⋮    │-        sql, params = HasKey(
+    ⋮ 396│+        sql, params = HasKeyOrArrayIndex(
+ 391⋮ 397│             self.lhs.lhs,
+ 392⋮ 398│             self.lhs.key_name,
+ 393⋮ 399│         ).as_oracle(compiler, connection)
+
+ 401⋮ 407│         template = "JSON_TYPE(%s, %%s) IS NULL"
+ 402⋮ 408│         if not self.rhs:
+ 403⋮ 409│             template = "JSON_TYPE(%s, %%s) IS NOT NULL"
+ 404⋮    │-        return HasKey(self.lhs.lhs, self.lhs.key_name).as_sql(
+    ⋮ 410│+        return HasKeyOrArrayIndex(self.lhs.lhs, self.lhs.key_name).as_sql(
+ 405⋮ 411│             compiler,
+ 406⋮ 412│             connection,
+ 407⋮ 413│             template=template,
+
+ 466⋮ 472│         rhs, rhs_params = super().process_rhs(compiler, connection)
+ 467⋮ 473│         if rhs_params == ["null"]:
+ 468⋮ 474│             # Field has key and it's NULL.
+ 469⋮    │-            has_key_expr = HasKey(self.lhs.lhs, self.lhs.key_name)
+    ⋮ 475│+            has_key_expr = HasKeyOrArrayIndex(self.lhs.lhs, self.lhs.key_name)
+ 470⋮ 476│             has_key_sql, has_key_params = has_key_expr.as_oracle(compiler, connection)
+ 471⋮ 477│             is_null_expr = self.lhs.get_lookup("isnull")(self.lhs, True)
+ 472⋮ 478│             is_null_sql, is_null_params = is_null_expr.as_sql(compiler, connection)

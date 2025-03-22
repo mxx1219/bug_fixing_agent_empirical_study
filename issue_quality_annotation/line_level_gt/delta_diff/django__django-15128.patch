@@ -1,0 +1,78 @@
+
+django/db/models/sql/query.py
+
+ 572⋮ 572│         if self.distinct_fields != rhs.distinct_fields:
+ 573⋮ 573│             raise TypeError('Cannot combine queries with different distinct fields.')
+ 574⋮ 574│ 
+    ⋮ 575│+        # If lhs and rhs shares the same alias prefix, it is possible to have
+    ⋮ 576│+        # conflicting alias changes like T4 -> T5, T5 -> T6, which might end up
+    ⋮ 577│+        # as T4 -> T6 while combining two querysets. To prevent this, change an
+    ⋮ 578│+        # alias prefix of the rhs and update current aliases accordingly,
+    ⋮ 579│+        # except if the alias is the base table since it must be present in the
+    ⋮ 580│+        # query on both sides.
+    ⋮ 581│+        initial_alias = self.get_initial_alias()
+    ⋮ 582│+        rhs.bump_prefix(self, exclude={initial_alias})
+    ⋮ 583│+
+ 575⋮ 584│         # Work out how to relabel the rhs aliases, if necessary.
+ 576⋮ 585│         change_map = {}
+ 577⋮ 586│         conjunction = (connector == AND)
+
+ 589⋮ 598│         # the AND case. The results will be correct but this creates too many
+ 590⋮ 599│         # joins. This is something that could be fixed later on.
+ 591⋮ 600│         reuse = set() if conjunction else set(self.alias_map)
+ 592⋮    │-        # Base table must be present in the query - this is the same
+ 593⋮    │-        # table on both sides.
+ 594⋮    │-        self.get_initial_alias()
+ 595⋮ 601│         joinpromoter = JoinPromoter(connector, 2, False)
+ 596⋮ 602│         joinpromoter.add_votes(
+ 597⋮ 603│             j for j in self.alias_map if self.alias_map[j].join_type == INNER)
+
+ 846⋮ 852│         relabelling any references to them in select columns and the where
+ 847⋮ 853│         clause.
+ 848⋮ 854│         """
+    ⋮ 855│+        # If keys and values of change_map were to intersect, an alias might be
+    ⋮ 856│+        # updated twice (e.g. T4 -> T5, T5 -> T6, so also T4 -> T6) depending
+    ⋮ 857│+        # on their order in change_map.
+ 849⋮ 858│         assert set(change_map).isdisjoint(change_map.values())
+ 850⋮ 859│ 
+ 851⋮ 860│         # 1. Update references in "select" (normal columns plus aliases),
+
+ 879⋮ 888│             for alias, aliased in self.external_aliases.items()
+ 880⋮ 889│         }
+ 881⋮ 890│ 
+ 882⋮    │-    def bump_prefix(self, outer_query):
+    ⋮ 891│+    def bump_prefix(self, other_query, exclude=None):
+ 883⋮ 892│         """
+ 884⋮ 893│         Change the alias prefix to the next letter in the alphabet in a way
+ 885⋮    │-        that the outer query's aliases and this query's aliases will not
+    ⋮ 894│+        that the other query's aliases and this query's aliases will not
+ 886⋮ 895│         conflict. Even tables that previously had no alias will get an alias
+ 887⋮    │-        after this call.
+    ⋮ 896│+        after this call. To prevent changing aliases use the exclude parameter.
+ 888⋮ 897│         """
+ 889⋮ 898│         def prefix_gen():
+ 890⋮ 899│             """
+
+ 904⋮ 913│                     yield ''.join(s)
+ 905⋮ 914│                 prefix = None
+ 906⋮ 915│ 
+ 907⋮    │-        if self.alias_prefix != outer_query.alias_prefix:
+    ⋮ 916│+        if self.alias_prefix != other_query.alias_prefix:
+ 908⋮ 917│             # No clashes between self and outer query should be possible.
+ 909⋮ 918│             return
+ 910⋮ 919│ 
+
+ 922⋮ 931│                     'Maximum recursion depth exceeded: too many subqueries.'
+ 923⋮ 932│                 )
+ 924⋮ 933│         self.subq_aliases = self.subq_aliases.union([self.alias_prefix])
+ 925⋮    │-        outer_query.subq_aliases = outer_query.subq_aliases.union(self.subq_aliases)
+    ⋮ 934│+        other_query.subq_aliases = other_query.subq_aliases.union(self.subq_aliases)
+    ⋮ 935│+        if exclude is None:
+    ⋮ 936│+            exclude = {}
+ 926⋮ 937│         self.change_aliases({
+ 927⋮ 938│             alias: '%s%d' % (self.alias_prefix, pos)
+ 928⋮ 939│             for pos, alias in enumerate(self.alias_map)
+    ⋮ 940│+            if alias not in exclude
+ 929⋮ 941│         })
+ 930⋮ 942│ 
+ 931⋮ 943│     def get_initial_alias(self):

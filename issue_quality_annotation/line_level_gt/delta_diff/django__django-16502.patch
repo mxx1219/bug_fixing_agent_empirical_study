@@ -1,0 +1,53 @@
+
+django/core/servers/basehttp.py
+
+ 11 ⋮ 11 │ import socket
+ 12 ⋮ 12 │ import socketserver
+ 13 ⋮ 13 │ import sys
+    ⋮ 14 │+from collections import deque
+ 14 ⋮ 15 │ from wsgiref import simple_server
+ 15 ⋮ 16 │ 
+ 16 ⋮ 17 │ from django.core.exceptions import ImproperlyConfigured
+
+ 130⋮ 131│ 
+ 131⋮ 132│     def cleanup_headers(self):
+ 132⋮ 133│         super().cleanup_headers()
+    ⋮ 134│+        if (
+    ⋮ 135│+            self.environ["REQUEST_METHOD"] == "HEAD"
+    ⋮ 136│+            and "Content-Length" in self.headers
+    ⋮ 137│+        ):
+    ⋮ 138│+            del self.headers["Content-Length"]
+ 133⋮ 139│         # HTTP/1.1 requires support for persistent connections. Send 'close' if
+ 134⋮ 140│         # the content length is unknown to prevent clients from reusing the
+ 135⋮ 141│         # connection.
+ 136⋮    │-        if "Content-Length" not in self.headers:
+    ⋮ 142│+        if (
+    ⋮ 143│+            self.environ["REQUEST_METHOD"] != "HEAD"
+    ⋮ 144│+            and "Content-Length" not in self.headers
+    ⋮ 145│+        ):
+ 137⋮ 146│             self.headers["Connection"] = "close"
+ 138⋮ 147│         # Persistent connections require threading server.
+ 139⋮ 148│         elif not isinstance(self.request_handler.server, socketserver.ThreadingMixIn):
+
+ 147⋮ 156│         self.get_stdin().read()
+ 148⋮ 157│         super().close()
+ 149⋮ 158│ 
+    ⋮ 159│+    def finish_response(self):
+    ⋮ 160│+        if self.environ["REQUEST_METHOD"] == "HEAD":
+    ⋮ 161│+            try:
+    ⋮ 162│+                deque(self.result, maxlen=0)  # Consume iterator.
+    ⋮ 163│+                # Don't call self.finish_content() as, if the headers have not
+    ⋮ 164│+                # been sent and Content-Length isn't set, it'll default to "0"
+    ⋮ 165│+                # which will prevent omission of the Content-Length header with
+    ⋮ 166│+                # HEAD requests as permitted by RFC 9110 Section 9.3.2.
+    ⋮ 167│+                # Instead, send the headers, if not sent yet.
+    ⋮ 168│+                if not self.headers_sent:
+    ⋮ 169│+                    self.send_headers()
+    ⋮ 170│+            finally:
+    ⋮ 171│+                self.close()
+    ⋮ 172│+        else:
+    ⋮ 173│+            super().finish_response()
+    ⋮ 174│+
+ 150⋮ 175│ 
+ 151⋮ 176│ class WSGIRequestHandler(simple_server.WSGIRequestHandler):
+ 152⋮ 177│     protocol_version = "HTTP/1.1"

@@ -1,0 +1,11 @@
+
+django/core/management/commands/loaddata.py
+
+ 367⋮ 367│         for app_config in apps.get_app_configs():
+ 368⋮ 368│             app_label = app_config.label
+ 369⋮ 369│             app_dir = os.path.join(app_config.path, "fixtures")
+ 370⋮    │-            if app_dir in fixture_dirs:
+    ⋮ 370│+            if app_dir in [str(d) for d in fixture_dirs]:
+ 371⋮ 371│                 raise ImproperlyConfigured(
+ 372⋮ 372│                     "'%s' is a default fixture directory for the '%s' app "
+ 373⋮ 373│                     "and cannot be listed in settings.FIXTURE_DIRS."

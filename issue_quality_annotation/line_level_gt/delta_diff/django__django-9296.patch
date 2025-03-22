@@ -1,0 +1,13 @@
+
+django/core/paginator.py
+
+ 34 ⋮ 34 │         self.orphans = int(orphans)
+ 35 ⋮ 35 │         self.allow_empty_first_page = allow_empty_first_page
+ 36 ⋮ 36 │ 
+    ⋮ 37 │+    def __iter__(self):
+    ⋮ 38 │+        for page_number in self.page_range:
+    ⋮ 39 │+            yield self.page(page_number)
+    ⋮ 40 │+
+ 37 ⋮ 41 │     def validate_number(self, number):
+ 38 ⋮ 42 │         """Validate the given 1-based page number."""
+ 39 ⋮ 43 │         try:

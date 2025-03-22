@@ -1,0 +1,51 @@
+
+django/contrib/messages/storage/cookie.py
+
+ 92 ⋮ 92 │                 samesite=settings.SESSION_COOKIE_SAMESITE,
+ 93 ⋮ 93 │             )
+ 94 ⋮ 94 │         else:
+ 95 ⋮    │-            response.delete_cookie(self.cookie_name, domain=settings.SESSION_COOKIE_DOMAIN)
+    ⋮ 95 │+            response.delete_cookie(
+    ⋮ 96 │+                self.cookie_name,
+    ⋮ 97 │+                domain=settings.SESSION_COOKIE_DOMAIN,
+    ⋮ 98 │+                samesite=settings.SESSION_COOKIE_SAMESITE,
+    ⋮ 99 │+            )
+ 96 ⋮ 100│ 
+ 97 ⋮ 101│     def _store(self, messages, response, remove_oldest=True, *args, **kwargs):
+ 98 ⋮ 102│         """
+
+django/contrib/sessions/middleware.py
+
+ 42 ⋮ 42 │                 settings.SESSION_COOKIE_NAME,
+ 43 ⋮ 43 │                 path=settings.SESSION_COOKIE_PATH,
+ 44 ⋮ 44 │                 domain=settings.SESSION_COOKIE_DOMAIN,
+    ⋮ 45 │+                samesite=settings.SESSION_COOKIE_SAMESITE,
+ 45 ⋮ 46 │             )
+ 46 ⋮ 47 │             patch_vary_headers(response, ('Cookie',))
+ 47 ⋮ 48 │         else:
+
+django/http/response.py
+
+ 210⋮ 210│         value = signing.get_cookie_signer(salt=key + salt).sign(value)
+ 211⋮ 211│         return self.set_cookie(key, value, **kwargs)
+ 212⋮ 212│ 
+ 213⋮    │-    def delete_cookie(self, key, path='/', domain=None):
+ 214⋮    │-        # Most browsers ignore the Set-Cookie header if the cookie name starts
+ 215⋮    │-        # with __Host- or __Secure- and the cookie doesn't use the secure flag.
+ 216⋮    │-        secure = key.startswith(('__Secure-', '__Host-'))
+    ⋮ 213│+    def delete_cookie(self, key, path='/', domain=None, samesite=None):
+    ⋮ 214│+        # Browsers can ignore the Set-Cookie header if the cookie doesn't use
+    ⋮ 215│+        # the secure flag and:
+    ⋮ 216│+        # - the cookie name starts with "__Host-" or "__Secure-", or
+    ⋮ 217│+        # - the samesite is "none".
+    ⋮ 218│+        secure = (
+    ⋮ 219│+            key.startswith(('__Secure-', '__Host-')) or
+    ⋮ 220│+            (samesite and samesite.lower() == 'none')
+    ⋮ 221│+        )
+ 217⋮ 222│         self.set_cookie(
+ 218⋮ 223│             key, max_age=0, path=path, domain=domain, secure=secure,
+ 219⋮    │-            expires='Thu, 01 Jan 1970 00:00:00 GMT',
+    ⋮ 224│+            expires='Thu, 01 Jan 1970 00:00:00 GMT', samesite=samesite,
+ 220⋮ 225│         )
+ 221⋮ 226│ 
+ 222⋮ 227│     # Common methods used by subclasses

@@ -1,0 +1,22 @@
+
+django/urls/resolvers.py
+
+ 59 ⋮ 59 │         return (self.func, self.args, self.kwargs)[index]
+ 60 ⋮ 60 │ 
+ 61 ⋮ 61 │     def __repr__(self):
+ 62 ⋮    │-        return "ResolverMatch(func=%s, args=%s, kwargs=%s, url_name=%s, app_names=%s, namespaces=%s, route=%s)" % (
+ 63 ⋮    │-            self._func_path, self.args, self.kwargs, self.url_name,
+ 64 ⋮    │-            self.app_names, self.namespaces, self.route,
+    ⋮ 62 │+        if isinstance(self.func, functools.partial):
+    ⋮ 63 │+            func = repr(self.func)
+    ⋮ 64 │+        else:
+    ⋮ 65 │+            func = self._func_path
+    ⋮ 66 │+        return (
+    ⋮ 67 │+            'ResolverMatch(func=%s, args=%r, kwargs=%r, url_name=%r, '
+    ⋮ 68 │+            'app_names=%r, namespaces=%r, route=%r)' % (
+    ⋮ 69 │+                func, self.args, self.kwargs, self.url_name,
+    ⋮ 70 │+                self.app_names, self.namespaces, self.route,
+    ⋮ 71 │+            )
+ 65 ⋮ 72 │         )
+ 66 ⋮ 73 │ 
+ 67 ⋮ 74 │ 

@@ -1,0 +1,28 @@
+
+django/core/management/commands/flush.py
+
+ 60 ⋮ 60 │ 
+ 61 ⋮ 61 │         if confirm == 'yes':
+ 62 ⋮ 62 │             try:
+ 63 ⋮    │-                connection.ops.execute_sql_flush(database, sql_list)
+    ⋮ 63 │+                connection.ops.execute_sql_flush(sql_list)
+ 64 ⋮ 64 │             except Exception as exc:
+ 65 ⋮ 65 │                 raise CommandError(
+ 66 ⋮ 66 │                     "Database %s couldn't be flushed. Possible reasons:\n"
+
+django/db/backends/base/operations.py
+
+ 400⋮ 400│         """
+ 401⋮ 401│         raise NotImplementedError('subclasses of BaseDatabaseOperations must provide a sql_flush() method')
+ 402⋮ 402│ 
+ 403⋮    │-    def execute_sql_flush(self, using, sql_list):
+    ⋮ 403│+    def execute_sql_flush(self, sql_list):
+ 404⋮ 404│         """Execute a list of SQL statements to flush the database."""
+ 405⋮    │-        with transaction.atomic(using=using, savepoint=self.connection.features.can_rollback_ddl):
+    ⋮ 405│+        with transaction.atomic(
+    ⋮ 406│+            using=self.connection.alias,
+    ⋮ 407│+            savepoint=self.connection.features.can_rollback_ddl,
+    ⋮ 408│+        ):
+ 406⋮ 409│             with self.connection.cursor() as cursor:
+ 407⋮ 410│                 for sql in sql_list:
+ 408⋮ 411│                     cursor.execute(sql)

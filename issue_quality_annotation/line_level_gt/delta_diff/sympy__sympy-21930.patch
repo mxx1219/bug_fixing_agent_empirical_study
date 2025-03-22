@@ -1,0 +1,29 @@
+
+sympy/physics/secondquant.py
+
+ 218⋮ 218│             return (12, label, h)
+ 219⋮ 219│ 
+ 220⋮ 220│     def _latex(self, printer):
+ 221⋮    │-        return "%s^{%s}_{%s}" % (
+    ⋮ 221│+        return "{%s^{%s}_{%s}}" % (
+ 222⋮ 222│             self.symbol,
+ 223⋮ 223│             "".join([ i.name for i in self.args[1]]),
+ 224⋮ 224│             "".join([ i.name for i in self.args[2]])
+
+ 478⋮ 478│         return "CreateBoson(%s)" % self.state
+ 479⋮ 479│ 
+ 480⋮ 480│     def _latex(self, printer):
+ 481⋮    │-        return "b^\\dagger_{%s}" % self.state.name
+    ⋮ 481│+        return "{b^\\dagger_{%s}}" % self.state.name
+ 482⋮ 482│ 
+ 483⋮ 483│ B = AnnihilateBoson
+ 484⋮ 484│ Bd = CreateBoson
+
+ 939⋮ 939│         return "CreateFermion(%s)" % self.state
+ 940⋮ 940│ 
+ 941⋮ 941│     def _latex(self, printer):
+ 942⋮    │-        return "a^\\dagger_{%s}" % self.state.name
+    ⋮ 942│+        return "{a^\\dagger_{%s}}" % self.state.name
+ 943⋮ 943│ 
+ 944⋮ 944│ Fd = CreateFermion
+ 945⋮ 945│ F = AnnihilateFermion

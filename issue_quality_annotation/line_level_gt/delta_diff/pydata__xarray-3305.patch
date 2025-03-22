@@ -1,0 +1,67 @@
+
+xarray/core/dataset.py
+
+4768⋮4768│                             # the former is often more efficient
+4769⋮4769│                             reduce_dims = None
+4770⋮4770│                         variables[name] = var.quantile(
+4771⋮    │-                            q, dim=reduce_dims, interpolation=interpolation
+    ⋮4771│+                            q,
+    ⋮4772│+                            dim=reduce_dims,
+    ⋮4773│+                            interpolation=interpolation,
+    ⋮4774│+                            keep_attrs=keep_attrs,
+4772⋮4775│                         )
+4773⋮4776│ 
+4774⋮4777│             else:
+
+xarray/core/variable.py
+
+1592⋮1592│         """
+1593⋮1593│         return self.broadcast_equals(other, equiv=duck_array_ops.array_notnull_equiv)
+1594⋮1594│ 
+1595⋮    │-    def quantile(self, q, dim=None, interpolation="linear"):
+    ⋮1595│+    def quantile(self, q, dim=None, interpolation="linear", keep_attrs=None):
+1596⋮1596│         """Compute the qth quantile of the data along the specified dimension.
+1597⋮1597│ 
+1598⋮1598│         Returns the qth quantiles(s) of the array elements.
+
+1615⋮1615│                 * higher: ``j``.
+1616⋮1616│                 * nearest: ``i`` or ``j``, whichever is nearest.
+1617⋮1617│                 * midpoint: ``(i + j) / 2``.
+    ⋮1618│+        keep_attrs : bool, optional
+    ⋮1619│+            If True, the variable's attributes (`attrs`) will be copied from
+    ⋮1620│+            the original object to the new one.  If False (default), the new
+    ⋮1621│+            object will be returned without attributes.
+1618⋮1622│ 
+1619⋮1623│         Returns
+1620⋮1624│         -------
+
+1623⋮1627│             is a scalar. If multiple percentiles are given, first axis of
+1624⋮1628│             the result corresponds to the quantile and a quantile dimension
+1625⋮1629│             is added to the return array. The other dimensions are the
+1626⋮    │-             dimensions that remain after the reduction of the array.
+    ⋮1630│+            dimensions that remain after the reduction of the array.
+1627⋮1631│ 
+1628⋮1632│         See Also
+1629⋮1633│         --------
+
+1651⋮1655│             axis = None
+1652⋮1656│             new_dims = []
+1653⋮1657│ 
+1654⋮    │-        # only add the quantile dimension if q is array like
+    ⋮1658│+        # Only add the quantile dimension if q is array-like
+1655⋮1659│         if q.ndim != 0:
+1656⋮1660│             new_dims = ["quantile"] + new_dims
+1657⋮1661│ 
+1658⋮1662│         qs = np.nanpercentile(
+1659⋮1663│             self.data, q * 100.0, axis=axis, interpolation=interpolation
+1660⋮1664│         )
+1661⋮    │-        return Variable(new_dims, qs)
+    ⋮1665│+
+    ⋮1666│+        if keep_attrs is None:
+    ⋮1667│+            keep_attrs = _get_keep_attrs(default=False)
+    ⋮1668│+        attrs = self._attrs if keep_attrs else None
+    ⋮1669│+
+    ⋮1670│+        return Variable(new_dims, qs, attrs)
+1662⋮1671│ 
+1663⋮1672│     def rank(self, dim, pct=False):
+1664⋮1673│         """Ranks the data.

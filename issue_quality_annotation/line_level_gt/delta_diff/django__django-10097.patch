@@ -1,0 +1,11 @@
+
+django/core/validators.py
+
+ 94 ⋮ 94 │ 
+ 95 ⋮ 95 │     regex = _lazy_re_compile(
+ 96 ⋮ 96 │         r'^(?:[a-z0-9\.\-\+]*)://'  # scheme is validated separately
+ 97 ⋮    │-        r'(?:\S+(?::\S*)?@)?'  # user:pass authentication
+    ⋮ 97 │+        r'(?:[^\s:@/]+(?::[^\s:@/]*)?@)?'  # user:pass authentication
+ 98 ⋮ 98 │         r'(?:' + ipv4_re + '|' + ipv6_re + '|' + host_re + ')'
+ 99 ⋮ 99 │         r'(?::\d{2,5})?'  # port
+ 100⋮ 100│         r'(?:[/?#][^\s]*)?'  # resource path

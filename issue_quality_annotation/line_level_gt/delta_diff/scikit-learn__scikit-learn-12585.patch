@@ -1,0 +1,11 @@
+
+sklearn/base.py
+
+ 48 ⋮ 48 │     # XXX: not handling dictionaries
+ 49 ⋮ 49 │     if estimator_type in (list, tuple, set, frozenset):
+ 50 ⋮ 50 │         return estimator_type([clone(e, safe=safe) for e in estimator])
+ 51 ⋮    │-    elif not hasattr(estimator, 'get_params'):
+    ⋮ 51 │+    elif not hasattr(estimator, 'get_params') or isinstance(estimator, type):
+ 52 ⋮ 52 │         if not safe:
+ 53 ⋮ 53 │             return copy.deepcopy(estimator)
+ 54 ⋮ 54 │         else:

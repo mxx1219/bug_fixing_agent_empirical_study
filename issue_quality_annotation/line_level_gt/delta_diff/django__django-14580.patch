@@ -1,0 +1,11 @@
+
+django/db/migrations/serializer.py
+
+ 273⋮ 273│ class TypeSerializer(BaseSerializer):
+ 274⋮ 274│     def serialize(self):
+ 275⋮ 275│         special_cases = [
+ 276⋮    │-            (models.Model, "models.Model", []),
+    ⋮ 276│+            (models.Model, "models.Model", ['from django.db import models']),
+ 277⋮ 277│             (type(None), 'type(None)', []),
+ 278⋮ 278│         ]
+ 279⋮ 279│         for case, string, imports in special_cases:

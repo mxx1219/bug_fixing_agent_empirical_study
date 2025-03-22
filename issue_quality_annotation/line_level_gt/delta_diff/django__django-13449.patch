@@ -1,0 +1,28 @@
+
+django/db/models/expressions.py
+
+1253⋮1253│         self.descending = True
+1254⋮1254│ 
+1255⋮1255│ 
+1256⋮    │-class Window(Expression):
+    ⋮1256│+class Window(SQLiteNumericMixin, Expression):
+1257⋮1257│     template = '%(expression)s OVER (%(window)s)'
+1258⋮1258│     # Although the main expression may either be an aggregate or an
+1259⋮1259│     # expression with an aggregate function, the GROUP BY that will
+
+1332⋮1332│             'window': ''.join(window_sql).strip()
+1333⋮1333│         }, params
+1334⋮1334│ 
+    ⋮1335│+    def as_sqlite(self, compiler, connection):
+    ⋮1336│+        if isinstance(self.output_field, fields.DecimalField):
+    ⋮1337│+            # Casting to numeric must be outside of the window expression.
+    ⋮1338│+            copy = self.copy()
+    ⋮1339│+            source_expressions = copy.get_source_expressions()
+    ⋮1340│+            source_expressions[0].output_field = fields.FloatField()
+    ⋮1341│+            copy.set_source_expressions(source_expressions)
+    ⋮1342│+            return super(Window, copy).as_sqlite(compiler, connection)
+    ⋮1343│+        return self.as_sql(compiler, connection)
+    ⋮1344│+
+1335⋮1345│     def __str__(self):
+1336⋮1346│         return '{} OVER ({}{}{})'.format(
+1337⋮1347│             str(self.source_expression),

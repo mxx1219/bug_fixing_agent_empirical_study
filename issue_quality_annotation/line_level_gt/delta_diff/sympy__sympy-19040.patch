@@ -1,0 +1,11 @@
+
+sympy/polys/factortools.py
+
+1147⋮1147│         return lc, []
+1148⋮1148│ 
+1149⋮1149│     f, F = dmp_sqf_part(f, u, K), f
+1150⋮    │-    s, g, r = dmp_sqf_norm(f, u, K)
+    ⋮1150│+    s, g, r = dmp_sqf_norm(F, u, K)
+1151⋮1151│ 
+1152⋮1152│     factors = dmp_factor_list_include(r, u, K.dom)
+1153⋮1153│ 

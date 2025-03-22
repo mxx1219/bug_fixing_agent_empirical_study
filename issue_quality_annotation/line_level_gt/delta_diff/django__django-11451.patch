@@ -1,0 +1,11 @@
+
+django/contrib/auth/backends.py
+
+ 39 ⋮ 39 │     def authenticate(self, request, username=None, password=None, **kwargs):
+ 40 ⋮ 40 │         if username is None:
+ 41 ⋮ 41 │             username = kwargs.get(UserModel.USERNAME_FIELD)
+    ⋮ 42 │+        if username is None or password is None:
+    ⋮ 43 │+            return
+ 42 ⋮ 44 │         try:
+ 43 ⋮ 45 │             user = UserModel._default_manager.get_by_natural_key(username)
+ 44 ⋮ 46 │         except UserModel.DoesNotExist:

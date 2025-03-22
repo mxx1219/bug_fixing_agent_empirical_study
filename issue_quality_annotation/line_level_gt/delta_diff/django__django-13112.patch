@@ -1,0 +1,15 @@
+
+django/db/models/fields/related.py
+
+ 582⋮ 582│         if self.remote_field.parent_link:
+ 583⋮ 583│             kwargs['parent_link'] = self.remote_field.parent_link
+ 584⋮ 584│         if isinstance(self.remote_field.model, str):
+ 585⋮    │-            kwargs['to'] = self.remote_field.model.lower()
+    ⋮ 585│+            if '.' in self.remote_field.model:
+    ⋮ 586│+                app_label, model_name = self.remote_field.model.split('.')
+    ⋮ 587│+                kwargs['to'] = '%s.%s' % (app_label, model_name.lower())
+    ⋮ 588│+            else:
+    ⋮ 589│+                kwargs['to'] = self.remote_field.model.lower()
+ 586⋮ 590│         else:
+ 587⋮ 591│             kwargs['to'] = self.remote_field.model._meta.label_lower
+ 588⋮ 592│         # If swappable is True, then see if we're actually pointing to the target

@@ -1,0 +1,11 @@
+
+sklearn/ensemble/voting.py
+
+ 78 ⋮ 78 │ 
+ 79 ⋮ 79 │         if sample_weight is not None:
+ 80 ⋮ 80 │             for name, step in self.estimators:
+    ⋮ 81 │+                if step is None:
+    ⋮ 82 │+                    continue
+ 81 ⋮ 83 │                 if not has_fit_parameter(step, 'sample_weight'):
+ 82 ⋮ 84 │                     raise ValueError('Underlying estimator \'%s\' does not'
+ 83 ⋮ 85 │                                      ' support sample weights.' % name)

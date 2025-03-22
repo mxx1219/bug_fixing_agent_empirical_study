@@ -1,0 +1,23 @@
+
+sphinx/ext/inheritance_diagram.py
+
+ 412⋮ 412│     pending_xrefs = cast(Iterable[addnodes.pending_xref], node)
+ 413⋮ 413│     for child in pending_xrefs:
+ 414⋮ 414│         if child.get('refuri') is not None:
+ 415⋮    │-            if graphviz_output_format == 'SVG':
+ 416⋮    │-                urls[child['reftitle']] = "../" + child.get('refuri')
+    ⋮ 415│+            # Construct the name from the URI if the reference is external via intersphinx
+    ⋮ 416│+            if not child.get('internal', True):
+    ⋮ 417│+                refname = child['refuri'].rsplit('#', 1)[-1]
+ 417⋮ 418│             else:
+ 418⋮    │-                urls[child['reftitle']] = child.get('refuri')
+    ⋮ 419│+                refname = child['reftitle']
+    ⋮ 420│+
+    ⋮ 421│+            urls[refname] = child.get('refuri')
+ 419⋮ 422│         elif child.get('refid') is not None:
+ 420⋮ 423│             if graphviz_output_format == 'SVG':
+ 421⋮    │-                urls[child['reftitle']] = '../' + current_filename + '#' + child.get('refid')
+    ⋮ 424│+                urls[child['reftitle']] = current_filename + '#' + child.get('refid')
+ 422⋮ 425│             else:
+ 423⋮ 426│                 urls[child['reftitle']] = '#' + child.get('refid')
+ 424⋮ 427│ 

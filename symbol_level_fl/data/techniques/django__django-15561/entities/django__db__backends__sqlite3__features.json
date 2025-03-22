@@ -1,0 +1,30 @@
+[
+    {
+        "type": "methods",
+        "line_range": "59-106"
+    },
+    {
+        "type": "methods",
+        "line_range": "108-110"
+    },
+    {
+        "type": "methods",
+        "line_range": "112-120"
+    },
+    {
+        "type": "methods",
+        "line_range": "122-130"
+    },
+    {
+        "type": "methods",
+        "line_range": "135-137"
+    },
+    {
+        "type": "classes",
+        "line_range": "11-58,107,111,121,131-134,138-141"
+    },
+    {
+        "type": "imports",
+        "line_range": "1-8"
+    }
+]

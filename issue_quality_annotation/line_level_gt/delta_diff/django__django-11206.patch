@@ -1,0 +1,17 @@
+
+django/utils/numberformat.py
+
+ 27 ⋮ 27 │     # sign
+ 28 ⋮ 28 │     sign = ''
+ 29 ⋮ 29 │     if isinstance(number, Decimal):
+    ⋮ 30 │+
+    ⋮ 31 │+        if decimal_pos is not None:
+    ⋮ 32 │+            # If the provided number is too small to affect any of the visible
+    ⋮ 33 │+            # decimal places, consider it equal to '0'.
+    ⋮ 34 │+            cutoff = Decimal('0.' + '1'.rjust(decimal_pos, '0'))
+    ⋮ 35 │+            if abs(number) < cutoff:
+    ⋮ 36 │+                number = Decimal('0')
+    ⋮ 37 │+
+ 30 ⋮ 38 │         # Format values with more than 200 digits (an arbitrary cutoff) using
+ 31 ⋮ 39 │         # scientific notation to avoid high memory usage in {:f}'.format().
+ 32 ⋮ 40 │         _, digits, exponent = number.as_tuple()

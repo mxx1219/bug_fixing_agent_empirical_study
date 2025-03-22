@@ -1,0 +1,110 @@
+[
+    {
+        "type": "functions",
+        "line_range": "149-299"
+    },
+    {
+        "type": "functions",
+        "line_range": "307-341"
+    },
+    {
+        "type": "functions",
+        "line_range": "344-370"
+    },
+    {
+        "type": "functions",
+        "line_range": "1129-1150"
+    },
+    {
+        "type": "methods",
+        "line_range": "109-113"
+    },
+    {
+        "type": "methods",
+        "line_range": "119-121"
+    },
+    {
+        "type": "methods",
+        "line_range": "123-128"
+    },
+    {
+        "type": "methods",
+        "line_range": "130-132"
+    },
+    {
+        "type": "methods",
+        "line_range": "416-423"
+    },
+    {
+        "type": "methods",
+        "line_range": "425-433"
+    },
+    {
+        "type": "methods",
+        "line_range": "438-463"
+    },
+    {
+        "type": "methods",
+        "line_range": "469-495"
+    },
+    {
+        "type": "methods",
+        "line_range": "499-577"
+    },
+    {
+        "type": "methods",
+        "line_range": "579-644"
+    },
+    {
+        "type": "methods",
+        "line_range": "646-680"
+    },
+    {
+        "type": "methods",
+        "line_range": "682-725"
+    },
+    {
+        "type": "methods",
+        "line_range": "727-731"
+    },
+    {
+        "type": "methods",
+        "line_range": "735-780"
+    },
+    {
+        "type": "methods",
+        "line_range": "782-849"
+    },
+    {
+        "type": "methods",
+        "line_range": "851-909"
+    },
+    {
+        "type": "methods",
+        "line_range": "911-971"
+    },
+    {
+        "type": "methods",
+        "line_range": "973-1002"
+    },
+    {
+        "type": "methods",
+        "line_range": "1004-1126"
+    },
+    {
+        "type": "classes",
+        "line_range": "95-108,114-118,122,129"
+    },
+    {
+        "type": "classes",
+        "line_range": "373-415,424,434-437,464-468,496-498,578,645,681,726,732-734,781,850,910,972,1003"
+    },
+    {
+        "type": "imports",
+        "line_range": "1-2"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "4-93"
+    }
+]

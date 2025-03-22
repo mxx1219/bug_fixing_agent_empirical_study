@@ -1,0 +1,31 @@
+
+sklearn/cluster/k_means_.py
+
+ 360⋮ 360│     else:
+ 361⋮ 361│         raise ValueError("Algorithm must be 'auto', 'full' or 'elkan', got"
+ 362⋮ 362│                          " %s" % str(algorithm))
+    ⋮ 363│+
+    ⋮ 364│+    seeds = random_state.randint(np.iinfo(np.int32).max, size=n_init)
+ 363⋮ 365│     if effective_n_jobs(n_jobs) == 1:
+ 364⋮ 366│         # For a single thread, less memory is needed if we just store one set
+ 365⋮ 367│         # of the best results (as opposed to one set per run per thread).
+ 366⋮    │-        for it in range(n_init):
+    ⋮ 368│+        for seed in seeds:
+ 367⋮ 369│             # run a k-means once
+ 368⋮ 370│             labels, inertia, centers, n_iter_ = kmeans_single(
+ 369⋮ 371│                 X, sample_weight, n_clusters, max_iter=max_iter, init=init,
+ 370⋮ 372│                 verbose=verbose, precompute_distances=precompute_distances,
+ 371⋮ 373│                 tol=tol, x_squared_norms=x_squared_norms,
+ 372⋮    │-                random_state=random_state)
+    ⋮ 374│+                random_state=seed)
+ 373⋮ 375│             # determine if these results are the best so far
+ 374⋮ 376│             if best_inertia is None or inertia < best_inertia:
+ 375⋮ 377│                 best_labels = labels.copy()
+
+ 378⋮ 380│                 best_n_iter = n_iter_
+ 379⋮ 381│     else:
+ 380⋮ 382│         # parallelisation of k-means runs
+ 381⋮    │-        seeds = random_state.randint(np.iinfo(np.int32).max, size=n_init)
+ 382⋮ 383│         results = Parallel(n_jobs=n_jobs, verbose=0)(
+ 383⋮ 384│             delayed(kmeans_single)(X, sample_weight, n_clusters,
+ 384⋮ 385│                                    max_iter=max_iter, init=init,

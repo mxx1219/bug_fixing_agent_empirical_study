@@ -1,0 +1,76 @@
+
+pylint/config/argument.py
+
+ 457⋮ 457│         kwargs: dict[str, Any],
+ 458⋮ 458│         hide_help: bool,
+ 459⋮ 459│         section: str | None,
+    ⋮ 460│+        metavar: str,
+ 460⋮ 461│     ) -> None:
+ 461⋮ 462│         super().__init__(
+ 462⋮ 463│             flags=flags, arg_help=arg_help, hide_help=hide_help, section=section
+
+ 467⋮ 468│ 
+ 468⋮ 469│         self.kwargs = kwargs
+ 469⋮ 470│         """Any additional arguments passed to the action."""
+    ⋮ 471│+
+    ⋮ 472│+        self.metavar = metavar
+    ⋮ 473│+        """The metavar of the argument.
+    ⋮ 474│+
+    ⋮ 475│+        See:
+    ⋮ 476│+        https://docs.python.org/3/library/argparse.html#metavar
+    ⋮ 477│+        """
+
+pylint/config/arguments_manager.py
+
+ 218⋮ 218│                 **argument.kwargs,
+ 219⋮ 219│                 action=argument.action,
+ 220⋮ 220│                 help=argument.help,
+    ⋮ 221│+                metavar=argument.metavar,
+ 221⋮ 222│             )
+ 222⋮ 223│         elif isinstance(argument, _ExtendArgument):
+ 223⋮ 224│             section_group.add_argument(
+
+pylint/config/utils.py
+
+ 71 ⋮ 71 │             kwargs=optdict.get("kwargs", {}),
+ 72 ⋮ 72 │             hide_help=optdict.get("hide", False),
+ 73 ⋮ 73 │             section=optdict.get("group", None),
+    ⋮ 74 │+            metavar=optdict.get("metavar", None),
+ 74 ⋮ 75 │         )
+ 75 ⋮ 76 │     try:
+ 76 ⋮ 77 │         default = optdict["default"]
+
+ 207⋮ 208│     "--output": (True, _set_output),
+ 208⋮ 209│     "--load-plugins": (True, _add_plugins),
+ 209⋮ 210│     "--verbose": (False, _set_verbose_mode),
+    ⋮ 211│+    "-v": (False, _set_verbose_mode),
+ 210⋮ 212│     "--enable-all-extensions": (False, _enable_all_extensions),
+ 211⋮ 213│ }
+ 212⋮ 214│ 
+
+ 218⋮ 220│     i = 0
+ 219⋮ 221│     while i < len(args):
+ 220⋮ 222│         argument = args[i]
+ 221⋮    │-        if not argument.startswith("--"):
+    ⋮ 223│+        if not argument.startswith("-"):
+ 222⋮ 224│             processed_args.append(argument)
+ 223⋮ 225│             i += 1
+ 224⋮ 226│             continue
+
+pylint/lint/base_options.py
+
+ 544⋮ 544│                 "help": "In verbose mode, extra non-checker-related info "
+ 545⋮ 545│                 "will be displayed.",
+ 546⋮ 546│                 "hide_from_config_file": True,
+    ⋮ 547│+                "metavar": "",
+ 547⋮ 548│             },
+ 548⋮ 549│         ),
+ 549⋮ 550│         (
+
+ 554⋮ 555│                 "help": "Load and enable all available extensions. "
+ 555⋮ 556│                 "Use --list-extensions to see a list all available extensions.",
+ 556⋮ 557│                 "hide_from_config_file": True,
+    ⋮ 558│+                "metavar": "",
+ 557⋮ 559│             },
+ 558⋮ 560│         ),
+ 559⋮ 561│         (

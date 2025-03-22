@@ -1,0 +1,12 @@
+
+django/forms/models.py
+
+1166⋮1166│     def __str__(self):
+1167⋮1167│         return str(self.value)
+1168⋮1168│ 
+    ⋮1169│+    def __hash__(self):
+    ⋮1170│+        return hash(self.value)
+    ⋮1171│+
+1169⋮1172│     def __eq__(self, other):
+1170⋮1173│         if isinstance(other, ModelChoiceIteratorValue):
+1171⋮1174│             other = other.value

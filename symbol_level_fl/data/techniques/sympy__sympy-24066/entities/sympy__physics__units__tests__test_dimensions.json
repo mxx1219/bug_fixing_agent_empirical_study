@@ -1,0 +1,34 @@
+[
+    {
+        "type": "functions",
+        "line_range": "18-24"
+    },
+    {
+        "type": "functions",
+        "line_range": "27-39"
+    },
+    {
+        "type": "functions",
+        "line_range": "42-44"
+    },
+    {
+        "type": "functions",
+        "line_range": "47-54"
+    },
+    {
+        "type": "functions",
+        "line_range": "57-81"
+    },
+    {
+        "type": "functions",
+        "line_range": "83-128"
+    },
+    {
+        "type": "functions",
+        "line_range": "130-150"
+    },
+    {
+        "type": "imports",
+        "line_range": "1-15"
+    }
+]

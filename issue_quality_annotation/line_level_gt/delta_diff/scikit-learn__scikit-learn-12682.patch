@@ -1,0 +1,280 @@
+
+examples/decomposition/plot_sparse_coding.py
+
+ 27 ⋮ 27 │ def ricker_function(resolution, center, width):
+ 28 ⋮ 28 │     """Discrete sub-sampled Ricker (Mexican hat) wavelet"""
+ 29 ⋮ 29 │     x = np.linspace(0, resolution - 1, resolution)
+ 30 ⋮    │-    x = ((2 / ((np.sqrt(3 * width) * np.pi ** 1 / 4)))
+ 31 ⋮    │-         * (1 - ((x - center) ** 2 / width ** 2))
+ 32 ⋮    │-         * np.exp((-(x - center) ** 2) / (2 * width ** 2)))
+    ⋮ 30 │+    x = ((2 / (np.sqrt(3 * width) * np.pi ** .25))
+    ⋮ 31 │+         * (1 - (x - center) ** 2 / width ** 2)
+    ⋮ 32 │+         * np.exp(-(x - center) ** 2 / (2 * width ** 2)))
+ 33 ⋮ 33 │     return x
+ 34 ⋮ 34 │ 
+ 35 ⋮ 35 │ 
+
+sklearn/decomposition/dict_learning.py
+
+ 73 ⋮ 73 │         `algorithm='lasso_cd'`.
+ 74 ⋮ 74 │ 
+ 75 ⋮ 75 │     max_iter : int, 1000 by default
+ 76 ⋮    │-        Maximum number of iterations to perform if `algorithm='lasso_cd'`.
+    ⋮ 76 │+        Maximum number of iterations to perform if `algorithm='lasso_cd'` or
+    ⋮ 77 │+        `lasso_lars`.
+ 77 ⋮ 78 │ 
+ 78 ⋮ 79 │     copy_cov : boolean, optional
+ 79 ⋮ 80 │         Whether to copy the precomputed covariance matrix; if False, it may be
+
+ 127⋮ 128│             lasso_lars = LassoLars(alpha=alpha, fit_intercept=False,
+ 128⋮ 129│                                    verbose=verbose, normalize=False,
+ 129⋮ 130│                                    precompute=gram, fit_path=False,
+ 130⋮    │-                                   positive=positive)
+    ⋮ 131│+                                   positive=positive, max_iter=max_iter)
+ 131⋮ 132│             lasso_lars.fit(dictionary.T, X.T, Xy=cov)
+ 132⋮ 133│             new_code = lasso_lars.coef_
+ 133⋮ 134│         finally:
+
+ 246⋮ 247│         `algorithm='lasso_cd'`.
+ 247⋮ 248│ 
+ 248⋮ 249│     max_iter : int, 1000 by default
+ 249⋮    │-        Maximum number of iterations to perform if `algorithm='lasso_cd'`.
+    ⋮ 250│+        Maximum number of iterations to perform if `algorithm='lasso_cd'` or
+    ⋮ 251│+        `lasso_lars`.
+ 250⋮ 252│ 
+ 251⋮ 253│     n_jobs : int or None, optional (default=None)
+ 252⋮ 254│         Number of parallel jobs to run.
+
+ 329⋮ 331│             init=init[this_slice] if init is not None else None,
+ 330⋮ 332│             max_iter=max_iter,
+ 331⋮ 333│             check_input=False,
+    ⋮ 334│+            verbose=verbose,
+ 332⋮ 335│             positive=positive)
+ 333⋮ 336│         for this_slice in slices)
+ 334⋮ 337│     for this_slice, this_view in zip(slices, code_views):
+
+ 423⋮ 426│                   method='lars', n_jobs=None, dict_init=None, code_init=None,
+ 424⋮ 427│                   callback=None, verbose=False, random_state=None,
+ 425⋮ 428│                   return_n_iter=False, positive_dict=False,
+ 426⋮    │-                  positive_code=False):
+    ⋮ 429│+                  positive_code=False, method_max_iter=1000):
+ 427⋮ 430│     """Solves a dictionary learning matrix factorization problem.
+ 428⋮ 431│ 
+ 429⋮ 432│     Finds the best dictionary and the corresponding sparse code for
+
+ 498⋮ 501│ 
+ 499⋮ 502│         .. versionadded:: 0.20
+ 500⋮ 503│ 
+    ⋮ 504│+    method_max_iter : int, optional (default=1000)
+    ⋮ 505│+        Maximum number of iterations to perform.
+    ⋮ 506│+
+    ⋮ 507│+        .. versionadded:: 0.22
+    ⋮ 508│+
+ 501⋮ 509│     Returns
+ 502⋮ 510│     -------
+ 503⋮ 511│     code : array of shape (n_samples, n_components)
+
+ 577⋮ 585│ 
+ 578⋮ 586│         # Update code
+ 579⋮ 587│         code = sparse_encode(X, dictionary, algorithm=method, alpha=alpha,
+ 580⋮    │-                             init=code, n_jobs=n_jobs, positive=positive_code)
+    ⋮ 588│+                             init=code, n_jobs=n_jobs, positive=positive_code,
+    ⋮ 589│+                             max_iter=method_max_iter, verbose=verbose)
+ 581⋮ 590│         # Update dictionary
+ 582⋮ 591│         dictionary, residuals = _update_dict(dictionary.T, X.T, code.T,
+ 583⋮ 592│                                              verbose=verbose, return_r2=True,
+
+ 614⋮ 623│                          n_jobs=None, method='lars', iter_offset=0,
+ 615⋮ 624│                          random_state=None, return_inner_stats=False,
+ 616⋮ 625│                          inner_stats=None, return_n_iter=False,
+ 617⋮    │-                         positive_dict=False, positive_code=False):
+    ⋮ 626│+                         positive_dict=False, positive_code=False,
+    ⋮ 627│+                         method_max_iter=1000):
+ 618⋮ 628│     """Solves a dictionary learning matrix factorization problem online.
+ 619⋮ 629│ 
+ 620⋮ 630│     Finds the best dictionary and the corresponding sparse code for
+
+ 642⋮ 652│         Sparsity controlling parameter.
+ 643⋮ 653│ 
+ 644⋮ 654│     n_iter : int,
+ 645⋮    │-        Number of iterations to perform.
+    ⋮ 655│+        Number of mini-batch iterations to perform.
+ 646⋮ 656│ 
+ 647⋮ 657│     return_code : boolean,
+ 648⋮ 658│         Whether to also return the code U or just the dictionary V.
+
+ 711⋮ 721│ 
+ 712⋮ 722│         .. versionadded:: 0.20
+ 713⋮ 723│ 
+    ⋮ 724│+    method_max_iter : int, optional (default=1000)
+    ⋮ 725│+        Maximum number of iterations to perform when solving the lasso problem.
+    ⋮ 726│+
+    ⋮ 727│+        .. versionadded:: 0.22
+    ⋮ 728│+
+ 714⋮ 729│     Returns
+ 715⋮ 730│     -------
+ 716⋮ 731│     code : array of shape (n_samples, n_components),
+
+ 806⋮ 821│         this_code = sparse_encode(this_X, dictionary.T, algorithm=method,
+ 807⋮ 822│                                   alpha=alpha, n_jobs=n_jobs,
+ 808⋮ 823│                                   check_input=False,
+ 809⋮    │-                                  positive=positive_code).T
+    ⋮ 824│+                                  positive=positive_code,
+    ⋮ 825│+                                  max_iter=method_max_iter, verbose=verbose).T
+ 810⋮ 826│ 
+ 811⋮ 827│         # Update the auxiliary variables
+ 812⋮ 828│         if ii < batch_size - 1:
+
+ 843⋮ 859│             print('|', end=' ')
+ 844⋮ 860│         code = sparse_encode(X, dictionary.T, algorithm=method, alpha=alpha,
+ 845⋮ 861│                              n_jobs=n_jobs, check_input=False,
+ 846⋮    │-                             positive=positive_code)
+    ⋮ 862│+                             positive=positive_code, max_iter=method_max_iter,
+    ⋮ 863│+                             verbose=verbose)
+ 847⋮ 864│         if verbose > 1:
+ 848⋮ 865│             dt = (time.time() - t0)
+ 849⋮ 866│             print('done (total time: % 3is, % 4.1fmn)' % (dt, dt / 60))
+
+ 865⋮ 882│                                   transform_algorithm='omp',
+ 866⋮ 883│                                   transform_n_nonzero_coefs=None,
+ 867⋮ 884│                                   transform_alpha=None, split_sign=False,
+ 868⋮    │-                                  n_jobs=None, positive_code=False):
+    ⋮ 885│+                                  n_jobs=None, positive_code=False,
+    ⋮ 886│+                                  transform_max_iter=1000):
+ 869⋮ 887│         self.n_components = n_components
+ 870⋮ 888│         self.transform_algorithm = transform_algorithm
+ 871⋮ 889│         self.transform_n_nonzero_coefs = transform_n_nonzero_coefs
+ 872⋮ 890│         self.transform_alpha = transform_alpha
+    ⋮ 891│+        self.transform_max_iter = transform_max_iter
+ 873⋮ 892│         self.split_sign = split_sign
+ 874⋮ 893│         self.n_jobs = n_jobs
+ 875⋮ 894│         self.positive_code = positive_code
+
+ 899⋮ 918│         code = sparse_encode(
+ 900⋮ 919│             X, self.components_, algorithm=self.transform_algorithm,
+ 901⋮ 920│             n_nonzero_coefs=self.transform_n_nonzero_coefs,
+ 902⋮    │-            alpha=self.transform_alpha, n_jobs=self.n_jobs,
+ 903⋮    │-            positive=self.positive_code)
+    ⋮ 921│+            alpha=self.transform_alpha, max_iter=self.transform_max_iter,
+    ⋮ 922│+            n_jobs=self.n_jobs, positive=self.positive_code)
+ 904⋮ 923│ 
+ 905⋮ 924│         if self.split_sign:
+ 906⋮ 925│             # feature vector is split into a positive and negative side
+
+ 974⋮ 993│ 
+ 975⋮ 994│         .. versionadded:: 0.20
+ 976⋮ 995│ 
+    ⋮ 996│+    transform_max_iter : int, optional (default=1000)
+    ⋮ 997│+        Maximum number of iterations to perform if `algorithm='lasso_cd'` or
+    ⋮ 998│+        `lasso_lars`.
+    ⋮ 999│+
+    ⋮1000│+        .. versionadded:: 0.22
+    ⋮1001│+
+ 977⋮1002│     Attributes
+ 978⋮1003│     ----------
+ 979⋮1004│     components_ : array, [n_components, n_features]
+
+ 991⋮1016│ 
+ 992⋮1017│     def __init__(self, dictionary, transform_algorithm='omp',
+ 993⋮1018│                  transform_n_nonzero_coefs=None, transform_alpha=None,
+ 994⋮    │-                 split_sign=False, n_jobs=None, positive_code=False):
+    ⋮1019│+                 split_sign=False, n_jobs=None, positive_code=False,
+    ⋮1020│+                 transform_max_iter=1000):
+ 995⋮1021│         self._set_sparse_coding_params(dictionary.shape[0],
+ 996⋮1022│                                        transform_algorithm,
+ 997⋮1023│                                        transform_n_nonzero_coefs,
+ 998⋮1024│                                        transform_alpha, split_sign, n_jobs,
+ 999⋮    │-                                       positive_code)
+    ⋮1025│+                                       positive_code, transform_max_iter)
+1000⋮1026│         self.components_ = dictionary
+1001⋮1027│ 
+1002⋮1028│     def fit(self, X, y=None):
+
+1122⋮1148│ 
+1123⋮1149│         .. versionadded:: 0.20
+1124⋮1150│ 
+    ⋮1151│+    transform_max_iter : int, optional (default=1000)
+    ⋮1152│+        Maximum number of iterations to perform if `algorithm='lasso_cd'` or
+    ⋮1153│+        `lasso_lars`.
+    ⋮1154│+
+    ⋮1155│+        .. versionadded:: 0.22
+    ⋮1156│+
+1125⋮1157│     Attributes
+1126⋮1158│     ----------
+1127⋮1159│     components_ : array, [n_components, n_features]
+
+1151⋮1183│                  fit_algorithm='lars', transform_algorithm='omp',
+1152⋮1184│                  transform_n_nonzero_coefs=None, transform_alpha=None,
+1153⋮1185│                  n_jobs=None, code_init=None, dict_init=None, verbose=False,
+1154⋮    │-                 split_sign=False, random_state=None,
+1155⋮    │-                 positive_code=False, positive_dict=False):
+    ⋮1186│+                 split_sign=False, random_state=None, positive_code=False,
+    ⋮1187│+                 positive_dict=False, transform_max_iter=1000):
+1156⋮1188│ 
+1157⋮1189│         self._set_sparse_coding_params(n_components, transform_algorithm,
+1158⋮1190│                                        transform_n_nonzero_coefs,
+1159⋮1191│                                        transform_alpha, split_sign, n_jobs,
+1160⋮    │-                                       positive_code)
+    ⋮1192│+                                       positive_code, transform_max_iter)
+1161⋮1193│         self.alpha = alpha
+1162⋮1194│         self.max_iter = max_iter
+1163⋮1195│         self.tol = tol
+
+1195⋮1227│             X, n_components, self.alpha,
+1196⋮1228│             tol=self.tol, max_iter=self.max_iter,
+1197⋮1229│             method=self.fit_algorithm,
+    ⋮1230│+            method_max_iter=self.transform_max_iter,
+1198⋮1231│             n_jobs=self.n_jobs,
+1199⋮1232│             code_init=self.code_init,
+1200⋮1233│             dict_init=self.dict_init,
+
+1305⋮1338│ 
+1306⋮1339│         .. versionadded:: 0.20
+1307⋮1340│ 
+    ⋮1341│+    transform_max_iter : int, optional (default=1000)
+    ⋮1342│+        Maximum number of iterations to perform if `algorithm='lasso_cd'` or
+    ⋮1343│+        `lasso_lars`.
+    ⋮1344│+
+    ⋮1345│+        .. versionadded:: 0.22
+    ⋮1346│+
+1308⋮1347│     Attributes
+1309⋮1348│     ----------
+1310⋮1349│     components_ : array, [n_components, n_features]
+
+1337⋮1376│ 
+1338⋮1377│     """
+1339⋮1378│     def __init__(self, n_components=None, alpha=1, n_iter=1000,
+1340⋮    │-                 fit_algorithm='lars', n_jobs=None, batch_size=3,
+1341⋮    │-                 shuffle=True, dict_init=None, transform_algorithm='omp',
+    ⋮1379│+                 fit_algorithm='lars', n_jobs=None, batch_size=3, shuffle=True,
+    ⋮1380│+                 dict_init=None, transform_algorithm='omp',
+1342⋮1381│                  transform_n_nonzero_coefs=None, transform_alpha=None,
+1343⋮1382│                  verbose=False, split_sign=False, random_state=None,
+1344⋮    │-                 positive_code=False, positive_dict=False):
+    ⋮1383│+                 positive_code=False, positive_dict=False,
+    ⋮1384│+                 transform_max_iter=1000):
+1345⋮1385│ 
+1346⋮1386│         self._set_sparse_coding_params(n_components, transform_algorithm,
+1347⋮1387│                                        transform_n_nonzero_coefs,
+1348⋮1388│                                        transform_alpha, split_sign, n_jobs,
+1349⋮    │-                                       positive_code)
+    ⋮1389│+                                       positive_code, transform_max_iter)
+1350⋮1390│         self.alpha = alpha
+1351⋮1391│         self.n_iter = n_iter
+1352⋮1392│         self.fit_algorithm = fit_algorithm
+
+1381⋮1421│             X, self.n_components, self.alpha,
+1382⋮1422│             n_iter=self.n_iter, return_code=False,
+1383⋮1423│             method=self.fit_algorithm,
+    ⋮1424│+            method_max_iter=self.transform_max_iter,
+1384⋮1425│             n_jobs=self.n_jobs, dict_init=self.dict_init,
+1385⋮1426│             batch_size=self.batch_size, shuffle=self.shuffle,
+1386⋮1427│             verbose=self.verbose, random_state=random_state,
+
+1430⋮1471│         U, (A, B) = dict_learning_online(
+1431⋮1472│             X, self.n_components, self.alpha,
+1432⋮1473│             n_iter=self.n_iter, method=self.fit_algorithm,
+    ⋮1474│+            method_max_iter=self.transform_max_iter,
+1433⋮1475│             n_jobs=self.n_jobs, dict_init=dict_init,
+1434⋮1476│             batch_size=len(X), shuffle=False,
+1435⋮1477│             verbose=self.verbose, return_code=False,

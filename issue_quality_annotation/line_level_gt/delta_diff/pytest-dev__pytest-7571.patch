@@ -1,0 +1,27 @@
+
+src/_pytest/logging.py
+
+ 345⋮ 345│         """Creates a new funcarg."""
+ 346⋮ 346│         self._item = item
+ 347⋮ 347│         # dict of log name -> log level
+    ⋮ 348│+        self._initial_handler_level = None  # type: Optional[int]
+ 348⋮ 349│         self._initial_logger_levels = {}  # type: Dict[Optional[str], int]
+ 349⋮ 350│ 
+ 350⋮ 351│     def _finalize(self) -> None:
+
+ 353⋮ 354│         This restores the log levels changed by :meth:`set_level`.
+ 354⋮ 355│         """
+ 355⋮ 356│         # restore log levels
+    ⋮ 357│+        if self._initial_handler_level is not None:
+    ⋮ 358│+            self.handler.setLevel(self._initial_handler_level)
+ 356⋮ 359│         for logger_name, level in self._initial_logger_levels.items():
+ 357⋮ 360│             logger = logging.getLogger(logger_name)
+ 358⋮ 361│             logger.setLevel(level)
+
+ 434⋮ 437│         # save the original log-level to restore it during teardown
+ 435⋮ 438│         self._initial_logger_levels.setdefault(logger, logger_obj.level)
+ 436⋮ 439│         logger_obj.setLevel(level)
+    ⋮ 440│+        self._initial_handler_level = self.handler.level
+ 437⋮ 441│         self.handler.setLevel(level)
+ 438⋮ 442│ 
+ 439⋮ 443│     @contextmanager

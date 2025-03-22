@@ -1,0 +1,38 @@
+
+django/urls/base.py
+
+  7 ⋮  7 │ from django.utils.translation import override
+  8 ⋮  8 │ 
+  9 ⋮  9 │ from .exceptions import NoReverseMatch, Resolver404
+ 10 ⋮    │-from .resolvers import get_ns_resolver, get_resolver
+    ⋮ 10 │+from .resolvers import _get_cached_resolver, get_ns_resolver, get_resolver
+ 11 ⋮ 11 │ from .utils import get_callable
+ 12 ⋮ 12 │ 
+ 13 ⋮ 13 │ # SCRIPT_NAME prefixes for each thread are stored here. If there's no entry for
+
+ 92 ⋮ 92 │ 
+ 93 ⋮ 93 │ def clear_url_caches():
+ 94 ⋮ 94 │     get_callable.cache_clear()
+ 95 ⋮    │-    get_resolver.cache_clear()
+    ⋮ 95 │+    _get_cached_resolver.cache_clear()
+ 96 ⋮ 96 │     get_ns_resolver.cache_clear()
+ 97 ⋮ 97 │ 
+ 98 ⋮ 98 │ 
+
+django/urls/resolvers.py
+
+ 63 ⋮ 63 │         )
+ 64 ⋮ 64 │ 
+ 65 ⋮ 65 │ 
+ 66 ⋮    │-@functools.lru_cache(maxsize=None)
+ 67 ⋮ 66 │ def get_resolver(urlconf=None):
+ 68 ⋮ 67 │     if urlconf is None:
+ 69 ⋮ 68 │         urlconf = settings.ROOT_URLCONF
+    ⋮ 69 │+    return _get_cached_resolver(urlconf)
+    ⋮ 70 │+
+    ⋮ 71 │+
+    ⋮ 72 │+@functools.lru_cache(maxsize=None)
+    ⋮ 73 │+def _get_cached_resolver(urlconf=None):
+ 70 ⋮ 74 │     return URLResolver(RegexPattern(r'^/'), urlconf)
+ 71 ⋮ 75 │ 
+ 72 ⋮ 76 │ 

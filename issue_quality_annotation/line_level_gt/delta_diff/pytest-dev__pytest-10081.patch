@@ -1,0 +1,14 @@
+
+src/_pytest/unittest.py
+
+ 316⋮ 316│             # Arguably we could always postpone tearDown(), but this changes the moment where the
+ 317⋮ 317│             # TestCase instance interacts with the results object, so better to only do it
+ 318⋮ 318│             # when absolutely needed.
+ 319⋮    │-            if self.config.getoption("usepdb") and not _is_skipped(self.obj):
+    ⋮ 319│+            # We need to consider if the test itself is skipped, or the whole class.
+    ⋮ 320│+            assert isinstance(self.parent, UnitTestCase)
+    ⋮ 321│+            skipped = _is_skipped(self.obj) or _is_skipped(self.parent.obj)
+    ⋮ 322│+            if self.config.getoption("usepdb") and not skipped:
+ 320⋮ 323│                 self._explicit_tearDown = self._testcase.tearDown
+ 321⋮ 324│                 setattr(self._testcase, "tearDown", lambda *args: None)
+ 322⋮ 325│ 

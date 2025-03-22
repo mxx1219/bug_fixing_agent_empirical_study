@@ -1,0 +1,11 @@
+
+django/contrib/admin/templatetags/admin_modify.py
+
+ 100⋮ 100│                 and context.get("show_delete", True)
+ 101⋮ 101│             ),
+ 102⋮ 102│             "show_save_as_new": not is_popup
+ 103⋮    │-            and has_change_permission
+    ⋮ 103│+            and has_add_permission
+ 104⋮ 104│             and change
+ 105⋮ 105│             and save_as,
+ 106⋮ 106│             "show_save_and_add_another": can_save_and_add_another,

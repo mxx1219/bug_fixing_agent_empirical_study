@@ -1,0 +1,50 @@
+
+django/db/models/fields/related_lookups.py
+
+ 93 ⋮ 93 │             elif not getattr(self.rhs, "has_select_fields", True) and not getattr(
+ 94 ⋮ 94 │                 self.lhs.field.target_field, "primary_key", False
+ 95 ⋮ 95 │             ):
+ 96 ⋮    │-                self.rhs.clear_select_clause()
+ 97 ⋮ 96 │                 if (
+ 98 ⋮ 97 │                     getattr(self.lhs.output_field, "primary_key", False)
+ 99 ⋮ 98 │                     and self.lhs.output_field.model == self.rhs.model
+
+ 105⋮ 104│                     target_field = self.lhs.field.name
+ 106⋮ 105│                 else:
+ 107⋮ 106│                     target_field = self.lhs.field.target_field.name
+ 108⋮    │-                self.rhs.add_fields([target_field], True)
+    ⋮ 107│+                self.rhs.set_values([target_field])
+ 109⋮ 108│         return super().get_prep_lookup()
+ 110⋮ 109│ 
+ 111⋮ 110│     def as_sql(self, compiler, connection):
+
+django/db/models/sql/query.py
+
+ 198⋮ 198│     select_for_update_of = ()
+ 199⋮ 199│     select_for_no_key_update = False
+ 200⋮ 200│     select_related = False
+    ⋮ 201│+    has_select_fields = False
+ 201⋮ 202│     # Arbitrary limit for select_related to prevents infinite recursion.
+ 202⋮ 203│     max_depth = 5
+ 203⋮ 204│     # Holds the selects defined by a call to values() or values_list()
+
+ 263⋮ 264│         elif len(self.annotation_select) == 1:
+ 264⋮ 265│             return next(iter(self.annotation_select.values())).output_field
+ 265⋮ 266│ 
+ 266⋮    │-    @property
+ 267⋮    │-    def has_select_fields(self):
+ 268⋮    │-        return bool(
+ 269⋮    │-            self.select or self.annotation_select_mask or self.extra_select_mask
+ 270⋮    │-        )
+ 271⋮    │-
+ 272⋮ 267│     @cached_property
+ 273⋮ 268│     def base_table(self):
+ 274⋮ 269│         for alias in self.alias_map:
+
+2384⋮2379│         self.select_related = False
+2385⋮2380│         self.clear_deferred_loading()
+2386⋮2381│         self.clear_select_fields()
+    ⋮2382│+        self.has_select_fields = True
+2387⋮2383│ 
+2388⋮2384│         if fields:
+2389⋮2385│             field_names = []

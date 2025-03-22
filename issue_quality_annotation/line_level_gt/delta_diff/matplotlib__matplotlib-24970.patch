@@ -1,0 +1,30 @@
+
+lib/matplotlib/colors.py
+
+ 715⋮ 715│         if not xa.dtype.isnative:
+ 716⋮ 716│             xa = xa.byteswap().newbyteorder()  # Native byteorder is faster.
+ 717⋮ 717│         if xa.dtype.kind == "f":
+ 718⋮    │-            with np.errstate(invalid="ignore"):
+ 719⋮    │-                xa *= self.N
+ 720⋮    │-                # Negative values are out of range, but astype(int) would
+ 721⋮    │-                # truncate them towards zero.
+ 722⋮    │-                xa[xa < 0] = -1
+ 723⋮    │-                # xa == 1 (== N after multiplication) is not out of range.
+ 724⋮    │-                xa[xa == self.N] = self.N - 1
+ 725⋮    │-                # Avoid converting large positive values to negative integers.
+ 726⋮    │-                np.clip(xa, -1, self.N, out=xa)
+ 727⋮    │-                xa = xa.astype(int)
+    ⋮ 718│+            xa *= self.N
+    ⋮ 719│+            # Negative values are out of range, but astype(int) would
+    ⋮ 720│+            # truncate them towards zero.
+    ⋮ 721│+            xa[xa < 0] = -1
+    ⋮ 722│+            # xa == 1 (== N after multiplication) is not out of range.
+    ⋮ 723│+            xa[xa == self.N] = self.N - 1
+    ⋮ 724│+            # Avoid converting large positive values to negative integers.
+    ⋮ 725│+            np.clip(xa, -1, self.N, out=xa)
+    ⋮ 726│+        with np.errstate(invalid="ignore"):
+    ⋮ 727│+            # We need this cast for unsigned ints as well as floats
+    ⋮ 728│+            xa = xa.astype(int)
+ 728⋮ 729│         # Set the over-range indices before the under-range;
+ 729⋮ 730│         # otherwise the under-range values get converted to over-range.
+ 730⋮ 731│         xa[xa > self.N - 1] = self._i_over

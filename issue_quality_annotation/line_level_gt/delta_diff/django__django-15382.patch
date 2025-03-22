@@ -1,0 +1,28 @@
+
+django/db/models/expressions.py
+
+1211⋮1211│ 
+1212⋮1212│     def as_sql(self, compiler, connection, template=None, **extra_context):
+1213⋮1213│         query = self.query.exists(using=connection.alias)
+1214⋮    │-        sql, params = super().as_sql(
+1215⋮    │-            compiler,
+1216⋮    │-            connection,
+1217⋮    │-            template=template,
+1218⋮    │-            query=query,
+1219⋮    │-            **extra_context,
+1220⋮    │-        )
+    ⋮1214│+        try:
+    ⋮1215│+            sql, params = super().as_sql(
+    ⋮1216│+                compiler,
+    ⋮1217│+                connection,
+    ⋮1218│+                template=template,
+    ⋮1219│+                query=query,
+    ⋮1220│+                **extra_context,
+    ⋮1221│+            )
+    ⋮1222│+        except EmptyResultSet:
+    ⋮1223│+            if self.negated:
+    ⋮1224│+                return '', ()
+    ⋮1225│+            raise
+1221⋮1226│         if self.negated:
+1222⋮1227│             sql = 'NOT {}'.format(sql)
+1223⋮1228│         return sql, params

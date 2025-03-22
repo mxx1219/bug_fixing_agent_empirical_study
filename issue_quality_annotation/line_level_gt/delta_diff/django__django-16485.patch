@@ -1,0 +1,11 @@
+
+django/template/defaultfilters.py
+
+ 168⋮ 168│     except (ValueError, OverflowError, InvalidOperation):
+ 169⋮ 169│         return input_val
+ 170⋮ 170│ 
+ 171⋮    │-    if not m and p < 0:
+    ⋮ 171│+    if not m and p <= 0:
+ 172⋮ 172│         return mark_safe(
+ 173⋮ 173│             formats.number_format(
+ 174⋮ 174│                 "%d" % (int(d)),

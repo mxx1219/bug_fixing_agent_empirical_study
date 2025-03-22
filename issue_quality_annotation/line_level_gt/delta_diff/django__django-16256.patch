@@ -1,0 +1,134 @@
+
+django/contrib/contenttypes/fields.py
+
+  2 ⋮  2 │ import itertools
+  3 ⋮  3 │ from collections import defaultdict
+  4 ⋮  4 │ 
+    ⋮  5 │+from asgiref.sync import sync_to_async
+    ⋮  6 │+
+  5 ⋮  7 │ from django.contrib.contenttypes.models import ContentType
+  6 ⋮  8 │ from django.core import checks
+  7 ⋮  9 │ from django.core.exceptions import FieldDoesNotExist, ObjectDoesNotExist
+
+ 747⋮ 749│ 
+ 748⋮ 750│         create.alters_data = True
+ 749⋮ 751│ 
+    ⋮ 752│+        async def acreate(self, **kwargs):
+    ⋮ 753│+            return await sync_to_async(self.create)(**kwargs)
+    ⋮ 754│+
+    ⋮ 755│+        acreate.alters_data = True
+    ⋮ 756│+
+ 750⋮ 757│         def get_or_create(self, **kwargs):
+ 751⋮ 758│             kwargs[self.content_type_field_name] = self.content_type
+ 752⋮ 759│             kwargs[self.object_id_field_name] = self.pk_val
+
+ 755⋮ 762│ 
+ 756⋮ 763│         get_or_create.alters_data = True
+ 757⋮ 764│ 
+    ⋮ 765│+        async def aget_or_create(self, **kwargs):
+    ⋮ 766│+            return await sync_to_async(self.get_or_create)(**kwargs)
+    ⋮ 767│+
+    ⋮ 768│+        aget_or_create.alters_data = True
+    ⋮ 769│+
+ 758⋮ 770│         def update_or_create(self, **kwargs):
+ 759⋮ 771│             kwargs[self.content_type_field_name] = self.content_type
+ 760⋮ 772│             kwargs[self.object_id_field_name] = self.pk_val
+
+ 763⋮ 775│ 
+ 764⋮ 776│         update_or_create.alters_data = True
+ 765⋮ 777│ 
+    ⋮ 778│+        async def aupdate_or_create(self, **kwargs):
+    ⋮ 779│+            return await sync_to_async(self.update_or_create)(**kwargs)
+    ⋮ 780│+
+    ⋮ 781│+        aupdate_or_create.alters_data = True
+    ⋮ 782│+
+ 766⋮ 783│     return GenericRelatedObjectManager
+
+django/db/models/fields/related_descriptors.py
+
+ 63 ⋮ 63 │    ``ReverseManyToManyDescriptor``, use ``ManyToManyDescriptor`` instead.
+ 64 ⋮ 64 │ """
+ 65 ⋮ 65 │ 
+    ⋮ 66 │+from asgiref.sync import sync_to_async
+    ⋮ 67 │+
+ 66 ⋮ 68 │ from django.core.exceptions import FieldError
+ 67 ⋮ 69 │ from django.db import (
+ 68 ⋮ 70 │     DEFAULT_DB_ALIAS,
+
+ 793⋮ 795│ 
+ 794⋮ 796│         create.alters_data = True
+ 795⋮ 797│ 
+    ⋮ 798│+        async def acreate(self, **kwargs):
+    ⋮ 799│+            return await sync_to_async(self.create)(**kwargs)
+    ⋮ 800│+
+    ⋮ 801│+        acreate.alters_data = True
+    ⋮ 802│+
+ 796⋮ 803│         def get_or_create(self, **kwargs):
+ 797⋮ 804│             self._check_fk_val()
+ 798⋮ 805│             kwargs[self.field.name] = self.instance
+
+ 801⋮ 808│ 
+ 802⋮ 809│         get_or_create.alters_data = True
+ 803⋮ 810│ 
+    ⋮ 811│+        async def aget_or_create(self, **kwargs):
+    ⋮ 812│+            return await sync_to_async(self.get_or_create)(**kwargs)
+    ⋮ 813│+
+    ⋮ 814│+        aget_or_create.alters_data = True
+    ⋮ 815│+
+ 804⋮ 816│         def update_or_create(self, **kwargs):
+ 805⋮ 817│             self._check_fk_val()
+ 806⋮ 818│             kwargs[self.field.name] = self.instance
+
+ 809⋮ 821│ 
+ 810⋮ 822│         update_or_create.alters_data = True
+ 811⋮ 823│ 
+    ⋮ 824│+        async def aupdate_or_create(self, **kwargs):
+    ⋮ 825│+            return await sync_to_async(self.update_or_create)(**kwargs)
+    ⋮ 826│+
+    ⋮ 827│+        aupdate_or_create.alters_data = True
+    ⋮ 828│+
+ 812⋮ 829│         # remove() and clear() are only provided if the ForeignKey can have a
+ 813⋮ 830│         # value of null.
+ 814⋮ 831│         if rel.field.null:
+
+1191⋮1208│ 
+1192⋮1209│         create.alters_data = True
+1193⋮1210│ 
+    ⋮1211│+        async def acreate(self, *, through_defaults=None, **kwargs):
+    ⋮1212│+            return await sync_to_async(self.create)(
+    ⋮1213│+                through_defaults=through_defaults, **kwargs
+    ⋮1214│+            )
+    ⋮1215│+
+    ⋮1216│+        acreate.alters_data = True
+    ⋮1217│+
+1194⋮1218│         def get_or_create(self, *, through_defaults=None, **kwargs):
+1195⋮1219│             db = router.db_for_write(self.instance.__class__, instance=self.instance)
+1196⋮1220│             obj, created = super(ManyRelatedManager, self.db_manager(db)).get_or_create(
+
+1204⋮1228│ 
+1205⋮1229│         get_or_create.alters_data = True
+1206⋮1230│ 
+    ⋮1231│+        async def aget_or_create(self, *, through_defaults=None, **kwargs):
+    ⋮1232│+            return await sync_to_async(self.get_or_create)(
+    ⋮1233│+                through_defaults=through_defaults, **kwargs
+    ⋮1234│+            )
+    ⋮1235│+
+    ⋮1236│+        aget_or_create.alters_data = True
+    ⋮1237│+
+1207⋮1238│         def update_or_create(self, *, through_defaults=None, **kwargs):
+1208⋮1239│             db = router.db_for_write(self.instance.__class__, instance=self.instance)
+1209⋮1240│             obj, created = super(
+
+1217⋮1248│ 
+1218⋮1249│         update_or_create.alters_data = True
+1219⋮1250│ 
+    ⋮1251│+        async def aupdate_or_create(self, *, through_defaults=None, **kwargs):
+    ⋮1252│+            return await sync_to_async(self.update_or_create)(
+    ⋮1253│+                through_defaults=through_defaults, **kwargs
+    ⋮1254│+            )
+    ⋮1255│+
+    ⋮1256│+        aupdate_or_create.alters_data = True
+    ⋮1257│+
+1220⋮1258│         def _get_target_ids(self, target_field_name, objs):
+1221⋮1259│             """
+1222⋮1260│             Return the set of ids of `objs` that the target field references.

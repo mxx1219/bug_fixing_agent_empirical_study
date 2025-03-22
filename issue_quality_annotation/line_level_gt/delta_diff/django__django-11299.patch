@@ -1,0 +1,11 @@
+
+django/db/models/sql/query.py
+
+1338⋮1338│             if isinstance(child, Node):
+1339⋮1339│                 child_clause, needed_inner = self._add_q(
+1340⋮1340│                     child, used_aliases, branch_negated,
+1341⋮    │-                    current_negated, allow_joins, split_subq)
+    ⋮1341│+                    current_negated, allow_joins, split_subq, simple_col)
+1342⋮1342│                 joinpromoter.add_votes(needed_inner)
+1343⋮1343│             else:
+1344⋮1344│                 child_clause, needed_inner = self.build_filter(

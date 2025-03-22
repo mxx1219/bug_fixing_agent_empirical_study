@@ -1,0 +1,20 @@
+
+django/utils/http.py
+
+ 176⋮ 176│     try:
+ 177⋮ 177│         year = int(m.group('year'))
+ 178⋮ 178│         if year < 100:
+ 179⋮    │-            if year < 70:
+ 180⋮    │-                year += 2000
+    ⋮ 179│+            current_year = datetime.datetime.utcnow().year
+    ⋮ 180│+            current_century = current_year - (current_year % 100)
+    ⋮ 181│+            if year - (current_year % 100) > 50:
+    ⋮ 182│+                # year that appears to be more than 50 years in the future are
+    ⋮ 183│+                # interpreted as representing the past.
+    ⋮ 184│+                year += current_century - 100
+ 181⋮ 185│             else:
+ 182⋮    │-                year += 1900
+    ⋮ 186│+                year += current_century
+ 183⋮ 187│         month = MONTHS.index(m.group('mon').lower()) + 1
+ 184⋮ 188│         day = int(m.group('day'))
+ 185⋮ 189│         hour = int(m.group('hour'))

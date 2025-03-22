@@ -1,0 +1,80 @@
+
+django/views/debug.py
+
+ 394⋮ 394│             return None, [], None, []
+ 395⋮ 395│         return lower_bound, pre_context, context_line, post_context
+ 396⋮ 396│ 
+ 397⋮    │-    def get_traceback_frames(self):
+ 398⋮    │-        def explicit_or_implicit_cause(exc_value):
+ 399⋮    │-            explicit = getattr(exc_value, '__cause__', None)
+ 400⋮    │-            suppress_context = getattr(exc_value, '__suppress_context__', None)
+ 401⋮    │-            implicit = getattr(exc_value, '__context__', None)
+ 402⋮    │-            return explicit or (None if suppress_context else implicit)
+    ⋮ 397│+    def _get_explicit_or_implicit_cause(self, exc_value):
+    ⋮ 398│+        explicit = getattr(exc_value, '__cause__', None)
+    ⋮ 399│+        suppress_context = getattr(exc_value, '__suppress_context__', None)
+    ⋮ 400│+        implicit = getattr(exc_value, '__context__', None)
+    ⋮ 401│+        return explicit or (None if suppress_context else implicit)
+ 403⋮ 402│ 
+    ⋮ 403│+    def get_traceback_frames(self):
+ 404⋮ 404│         # Get the exception and all its causes
+ 405⋮ 405│         exceptions = []
+ 406⋮ 406│         exc_value = self.exc_value
+ 407⋮ 407│         while exc_value:
+ 408⋮ 408│             exceptions.append(exc_value)
+ 409⋮    │-            exc_value = explicit_or_implicit_cause(exc_value)
+    ⋮ 409│+            exc_value = self._get_explicit_or_implicit_cause(exc_value)
+ 410⋮ 410│             if exc_value in exceptions:
+ 411⋮ 411│                 warnings.warn(
+ 412⋮ 412│                     "Cycle in the exception chain detected: exception '%s' "
+
+ 424⋮ 424│         # In case there's just one exception, take the traceback from self.tb
+ 425⋮ 425│         exc_value = exceptions.pop()
+ 426⋮ 426│         tb = self.tb if not exceptions else exc_value.__traceback__
+    ⋮ 427│+        frames.extend(self.get_exception_traceback_frames(exc_value, tb))
+    ⋮ 428│+        while exceptions:
+    ⋮ 429│+            exc_value = exceptions.pop()
+    ⋮ 430│+            frames.extend(
+    ⋮ 431│+                self.get_exception_traceback_frames(exc_value, exc_value.__traceback__),
+    ⋮ 432│+            )
+    ⋮ 433│+        return frames
+    ⋮ 434│+
+    ⋮ 435│+    def get_exception_traceback_frames(self, exc_value, tb):
+    ⋮ 436│+        exc_cause = self._get_explicit_or_implicit_cause(exc_value)
+    ⋮ 437│+        exc_cause_explicit = getattr(exc_value, '__cause__', True)
+ 427⋮ 438│ 
+ 428⋮ 439│         while tb is not None:
+ 429⋮ 440│             # Support for __traceback_hide__ which is used by a few libraries
+
+ 444⋮ 455│                 pre_context = []
+ 445⋮ 456│                 context_line = '<source code not available>'
+ 446⋮ 457│                 post_context = []
+ 447⋮    │-            frames.append({
+ 448⋮    │-                'exc_cause': explicit_or_implicit_cause(exc_value),
+ 449⋮    │-                'exc_cause_explicit': getattr(exc_value, '__cause__', True),
+    ⋮ 458│+            yield {
+    ⋮ 459│+                'exc_cause': exc_cause,
+    ⋮ 460│+                'exc_cause_explicit': exc_cause_explicit,
+ 450⋮ 461│                 'tb': tb,
+ 451⋮ 462│                 'type': 'django' if module_name.startswith('django.') else 'user',
+ 452⋮ 463│                 'filename': filename,
+
+ 458⋮ 469│                 'context_line': context_line,
+ 459⋮ 470│                 'post_context': post_context,
+ 460⋮ 471│                 'pre_context_lineno': pre_context_lineno + 1,
+ 461⋮    │-            })
+ 462⋮    │-
+ 463⋮    │-            # If the traceback for current exception is consumed, try the
+ 464⋮    │-            # other exception.
+ 465⋮    │-            if not tb.tb_next and exceptions:
+ 466⋮    │-                exc_value = exceptions.pop()
+ 467⋮    │-                tb = exc_value.__traceback__
+ 468⋮    │-            else:
+ 469⋮    │-                tb = tb.tb_next
+ 470⋮    │-
+ 471⋮    │-        return frames
+    ⋮ 472│+            }
+    ⋮ 473│+            tb = tb.tb_next
+ 472⋮ 474│ 
+ 473⋮ 475│ 
+ 474⋮ 476│ def technical_404_response(request, exception):

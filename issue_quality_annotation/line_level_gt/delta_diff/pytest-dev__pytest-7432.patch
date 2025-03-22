@@ -1,0 +1,12 @@
+
+src/_pytest/skipping.py
+
+ 291⋮ 291│             else:
+ 292⋮ 292│                 rep.outcome = "passed"
+ 293⋮ 293│                 rep.wasxfail = xfailed.reason
+ 294⋮    │-    elif (
+    ⋮ 294│+
+    ⋮ 295│+    if (
+ 295⋮ 296│         item._store.get(skipped_by_mark_key, True)
+ 296⋮ 297│         and rep.skipped
+ 297⋮ 298│         and type(rep.longrepr) is tuple

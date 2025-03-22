@@ -1,0 +1,18 @@
+
+django/utils/autoreload.py
+
+ 223⋮ 223│     # __spec__ is set when the server was started with the `-m` option,
+ 224⋮ 224│     # see https://docs.python.org/3/reference/import.html#main-spec
+ 225⋮ 225│     # __spec__ may not exist, e.g. when running in a Conda env.
+ 226⋮    │-    if getattr(__main__, '__spec__', None) is not None and __main__.__spec__.parent:
+ 227⋮    │-        args += ['-m', __main__.__spec__.parent]
+    ⋮ 226│+    if getattr(__main__, '__spec__', None) is not None:
+    ⋮ 227│+        spec = __main__.__spec__
+    ⋮ 228│+        if (spec.name == '__main__' or spec.name.endswith('.__main__')) and spec.parent:
+    ⋮ 229│+            name = spec.parent
+    ⋮ 230│+        else:
+    ⋮ 231│+            name = spec.name
+    ⋮ 232│+        args += ['-m', name]
+ 228⋮ 233│         args += sys.argv[1:]
+ 229⋮ 234│     elif not py_script.exists():
+ 230⋮ 235│         # sys.argv[0] may not exist for several reasons on Windows.

@@ -1,0 +1,10 @@
+
+django/db/models/sql/query.py
+
+ 748⋮ 748│                     cur_model = source.related_model
+ 749⋮ 749│                 else:
+ 750⋮ 750│                     cur_model = source.remote_field.model
+    ⋮ 751│+                cur_model = cur_model._meta.concrete_model
+ 751⋮ 752│                 opts = cur_model._meta
+ 752⋮ 753│                 # Even if we're "just passing through" this model, we must add
+ 753⋮ 754│                 # both the current model's pk and the related reference field

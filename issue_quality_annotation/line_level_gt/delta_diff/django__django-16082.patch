@@ -1,0 +1,10 @@
+
+django/db/models/expressions.py
+
+ 533⋮ 533│             Combinable.SUB,
+ 534⋮ 534│             Combinable.MUL,
+ 535⋮ 535│             Combinable.DIV,
+    ⋮ 536│+            Combinable.MOD,
+ 536⋮ 537│         )
+ 537⋮ 538│     },
+ 538⋮ 539│     # Bitwise operators.

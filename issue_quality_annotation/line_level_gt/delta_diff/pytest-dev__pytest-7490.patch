@@ -1,0 +1,44 @@
+
+src/_pytest/skipping.py
+
+ 231⋮ 231│ 
+ 232⋮ 232│ @hookimpl(tryfirst=True)
+ 233⋮ 233│ def pytest_runtest_setup(item: Item) -> None:
+ 234⋮    │-    item._store[skipped_by_mark_key] = False
+ 235⋮    │-
+ 236⋮ 234│     skipped = evaluate_skip_marks(item)
+    ⋮ 235│+    item._store[skipped_by_mark_key] = skipped is not None
+ 237⋮ 236│     if skipped:
+ 238⋮    │-        item._store[skipped_by_mark_key] = True
+ 239⋮ 237│         skip(skipped.reason)
+ 240⋮ 238│ 
+ 241⋮    │-    if not item.config.option.runxfail:
+ 242⋮    │-        item._store[xfailed_key] = xfailed = evaluate_xfail_marks(item)
+ 243⋮    │-        if xfailed and not xfailed.run:
+ 244⋮    │-            xfail("[NOTRUN] " + xfailed.reason)
+    ⋮ 239│+    item._store[xfailed_key] = xfailed = evaluate_xfail_marks(item)
+    ⋮ 240│+    if xfailed and not item.config.option.runxfail and not xfailed.run:
+    ⋮ 241│+        xfail("[NOTRUN] " + xfailed.reason)
+ 245⋮ 242│ 
+ 246⋮ 243│ 
+ 247⋮ 244│ @hookimpl(hookwrapper=True)
+
+ 250⋮ 247│     if xfailed is None:
+ 251⋮ 248│         item._store[xfailed_key] = xfailed = evaluate_xfail_marks(item)
+ 252⋮ 249│ 
+ 253⋮    │-    if not item.config.option.runxfail:
+ 254⋮    │-        if xfailed and not xfailed.run:
+ 255⋮    │-            xfail("[NOTRUN] " + xfailed.reason)
+    ⋮ 250│+    if xfailed and not item.config.option.runxfail and not xfailed.run:
+    ⋮ 251│+        xfail("[NOTRUN] " + xfailed.reason)
+ 256⋮ 252│ 
+ 257⋮ 253│     yield
+ 258⋮ 254│ 
+    ⋮ 255│+    # The test run may have added an xfail mark dynamically.
+    ⋮ 256│+    xfailed = item._store.get(xfailed_key, None)
+    ⋮ 257│+    if xfailed is None:
+    ⋮ 258│+        item._store[xfailed_key] = xfailed = evaluate_xfail_marks(item)
+    ⋮ 259│+
+ 259⋮ 260│ 
+ 260⋮ 261│ @hookimpl(hookwrapper=True)
+ 261⋮ 262│ def pytest_runtest_makereport(item: Item, call: CallInfo[None]):

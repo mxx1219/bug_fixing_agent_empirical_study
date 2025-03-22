@@ -1,0 +1,13 @@
+
+django/utils/dateformat.py
+
+ 313⋮ 313│         return '%02d' % (self.data.year % 100)
+ 314⋮ 314│ 
+ 315⋮ 315│     def Y(self):
+ 316⋮    │-        "Year, 4 digits; e.g. '1999'"
+ 317⋮    │-        return self.data.year
+    ⋮ 316│+        """Year, 4 digits with leading zeros; e.g. '1999'."""
+    ⋮ 317│+        return '%04d' % self.data.year
+ 318⋮ 318│ 
+ 319⋮ 319│     def z(self):
+ 320⋮ 320│         """Day of the year, i.e. 1 to 366."""

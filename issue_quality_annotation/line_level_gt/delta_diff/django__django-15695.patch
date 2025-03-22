@@ -1,0 +1,12 @@
+
+django/db/migrations/operations/models.py
+
+ 960⋮ 960│         else:
+ 961⋮ 961│             from_model_state = from_state.models[app_label, self.model_name_lower]
+ 962⋮ 962│             old_index = from_model_state.get_index_by_name(self.old_name)
+    ⋮ 963│+        # Don't alter when the index name is not changed.
+    ⋮ 964│+        if old_index.name == self.new_name:
+    ⋮ 965│+            return
+ 963⋮ 966│ 
+ 964⋮ 967│         to_model_state = to_state.models[app_label, self.model_name_lower]
+ 965⋮ 968│         new_index = to_model_state.get_index_by_name(self.new_name)

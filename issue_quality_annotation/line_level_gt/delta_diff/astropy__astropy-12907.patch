@@ -1,0 +1,11 @@
+
+astropy/modeling/separable.py
+
+ 242⋮ 242│         cright = _coord_matrix(right, 'right', noutp)
+ 243⋮ 243│     else:
+ 244⋮ 244│         cright = np.zeros((noutp, right.shape[1]))
+ 245⋮    │-        cright[-right.shape[0]:, -right.shape[1]:] = 1
+    ⋮ 245│+        cright[-right.shape[0]:, -right.shape[1]:] = right
+ 246⋮ 246│ 
+ 247⋮ 247│     return np.hstack([cleft, cright])
+ 248⋮ 248│ 

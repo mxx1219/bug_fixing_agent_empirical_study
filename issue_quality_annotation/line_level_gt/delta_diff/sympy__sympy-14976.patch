@@ -1,0 +1,16 @@
+
+sympy/printing/pycode.py
+
+ 332⋮ 332│         return '{func}({args})'.format(func=self._module_format('mpmath.mpf'), args=args)
+ 333⋮ 333│ 
+ 334⋮ 334│ 
+    ⋮ 335│+    def _print_Rational(self, e):
+    ⋮ 336│+        return '{0}({1})/{0}({2})'.format(
+    ⋮ 337│+            self._module_format('mpmath.mpf'),
+    ⋮ 338│+            e.p,
+    ⋮ 339│+            e.q,
+    ⋮ 340│+            )
+    ⋮ 341│+
+ 335⋮ 342│     def _print_uppergamma(self, e):
+ 336⋮ 343│         return "{0}({1}, {2}, {3})".format(
+ 337⋮ 344│             self._module_format('mpmath.gammainc'),

@@ -1,0 +1,10 @@
+
+sympy/polys/polytools.py
+
+ 106⋮ 106│ 
+ 107⋮ 107│     is_commutative = True
+ 108⋮ 108│     is_Poly = True
+    ⋮ 109│+    _op_priority = 10.001
+ 109⋮ 110│ 
+ 110⋮ 111│     def __new__(cls, rep, *gens, **args):
+ 111⋮ 112│         """Create a new polynomial instance out of something useful. """

@@ -1,0 +1,40 @@
+
+sklearn/multioutput.py
+
+ 325⋮ 325│     def __init__(self, estimator, n_jobs=None):
+ 326⋮ 326│         super().__init__(estimator, n_jobs)
+ 327⋮ 327│ 
+    ⋮ 328│+    def fit(self, X, Y, sample_weight=None):
+    ⋮ 329│+        """Fit the model to data matrix X and targets Y.
+    ⋮ 330│+
+    ⋮ 331│+        Parameters
+    ⋮ 332│+        ----------
+    ⋮ 333│+        X : {array-like, sparse matrix} of shape (n_samples, n_features)
+    ⋮ 334│+            The input data.
+    ⋮ 335│+        Y : array-like of shape (n_samples, n_classes)
+    ⋮ 336│+            The target values.
+    ⋮ 337│+        sample_weight : array-like of shape (n_samples,) or None
+    ⋮ 338│+            Sample weights. If None, then samples are equally weighted.
+    ⋮ 339│+            Only supported if the underlying classifier supports sample
+    ⋮ 340│+            weights.
+    ⋮ 341│+
+    ⋮ 342│+        Returns
+    ⋮ 343│+        -------
+    ⋮ 344│+        self : object
+    ⋮ 345│+        """
+    ⋮ 346│+        super().fit(X, Y, sample_weight)
+    ⋮ 347│+        self.classes_ = [estimator.classes_ for estimator in self.estimators_]
+    ⋮ 348│+        return self
+    ⋮ 349│+
+ 328⋮ 350│     def predict_proba(self, X):
+ 329⋮ 351│         """Probability estimates.
+ 330⋮ 352│         Returns prediction probabilities for each class of each output.
+
+ 420⋮ 442│             if self.order_ == 'random':
+ 421⋮ 443│                 self.order_ = random_state.permutation(Y.shape[1])
+ 422⋮ 444│         elif sorted(self.order_) != list(range(Y.shape[1])):
+ 423⋮    │-                raise ValueError("invalid order")
+    ⋮ 445│+            raise ValueError("invalid order")
+ 424⋮ 446│ 
+ 425⋮ 447│         self.estimators_ = [clone(self.base_estimator)
+ 426⋮ 448│                             for _ in range(Y.shape[1])]

@@ -1,0 +1,15 @@
+
+astropy/nddata/mixins/ndarithmetic.py
+
+ 520⋮ 520│         elif self.mask is None and operand is not None:
+ 521⋮ 521│             # Make a copy so there is no reference in the result.
+ 522⋮ 522│             return deepcopy(operand.mask)
+ 523⋮    │-        elif operand is None:
+    ⋮ 523│+        elif operand.mask is None:
+ 524⋮ 524│             return deepcopy(self.mask)
+ 525⋮ 525│         else:
+ 526⋮    │-            # Now lets calculate the resulting mask (operation enforces copy)
+    ⋮ 526│+            # Now let's calculate the resulting mask (operation enforces copy)
+ 527⋮ 527│             return handle_mask(self.mask, operand.mask, **kwds)
+ 528⋮ 528│ 
+ 529⋮ 529│     def _arithmetic_wcs(self, operation, operand, compare_wcs, **kwds):

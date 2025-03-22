@@ -1,0 +1,10 @@
+
+django/apps/registry.py
+
+ 373⋮ 373│ 
+ 374⋮ 374│         This is mostly used in tests.
+ 375⋮ 375│         """
+    ⋮ 376│+        self.get_swappable_settings_name.cache_clear()
+ 376⋮ 377│         # Call expire cache on each model. This will purge
+ 377⋮ 378│         # the relation tree and the fields cache.
+ 378⋮ 379│         self.get_models.cache_clear()

@@ -1,0 +1,28 @@
+
+sympy/matrices/sparse.py
+
+ 985⋮ 985│         >>> C == A.row_insert(A.rows, Matrix(B))
+ 986⋮ 986│         True
+ 987⋮ 987│         """
+ 988⋮    │-        if not self:
+ 989⋮    │-            return type(self)(other)
+    ⋮ 988│+        # A null matrix can always be stacked (see  #10770)
+    ⋮ 989│+        if self.rows == 0 and self.cols != other.cols:
+    ⋮ 990│+            return self._new(0, other.cols, []).col_join(other)
+    ⋮ 991│+
+ 990⋮ 992│         A, B = self, other
+ 991⋮ 993│         if not A.cols == B.cols:
+ 992⋮ 994│             raise ShapeError()
+
+1191⋮1193│         >>> C == A.col_insert(A.cols, B)
+1192⋮1194│         True
+1193⋮1195│         """
+1194⋮    │-        if not self:
+1195⋮    │-            return type(self)(other)
+    ⋮1196│+        # A null matrix can always be stacked (see  #10770)
+    ⋮1197│+        if self.cols == 0 and self.rows != other.rows:
+    ⋮1198│+            return self._new(other.rows, 0, []).row_join(other)
+    ⋮1199│+
+1196⋮1200│         A, B = self, other
+1197⋮1201│         if not A.rows == B.rows:
+1198⋮1202│             raise ShapeError()

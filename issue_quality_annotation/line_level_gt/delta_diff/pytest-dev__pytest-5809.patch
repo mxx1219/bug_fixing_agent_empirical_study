@@ -1,0 +1,15 @@
+
+src/_pytest/pastebin.py
+
+ 77 ⋮ 77 │         from urllib.request import urlopen
+ 78 ⋮ 78 │         from urllib.parse import urlencode
+ 79 ⋮ 79 │ 
+ 80 ⋮    │-    params = {
+ 81 ⋮    │-        "code": contents,
+ 82 ⋮    │-        "lexer": "python3" if sys.version_info[0] >= 3 else "python",
+ 83 ⋮    │-        "expiry": "1week",
+ 84 ⋮    │-    }
+    ⋮ 80 │+    params = {"code": contents, "lexer": "text", "expiry": "1week"}
+ 85 ⋮ 81 │     url = "https://bpaste.net"
+ 86 ⋮ 82 │     response = urlopen(url, data=urlencode(params).encode("ascii")).read()
+ 87 ⋮ 83 │     m = re.search(r'href="/raw/(\w+)"', response.decode("utf-8"))

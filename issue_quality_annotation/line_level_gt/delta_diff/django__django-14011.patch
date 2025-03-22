@@ -1,0 +1,49 @@
+
+django/core/servers/basehttp.py
+
+ 16 ⋮ 16 │ from django.core.exceptions import ImproperlyConfigured
+ 17 ⋮ 17 │ from django.core.handlers.wsgi import LimitedStream
+ 18 ⋮ 18 │ from django.core.wsgi import get_wsgi_application
+    ⋮ 19 │+from django.db import connections
+ 19 ⋮ 20 │ from django.utils.module_loading import import_string
+ 20 ⋮ 21 │ 
+ 21 ⋮ 22 │ __all__ = ('WSGIServer', 'WSGIRequestHandler')
+
+ 81 ⋮ 82 │     """A threaded version of the WSGIServer"""
+ 82 ⋮ 83 │     daemon_threads = True
+ 83 ⋮ 84 │ 
+    ⋮ 85 │+    def __init__(self, *args, connections_override=None, **kwargs):
+    ⋮ 86 │+        super().__init__(*args, **kwargs)
+    ⋮ 87 │+        self.connections_override = connections_override
+    ⋮ 88 │+
+    ⋮ 89 │+    # socketserver.ThreadingMixIn.process_request() passes this method as
+    ⋮ 90 │+    # the target to a new Thread object.
+    ⋮ 91 │+    def process_request_thread(self, request, client_address):
+    ⋮ 92 │+        if self.connections_override:
+    ⋮ 93 │+            # Override this thread's database connections with the ones
+    ⋮ 94 │+            # provided by the parent thread.
+    ⋮ 95 │+            for alias, conn in self.connections_override.items():
+    ⋮ 96 │+                connections[alias] = conn
+    ⋮ 97 │+        super().process_request_thread(request, client_address)
+    ⋮ 98 │+
+    ⋮ 99 │+    def _close_connections(self):
+    ⋮ 100│+        # Used for mocking in tests.
+    ⋮ 101│+        connections.close_all()
+    ⋮ 102│+
+    ⋮ 103│+    def close_request(self, request):
+    ⋮ 104│+        self._close_connections()
+    ⋮ 105│+        super().close_request(request)
+    ⋮ 106│+
+ 84 ⋮ 107│ 
+ 85 ⋮ 108│ class ServerHandler(simple_server.ServerHandler):
+ 86 ⋮ 109│     http_version = '1.1'
+
+django/db/backends/sqlite3/features.py
+
+ 83 ⋮ 83 │                 "the sqlite backend's close() method is a no-op when using an "
+ 84 ⋮ 84 │                 "in-memory database": {
+ 85 ⋮ 85 │                     'servers.test_liveserverthread.LiveServerThreadTest.test_closes_connections',
+    ⋮ 86 │+                    'servers.tests.LiveServerTestCloseConnectionTest.test_closes_connections',
+ 86 ⋮ 87 │                 },
+ 87 ⋮ 88 │             })
+ 88 ⋮ 89 │         return skips

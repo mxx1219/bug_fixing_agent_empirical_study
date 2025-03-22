@@ -1,0 +1,12 @@
+
+django/db/models/query.py
+
+1209⋮1209│         if ignore_conflicts and not connections[self.db].features.supports_ignore_conflicts:
+1210⋮1210│             raise NotSupportedError('This database backend does not support ignoring conflicts.')
+1211⋮1211│         ops = connections[self.db].ops
+1212⋮    │-        batch_size = (batch_size or max(ops.bulk_batch_size(fields, objs), 1))
+    ⋮1212│+        max_batch_size = max(ops.bulk_batch_size(fields, objs), 1)
+    ⋮1213│+        batch_size = min(batch_size, max_batch_size) if batch_size else max_batch_size
+1213⋮1214│         inserted_rows = []
+1214⋮1215│         bulk_return = connections[self.db].features.can_return_rows_from_bulk_insert
+1215⋮1216│         for item in [objs[i:i + batch_size] for i in range(0, len(objs), batch_size)]:

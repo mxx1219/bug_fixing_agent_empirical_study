@@ -1,0 +1,21 @@
+
+lib/matplotlib/__init__.py
+
+1059⋮1059│     """
+1060⋮1060│     Return a context manager for temporarily changing rcParams.
+1061⋮1061│ 
+    ⋮1062│+    The :rc:`backend` will not be reset by the context manager.
+    ⋮1063│+
+1062⋮1064│     Parameters
+1063⋮1065│     ----------
+1064⋮1066│     rc : dict
+
+1087⋮1089│              plt.plot(x, y)  # uses 'print.rc'
+1088⋮1090│ 
+1089⋮1091│     """
+1090⋮    │-    orig = rcParams.copy()
+    ⋮1092│+    orig = dict(rcParams.copy())
+    ⋮1093│+    del orig['backend']
+1091⋮1094│     try:
+1092⋮1095│         if fname:
+1093⋮1096│             rc_file(fname)

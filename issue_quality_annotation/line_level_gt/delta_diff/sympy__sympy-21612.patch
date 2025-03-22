@@ -1,0 +1,11 @@
+
+sympy/printing/str.py
+
+ 333⋮ 333│                     b.append(apow(item))
+ 334⋮ 334│                 else:
+ 335⋮ 335│                     if (len(item.args[0].args) != 1 and
+ 336⋮    │-                            isinstance(item.base, Mul)):
+    ⋮ 336│+                            isinstance(item.base, (Mul, Pow))):
+ 337⋮ 337│                         # To avoid situations like #14160
+ 338⋮ 338│                         pow_paren.append(item)
+ 339⋮ 339│                     b.append(item.base)

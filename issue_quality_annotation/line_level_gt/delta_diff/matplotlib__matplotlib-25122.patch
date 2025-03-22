@@ -1,0 +1,30 @@
+
+lib/matplotlib/mlab.py
+
+ 395⋮ 395│     elif mode == 'psd':
+ 396⋮ 396│         result = np.conj(result) * result
+ 397⋮ 397│     elif mode == 'magnitude':
+ 398⋮    │-        result = np.abs(result) / np.abs(window).sum()
+    ⋮ 398│+        result = np.abs(result) / window.sum()
+ 399⋮ 399│     elif mode == 'angle' or mode == 'phase':
+ 400⋮ 400│         # we unwrap the phase later to handle the onesided vs. twosided case
+ 401⋮ 401│         result = np.angle(result)
+ 402⋮ 402│     elif mode == 'complex':
+ 403⋮    │-        result /= np.abs(window).sum()
+    ⋮ 403│+        result /= window.sum()
+ 404⋮ 404│ 
+ 405⋮ 405│     if mode == 'psd':
+ 406⋮ 406│ 
+
+ 424⋮ 424│             result /= Fs
+ 425⋮ 425│             # Scale the spectrum by the norm of the window to compensate for
+ 426⋮ 426│             # windowing loss; see Bendat & Piersol Sec 11.5.2.
+ 427⋮    │-            result /= (np.abs(window)**2).sum()
+    ⋮ 427│+            result /= (window**2).sum()
+ 428⋮ 428│         else:
+ 429⋮ 429│             # In this case, preserve power in the segment, not amplitude
+ 430⋮    │-            result /= np.abs(window).sum()**2
+    ⋮ 430│+            result /= window.sum()**2
+ 431⋮ 431│ 
+ 432⋮ 432│     t = np.arange(NFFT/2, len(x) - NFFT/2 + 1, NFFT - noverlap)/Fs
+ 433⋮ 433│ 

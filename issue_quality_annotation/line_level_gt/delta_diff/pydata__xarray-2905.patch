@@ -1,0 +1,12 @@
+
+xarray/core/variable.py
+
+ 218⋮ 218│         data = np.timedelta64(getattr(data, "value", data), "ns")
+ 219⋮ 219│ 
+ 220⋮ 220│     # we don't want nested self-described arrays
+ 221⋮    │-    data = getattr(data, "values", data)
+    ⋮ 221│+    if isinstance(data, (pd.Series, pd.Index, pd.DataFrame)):
+    ⋮ 222│+        data = data.values
+ 222⋮ 223│ 
+ 223⋮ 224│     if isinstance(data, np.ma.MaskedArray):
+ 224⋮ 225│         mask = np.ma.getmaskarray(data)

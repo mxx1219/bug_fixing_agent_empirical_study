@@ -1,0 +1,20 @@
+
+django/template/autoreload.py
+
+ 17 ⋮ 17 │         if not isinstance(backend, DjangoTemplates):
+ 18 ⋮ 18 │             continue
+ 19 ⋮ 19 │ 
+ 20 ⋮    │-        items.update(cwd / to_path(dir) for dir in backend.engine.dirs)
+    ⋮ 20 │+        items.update(cwd / to_path(dir) for dir in backend.engine.dirs if dir)
+ 21 ⋮ 21 │ 
+ 22 ⋮ 22 │         for loader in backend.engine.template_loaders:
+ 23 ⋮ 23 │             if not hasattr(loader, "get_dirs"):
+
+ 25 ⋮ 25 │             items.update(
+ 26 ⋮ 26 │                 cwd / to_path(directory)
+ 27 ⋮ 27 │                 for directory in loader.get_dirs()
+ 28 ⋮    │-                if not is_django_path(directory)
+    ⋮ 28 │+                if directory and not is_django_path(directory)
+ 29 ⋮ 29 │             )
+ 30 ⋮ 30 │     return items
+ 31 ⋮ 31 │ 

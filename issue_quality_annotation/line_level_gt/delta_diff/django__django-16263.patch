@@ -1,0 +1,223 @@
+
+django/db/models/expressions.py
+
+ 405⋮ 405│         )
+ 406⋮ 406│         return clone
+ 407⋮ 407│ 
+    ⋮ 408│+    def get_refs(self):
+    ⋮ 409│+        refs = set()
+    ⋮ 410│+        for expr in self.get_source_expressions():
+    ⋮ 411│+            refs |= expr.get_refs()
+    ⋮ 412│+        return refs
+    ⋮ 413│+
+ 408⋮ 414│     def copy(self):
+ 409⋮ 415│         return copy.copy(self)
+ 410⋮ 416│ 
+
+1167⋮1173│         # just a reference to the name of `source`.
+1168⋮1174│         return self
+1169⋮1175│ 
+    ⋮1176│+    def get_refs(self):
+    ⋮1177│+        return {self.refs}
+    ⋮1178│+
+1170⋮1179│     def relabeled_clone(self, relabels):
+1171⋮1180│         return self
+1172⋮1181│ 
+
+django/db/models/query_utils.py
+
+ 90 ⋮ 90 │             allow_joins=allow_joins,
+ 91 ⋮ 91 │             split_subq=False,
+ 92 ⋮ 92 │             check_filterable=False,
+    ⋮ 93 │+            summarize=summarize,
+ 93 ⋮ 94 │         )
+ 94 ⋮ 95 │         query.promote_joins(joins)
+ 95 ⋮ 96 │         return clause
+
+ 358⋮ 359│     """
+ 359⋮ 360│     for n in range(1, len(lookup_parts) + 1):
+ 360⋮ 361│         level_n_lookup = LOOKUP_SEP.join(lookup_parts[0:n])
+ 361⋮    │-        if level_n_lookup in annotations and annotations[level_n_lookup]:
+ 362⋮    │-            return annotations[level_n_lookup], lookup_parts[n:]
+ 363⋮    │-    return False, ()
+    ⋮ 362│+        if annotations.get(level_n_lookup):
+    ⋮ 363│+            return level_n_lookup, lookup_parts[n:]
+    ⋮ 364│+    return None, ()
+ 364⋮ 365│ 
+ 365⋮ 366│ 
+ 366⋮ 367│ def check_rel_lookup_compatibility(model, target_opts, field):
+
+django/db/models/sql/query.py
+
+ 441⋮ 441│         """
+ 442⋮ 442│         if not self.annotation_select:
+ 443⋮ 443│             return {}
+ 444⋮    │-        existing_annotations = [
+ 445⋮    │-            annotation
+ 446⋮    │-            for alias, annotation in self.annotations.items()
+    ⋮ 444│+        existing_annotations = {
+    ⋮ 445│+            alias: annotation
+    ⋮ 446│+            for alias, annotation in self.annotation_select.items()
+ 447⋮ 447│             if alias not in added_aggregate_names
+ 448⋮    │-        ]
+    ⋮ 448│+        }
+    ⋮ 449│+        # Existing usage of aggregation can be determined by the presence of
+    ⋮ 450│+        # selected aggregate and window annotations but also by filters against
+    ⋮ 451│+        # aliased aggregate and windows via HAVING / QUALIFY.
+    ⋮ 452│+        has_existing_aggregation = any(
+    ⋮ 453│+            getattr(annotation, "contains_aggregate", True)
+    ⋮ 454│+            or getattr(annotation, "contains_over_clause", True)
+    ⋮ 455│+            for annotation in existing_annotations.values()
+    ⋮ 456│+        ) or any(self.where.split_having_qualify()[1:])
+ 449⋮ 457│         # Decide if we need to use a subquery.
+ 450⋮ 458│         #
+ 451⋮    │-        # Existing annotations would cause incorrect results as get_aggregation()
+ 452⋮    │-        # must produce just one result and thus must not use GROUP BY. But we
+ 453⋮    │-        # aren't smart enough to remove the existing annotations from the
+ 454⋮    │-        # query, so those would force us to use GROUP BY.
+    ⋮ 459│+        # Existing aggregations would cause incorrect results as
+    ⋮ 460│+        # get_aggregation() must produce just one result and thus must not use
+    ⋮ 461│+        # GROUP BY.
+ 455⋮ 462│         #
+ 456⋮ 463│         # If the query has limit or distinct, or uses set operations, then
+ 457⋮ 464│         # those operations must be done in a subquery so that the query
+
+ 460⋮ 467│         if (
+ 461⋮ 468│             isinstance(self.group_by, tuple)
+ 462⋮ 469│             or self.is_sliced
+ 463⋮    │-            or existing_annotations
+    ⋮ 470│+            or has_existing_aggregation
+ 464⋮ 471│             or self.distinct
+ 465⋮ 472│             or self.combinator
+ 466⋮ 473│         ):
+
+ 482⋮ 489│                 # query is grouped by the main model's primary key. However,
+ 483⋮ 490│                 # clearing the select clause can alter results if distinct is
+ 484⋮ 491│                 # used.
+ 485⋮    │-                has_existing_aggregate_annotations = any(
+ 486⋮    │-                    annotation
+ 487⋮    │-                    for annotation in existing_annotations
+ 488⋮    │-                    if getattr(annotation, "contains_aggregate", True)
+ 489⋮    │-                )
+ 490⋮    │-                if inner_query.default_cols and has_existing_aggregate_annotations:
+    ⋮ 492│+                if inner_query.default_cols and has_existing_aggregation:
+ 491⋮ 493│                     inner_query.group_by = (
+ 492⋮ 494│                         self.model._meta.pk.get_col(inner_query.get_initial_alias()),
+ 493⋮ 495│                     )
+ 494⋮ 496│                 inner_query.default_cols = False
+    ⋮ 497│+                # Mask existing annotations that are not referenced by
+    ⋮ 498│+                # aggregates to be pushed to the outer query.
+    ⋮ 499│+                annotation_mask = set()
+    ⋮ 500│+                for name in added_aggregate_names:
+    ⋮ 501│+                    annotation_mask.add(name)
+    ⋮ 502│+                    annotation_mask |= inner_query.annotations[name].get_refs()
+    ⋮ 503│+                inner_query.set_annotation_mask(annotation_mask)
+ 495⋮ 504│ 
+ 496⋮ 505│             relabels = {t: "subquery" for t in inner_query.alias_map}
+ 497⋮ 506│             relabels[None] = "subquery"
+
+ 525⋮ 534│             self.select = ()
+ 526⋮ 535│             self.default_cols = False
+ 527⋮ 536│             self.extra = {}
+    ⋮ 537│+            if existing_annotations:
+    ⋮ 538│+                # Inline reference to existing annotations and mask them as
+    ⋮ 539│+                # they are unnecessary given only the summarized aggregations
+    ⋮ 540│+                # are requested.
+    ⋮ 541│+                replacements = {
+    ⋮ 542│+                    Ref(alias, annotation): annotation
+    ⋮ 543│+                    for alias, annotation in existing_annotations.items()
+    ⋮ 544│+                }
+    ⋮ 545│+                for name in added_aggregate_names:
+    ⋮ 546│+                    self.annotations[name] = self.annotations[name].replace_expressions(
+    ⋮ 547│+                        replacements
+    ⋮ 548│+                    )
+    ⋮ 549│+                self.set_annotation_mask(added_aggregate_names)
+ 528⋮ 550│ 
+ 529⋮ 551│         empty_set_result = [
+ 530⋮ 552│             expression.empty_result_set_value
+
+1192⋮1214│             return type_(values)
+1193⋮1215│         return value
+1194⋮1216│ 
+1195⋮    │-    def solve_lookup_type(self, lookup):
+    ⋮1217│+    def solve_lookup_type(self, lookup, summarize=False):
+1196⋮1218│         """
+1197⋮1219│         Solve the lookup type from the lookup (e.g.: 'foobar__id__icontains').
+1198⋮1220│         """
+1199⋮1221│         lookup_splitted = lookup.split(LOOKUP_SEP)
+1200⋮1222│         if self.annotations:
+1201⋮    │-            expression, expression_lookups = refs_expression(
+    ⋮1223│+            annotation, expression_lookups = refs_expression(
+1202⋮1224│                 lookup_splitted, self.annotations
+1203⋮1225│             )
+1204⋮    │-            if expression:
+    ⋮1226│+            if annotation:
+    ⋮1227│+                expression = self.annotations[annotation]
+    ⋮1228│+                if summarize:
+    ⋮1229│+                    expression = Ref(annotation, expression)
+1205⋮1230│                 return expression_lookups, (), expression
+1206⋮1231│         _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+1207⋮1232│         field_parts = lookup_splitted[0 : len(lookup_splitted) - len(lookup_parts)]
+
+1338⋮1363│         split_subq=True,
+1339⋮1364│         reuse_with_filtered_relation=False,
+1340⋮1365│         check_filterable=True,
+    ⋮1366│+        summarize=False,
+1341⋮1367│     ):
+1342⋮1368│         """
+1343⋮1369│         Build a WhereNode for a single filter clause but don't add it
+
+1378⋮1404│                 allow_joins=allow_joins,
+1379⋮1405│                 split_subq=split_subq,
+1380⋮1406│                 check_filterable=check_filterable,
+    ⋮1407│+                summarize=summarize,
+1381⋮1408│             )
+1382⋮1409│         if hasattr(filter_expr, "resolve_expression"):
+1383⋮1410│             if not getattr(filter_expr, "conditional", False):
+1384⋮1411│                 raise TypeError("Cannot filter against a non-conditional expression.")
+1385⋮    │-            condition = filter_expr.resolve_expression(self, allow_joins=allow_joins)
+    ⋮1412│+            condition = filter_expr.resolve_expression(
+    ⋮1413│+                self, allow_joins=allow_joins, summarize=summarize
+    ⋮1414│+            )
+1386⋮1415│             if not isinstance(condition, Lookup):
+1387⋮1416│                 condition = self.build_lookup(["exact"], condition, True)
+1388⋮1417│             return WhereNode([condition], connector=AND), []
+1389⋮1418│         arg, value = filter_expr
+1390⋮1419│         if not arg:
+1391⋮1420│             raise FieldError("Cannot parse keyword query %r" % arg)
+1392⋮    │-        lookups, parts, reffed_expression = self.solve_lookup_type(arg)
+    ⋮1421│+        lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+1393⋮1422│ 
+1394⋮1423│         if check_filterable:
+1395⋮1424│             self.check_filterable(reffed_expression)
+
+1528⋮1557│         allow_joins=True,
+1529⋮1558│         split_subq=True,
+1530⋮1559│         check_filterable=True,
+    ⋮1560│+        summarize=False,
+1531⋮1561│     ):
+1532⋮1562│         """Add a Q-object to the current filter."""
+1533⋮1563│         connector = q_object.connector
+
+1546⋮1576│                 allow_joins=allow_joins,
+1547⋮1577│                 split_subq=split_subq,
+1548⋮1578│                 check_filterable=check_filterable,
+    ⋮1579│+                summarize=summarize,
+1549⋮1580│             )
+1550⋮1581│             joinpromoter.add_votes(needed_inner)
+1551⋮1582│             if child_clause:
+
+django/db/models/sql/where.py
+
+ 227⋮ 227│             clone.children.append(child.replace_expressions(replacements))
+ 228⋮ 228│         return clone
+ 229⋮ 229│ 
+    ⋮ 230│+    def get_refs(self):
+    ⋮ 231│+        refs = set()
+    ⋮ 232│+        for child in self.children:
+    ⋮ 233│+            refs |= child.get_refs()
+    ⋮ 234│+        return refs
+    ⋮ 235│+
+ 230⋮ 236│     @classmethod
+ 231⋮ 237│     def _contains_aggregate(cls, obj):
+ 232⋮ 238│         if isinstance(obj, tree.Node):

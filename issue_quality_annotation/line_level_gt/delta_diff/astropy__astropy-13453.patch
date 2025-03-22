@@ -1,0 +1,16 @@
+
+astropy/io/ascii/html.py
+
+ 349⋮ 349│         cols = list(table.columns.values())
+ 350⋮ 350│ 
+ 351⋮ 351│         self.data.header.cols = cols
+    ⋮ 352│+        self.data.cols = cols
+ 352⋮ 353│ 
+ 353⋮ 354│         if isinstance(self.data.fill_values, tuple):
+ 354⋮ 355│             self.data.fill_values = [self.data.fill_values]
+ 355⋮ 356│ 
+ 356⋮ 357│         self.data._set_fill_values(cols)
+    ⋮ 358│+        self.data._set_col_formats()
+ 357⋮ 359│ 
+ 358⋮ 360│         lines = []
+ 359⋮ 361│ 

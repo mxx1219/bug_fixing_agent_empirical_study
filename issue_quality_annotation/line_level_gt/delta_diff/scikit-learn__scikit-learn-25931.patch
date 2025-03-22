@@ -1,0 +1,43 @@
+
+sklearn/ensemble/_iforest.py
+
+ 344⋮ 344│             self.offset_ = -0.5
+ 345⋮ 345│             return self
+ 346⋮ 346│ 
+ 347⋮    │-        # else, define offset_ wrt contamination parameter
+ 348⋮    │-        self.offset_ = np.percentile(self.score_samples(X), 100.0 * self.contamination)
+    ⋮ 347│+        # Else, define offset_ wrt contamination parameter
+    ⋮ 348│+        # To avoid performing input validation a second time we call
+    ⋮ 349│+        # _score_samples rather than score_samples
+    ⋮ 350│+        self.offset_ = np.percentile(self._score_samples(X), 100.0 * self.contamination)
+ 349⋮ 351│ 
+ 350⋮ 352│         return self
+ 351⋮ 353│ 
+
+ 428⋮ 430│             The anomaly score of the input samples.
+ 429⋮ 431│             The lower, the more abnormal.
+ 430⋮ 432│         """
+ 431⋮    │-        # code structure from ForestClassifier/predict_proba
+ 432⋮    │-
+ 433⋮    │-        check_is_fitted(self)
+ 434⋮    │-
+ 435⋮ 433│         # Check data
+ 436⋮ 434│         X = self._validate_data(X, accept_sparse="csr", dtype=np.float32, reset=False)
+ 437⋮ 435│ 
+ 438⋮    │-        # Take the opposite of the scores as bigger is better (here less
+ 439⋮    │-        # abnormal)
+    ⋮ 436│+        return self._score_samples(X)
+    ⋮ 437│+
+    ⋮ 438│+    def _score_samples(self, X):
+    ⋮ 439│+        """Private version of score_samples without input validation.
+    ⋮ 440│+
+    ⋮ 441│+        Input validation would remove feature names, so we disable it.
+    ⋮ 442│+        """
+    ⋮ 443│+        # Code structure from ForestClassifier/predict_proba
+    ⋮ 444│+
+    ⋮ 445│+        check_is_fitted(self)
+    ⋮ 446│+
+    ⋮ 447│+        # Take the opposite of the scores as bigger is better (here less abnormal)
+ 440⋮ 448│         return -self._compute_chunked_score_samples(X)
+ 441⋮ 449│ 
+ 442⋮ 450│     def _compute_chunked_score_samples(self, X):

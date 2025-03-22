@@ -1,0 +1,77 @@
+
+django/db/backends/base/operations.py
+
+ 526⋮ 526│         """
+ 527⋮ 527│         return value or None
+ 528⋮ 528│ 
+ 529⋮    │-    def year_lookup_bounds_for_date_field(self, value):
+    ⋮ 529│+    def year_lookup_bounds_for_date_field(self, value, iso_year=False):
+ 530⋮ 530│         """
+ 531⋮ 531│         Return a two-elements list with the lower and upper bound to be used
+ 532⋮ 532│         with a BETWEEN operator to query a DateField value using a year
+ 533⋮ 533│         lookup.
+ 534⋮ 534│ 
+ 535⋮ 535│         `value` is an int, containing the looked-up year.
+    ⋮ 536│+        If `iso_year` is True, return bounds for ISO-8601 week-numbering years.
+ 536⋮ 537│         """
+ 537⋮    │-        first = datetime.date(value, 1, 1)
+ 538⋮    │-        second = datetime.date(value, 12, 31)
+    ⋮ 538│+        if iso_year:
+    ⋮ 539│+            first = datetime.date.fromisocalendar(value, 1, 1)
+    ⋮ 540│+            second = (
+    ⋮ 541│+                datetime.date.fromisocalendar(value + 1, 1, 1) -
+    ⋮ 542│+                datetime.timedelta(days=1)
+    ⋮ 543│+            )
+    ⋮ 544│+        else:
+    ⋮ 545│+            first = datetime.date(value, 1, 1)
+    ⋮ 546│+            second = datetime.date(value, 12, 31)
+ 539⋮ 547│         first = self.adapt_datefield_value(first)
+ 540⋮ 548│         second = self.adapt_datefield_value(second)
+ 541⋮ 549│         return [first, second]
+ 542⋮ 550│ 
+ 543⋮    │-    def year_lookup_bounds_for_datetime_field(self, value):
+    ⋮ 551│+    def year_lookup_bounds_for_datetime_field(self, value, iso_year=False):
+ 544⋮ 552│         """
+ 545⋮ 553│         Return a two-elements list with the lower and upper bound to be used
+ 546⋮ 554│         with a BETWEEN operator to query a DateTimeField value using a year
+ 547⋮ 555│         lookup.
+ 548⋮ 556│ 
+ 549⋮ 557│         `value` is an int, containing the looked-up year.
+    ⋮ 558│+        If `iso_year` is True, return bounds for ISO-8601 week-numbering years.
+ 550⋮ 559│         """
+ 551⋮    │-        first = datetime.datetime(value, 1, 1)
+ 552⋮    │-        second = datetime.datetime(value, 12, 31, 23, 59, 59, 999999)
+    ⋮ 560│+        if iso_year:
+    ⋮ 561│+            first = datetime.datetime.fromisocalendar(value, 1, 1)
+    ⋮ 562│+            second = (
+    ⋮ 563│+                datetime.datetime.fromisocalendar(value + 1, 1, 1) -
+    ⋮ 564│+                datetime.timedelta(microseconds=1)
+    ⋮ 565│+            )
+    ⋮ 566│+        else:
+    ⋮ 567│+            first = datetime.datetime(value, 1, 1)
+    ⋮ 568│+            second = datetime.datetime(value, 12, 31, 23, 59, 59, 999999)
+ 553⋮ 569│         if settings.USE_TZ:
+ 554⋮ 570│             tz = timezone.get_current_timezone()
+ 555⋮ 571│             first = timezone.make_aware(first, tz)
+
+django/db/models/lookups.py
+
+ 539⋮ 539│ 
+ 540⋮ 540│ class YearLookup(Lookup):
+ 541⋮ 541│     def year_lookup_bounds(self, connection, year):
+    ⋮ 542│+        from django.db.models.functions import ExtractIsoYear
+    ⋮ 543│+        iso_year = isinstance(self.lhs, ExtractIsoYear)
+ 542⋮ 544│         output_field = self.lhs.lhs.output_field
+ 543⋮ 545│         if isinstance(output_field, DateTimeField):
+ 544⋮    │-            bounds = connection.ops.year_lookup_bounds_for_datetime_field(year)
+    ⋮ 546│+            bounds = connection.ops.year_lookup_bounds_for_datetime_field(
+    ⋮ 547│+                year, iso_year=iso_year,
+    ⋮ 548│+            )
+ 545⋮ 549│         else:
+ 546⋮    │-            bounds = connection.ops.year_lookup_bounds_for_date_field(year)
+    ⋮ 550│+            bounds = connection.ops.year_lookup_bounds_for_date_field(
+    ⋮ 551│+                year, iso_year=iso_year,
+    ⋮ 552│+            )
+ 547⋮ 553│         return bounds
+ 548⋮ 554│ 
+ 549⋮ 555│     def as_sql(self, compiler, connection):

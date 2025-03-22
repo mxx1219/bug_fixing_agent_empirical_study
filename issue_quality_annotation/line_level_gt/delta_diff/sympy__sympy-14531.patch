@@ -1,0 +1,123 @@
+
+sympy/printing/str.py
+
+ 86 ⋮ 86 │         return self.stringify(expr.args, " | ", PRECEDENCE["BitwiseOr"])
+ 87 ⋮ 87 │ 
+ 88 ⋮ 88 │     def _print_AppliedPredicate(self, expr):
+ 89 ⋮    │-        return '%s(%s)' % (expr.func, expr.arg)
+    ⋮ 89 │+        return '%s(%s)' % (self._print(expr.func), self._print(expr.arg))
+ 90 ⋮ 90 │ 
+ 91 ⋮ 91 │     def _print_Basic(self, expr):
+ 92 ⋮ 92 │         l = [self._print(o) for o in expr.args]
+
+ 141⋮ 141│         return 'E'
+ 142⋮ 142│ 
+ 143⋮ 143│     def _print_ExprCondPair(self, expr):
+ 144⋮    │-        return '(%s, %s)' % (expr.expr, expr.cond)
+    ⋮ 144│+        return '(%s, %s)' % (self._print(expr.expr), self._print(expr.cond))
+ 145⋮ 145│ 
+ 146⋮ 146│     def _print_FiniteSet(self, s):
+ 147⋮ 147│         s = sorted(s, key=default_sort_key)
+
+ 204⋮ 204│     def _print_Lambda(self, obj):
+ 205⋮ 205│         args, expr = obj.args
+ 206⋮ 206│         if len(args) == 1:
+ 207⋮    │-            return "Lambda(%s, %s)" % (args.args[0], expr)
+    ⋮ 207│+            return "Lambda(%s, %s)" % (self._print(args.args[0]), self._print(expr))
+ 208⋮ 208│         else:
+ 209⋮ 209│             arg_string = ", ".join(self._print(arg) for arg in args)
+ 210⋮    │-            return "Lambda((%s), %s)" % (arg_string, expr)
+    ⋮ 210│+            return "Lambda((%s), %s)" % (arg_string, self._print(expr))
+ 211⋮ 211│ 
+ 212⋮ 212│     def _print_LatticeOp(self, expr):
+ 213⋮ 213│         args = sorted(expr.args, key=default_sort_key)
+
+ 216⋮ 216│     def _print_Limit(self, expr):
+ 217⋮ 217│         e, z, z0, dir = expr.args
+ 218⋮ 218│         if str(dir) == "+":
+ 219⋮    │-            return "Limit(%s, %s, %s)" % (e, z, z0)
+    ⋮ 219│+            return "Limit(%s, %s, %s)" % tuple(map(self._print, (e, z, z0)))
+ 220⋮ 220│         else:
+ 221⋮    │-            return "Limit(%s, %s, %s, dir='%s')" % (e, z, z0, dir)
+    ⋮ 221│+            return "Limit(%s, %s, %s, dir='%s')" % tuple(map(self._print,
+    ⋮ 222│+                                                            (e, z, z0, dir)))
+ 222⋮ 223│ 
+ 223⋮ 224│     def _print_list(self, expr):
+ 224⋮ 225│         return "[%s]" % self.stringify(expr, ", ")
+
+ 237⋮ 238│ 
+ 238⋮ 239│     def _print_MatrixElement(self, expr):
+ 239⋮ 240│         return self.parenthesize(expr.parent, PRECEDENCE["Atom"], strict=True) \
+ 240⋮    │-            + '[%s, %s]' % (expr.i, expr.j)
+    ⋮ 241│+            + '[%s, %s]' % (self._print(expr.i), self._print(expr.j))
+ 241⋮ 242│ 
+ 242⋮ 243│     def _print_MatrixSlice(self, expr):
+ 243⋮ 244│         def strslice(x):
+
+ 341⋮ 342│         return '-oo'
+ 342⋮ 343│ 
+ 343⋮ 344│     def _print_Normal(self, expr):
+ 344⋮    │-        return "Normal(%s, %s)" % (expr.mu, expr.sigma)
+    ⋮ 345│+        return "Normal(%s, %s)" % (self._print(expr.mu), self._print(expr.sigma))
+ 345⋮ 346│ 
+ 346⋮ 347│     def _print_Order(self, expr):
+ 347⋮ 348│         if all(p is S.Zero for p in expr.point) or not len(expr.variables):
+
+ 375⋮ 376│             s = expr.support()
+ 376⋮ 377│             if not s:
+ 377⋮ 378│                 if expr.size < 5:
+ 378⋮    │-                    return 'Permutation(%s)' % str(expr.array_form)
+ 379⋮    │-                return 'Permutation([], size=%s)' % expr.size
+ 380⋮    │-            trim = str(expr.array_form[:s[-1] + 1]) + ', size=%s' % expr.size
+ 381⋮    │-            use = full = str(expr.array_form)
+    ⋮ 379│+                    return 'Permutation(%s)' % self._print(expr.array_form)
+    ⋮ 380│+                return 'Permutation([], size=%s)' % self._print(expr.size)
+    ⋮ 381│+            trim = self._print(expr.array_form[:s[-1] + 1]) + ', size=%s' % self._print(expr.size)
+    ⋮ 382│+            use = full = self._print(expr.array_form)
+ 382⋮ 383│             if len(trim) < len(full):
+ 383⋮ 384│                 use = trim
+ 384⋮ 385│             return 'Permutation(%s)' % use
+
+ 399⋮ 400│         return expr._print()
+ 400⋮ 401│ 
+ 401⋮ 402│     def _print_PermutationGroup(self, expr):
+ 402⋮    │-        p = ['    %s' % str(a) for a in expr.args]
+    ⋮ 403│+        p = ['    %s' % self._print(a) for a in expr.args]
+ 403⋮ 404│         return 'PermutationGroup([\n%s])' % ',\n'.join(p)
+ 404⋮ 405│ 
+ 405⋮ 406│     def _print_PDF(self, expr):
+
+ 412⋮ 413│ 
+ 413⋮ 414│     def _print_PolyRing(self, ring):
+ 414⋮ 415│         return "Polynomial ring in %s over %s with %s order" % \
+ 415⋮    │-            (", ".join(map(self._print, ring.symbols)), ring.domain, ring.order)
+    ⋮ 416│+            (", ".join(map(self._print, ring.symbols)),
+    ⋮ 417│+            self._print(ring.domain), self._print(ring.order))
+ 416⋮ 418│ 
+ 417⋮ 419│     def _print_FracField(self, field):
+ 418⋮ 420│         return "Rational function field in %s over %s with %s order" % \
+ 419⋮    │-            (", ".join(map(self._print, field.symbols)), field.domain, field.order)
+    ⋮ 421│+            (", ".join(map(self._print, field.symbols)),
+    ⋮ 422│+            self._print(field.domain), self._print(field.order))
+ 420⋮ 423│ 
+ 421⋮ 424│     def _print_FreeGroupElement(self, elm):
+ 422⋮ 425│         return elm.__str__()
+
+ 630⋮ 633│         }
+ 631⋮ 634│ 
+ 632⋮ 635│         if expr.rel_op in charmap:
+ 633⋮    │-            return '%s(%s, %s)' % (charmap[expr.rel_op], expr.lhs, expr.rhs)
+    ⋮ 636│+            return '%s(%s, %s)' % (charmap[expr.rel_op], self._print(expr.lhs),
+    ⋮ 637│+                                   self._print(expr.rhs))
+ 634⋮ 638│ 
+ 635⋮ 639│         return '%s %s %s' % (self.parenthesize(expr.lhs, precedence(expr)),
+ 636⋮ 640│                            self._relationals.get(expr.rel_op) or expr.rel_op,
+
+ 722⋮ 726│         return "%s.T" % self.parenthesize(T.arg, PRECEDENCE["Pow"])
+ 723⋮ 727│ 
+ 724⋮ 728│     def _print_Uniform(self, expr):
+ 725⋮    │-        return "Uniform(%s, %s)" % (expr.a, expr.b)
+    ⋮ 729│+        return "Uniform(%s, %s)" % (self._print(expr.a), self._print(expr.b))
+ 726⋮ 730│ 
+ 727⋮ 731│     def _print_Union(self, expr):
+ 728⋮ 732│         return 'Union(%s)' %(', '.join([self._print(a) for a in expr.args]))

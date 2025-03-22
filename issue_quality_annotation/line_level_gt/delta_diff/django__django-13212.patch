@@ -1,0 +1,167 @@
+
+django/core/validators.py
+
+ 48 ⋮ 48 │         regex_matches = self.regex.search(str(value))
+ 49 ⋮ 49 │         invalid_input = regex_matches if self.inverse_match else not regex_matches
+ 50 ⋮ 50 │         if invalid_input:
+ 51 ⋮    │-            raise ValidationError(self.message, code=self.code)
+    ⋮ 51 │+            raise ValidationError(self.message, code=self.code, params={'value': value})
+ 52 ⋮ 52 │ 
+ 53 ⋮ 53 │     def __eq__(self, other):
+ 54 ⋮ 54 │         return (
+
+ 100⋮ 100│ 
+ 101⋮ 101│     def __call__(self, value):
+ 102⋮ 102│         if not isinstance(value, str):
+ 103⋮    │-            raise ValidationError(self.message, code=self.code)
+    ⋮ 103│+            raise ValidationError(self.message, code=self.code, params={'value': value})
+ 104⋮ 104│         # Check if the scheme is valid.
+ 105⋮ 105│         scheme = value.split('://')[0].lower()
+ 106⋮ 106│         if scheme not in self.schemes:
+ 107⋮    │-            raise ValidationError(self.message, code=self.code)
+    ⋮ 107│+            raise ValidationError(self.message, code=self.code, params={'value': value})
+ 108⋮ 108│ 
+ 109⋮ 109│         # Then check full URL
+ 110⋮ 110│         try:
+
+ 115⋮ 115│                 try:
+ 116⋮ 116│                     scheme, netloc, path, query, fragment = urlsplit(value)
+ 117⋮ 117│                 except ValueError:  # for example, "Invalid IPv6 URL"
+ 118⋮    │-                    raise ValidationError(self.message, code=self.code)
+    ⋮ 118│+                    raise ValidationError(self.message, code=self.code, params={'value': value})
+ 119⋮ 119│                 try:
+ 120⋮ 120│                     netloc = punycode(netloc)  # IDN -> ACE
+ 121⋮ 121│                 except UnicodeError:  # invalid domain part
+
+ 132⋮ 132│                 try:
+ 133⋮ 133│                     validate_ipv6_address(potential_ip)
+ 134⋮ 134│                 except ValidationError:
+ 135⋮    │-                    raise ValidationError(self.message, code=self.code)
+    ⋮ 135│+                    raise ValidationError(self.message, code=self.code, params={'value': value})
+ 136⋮ 136│ 
+ 137⋮ 137│         # The maximum length of a full host name is 253 characters per RFC 1034
+ 138⋮ 138│         # section 3.1. It's defined to be 255 bytes or less, but this includes
+ 139⋮ 139│         # one byte for the length of the name and one byte for the trailing dot
+ 140⋮ 140│         # that's used to indicate absolute names in DNS.
+ 141⋮ 141│         if len(urlsplit(value).netloc) > 253:
+ 142⋮    │-            raise ValidationError(self.message, code=self.code)
+    ⋮ 142│+            raise ValidationError(self.message, code=self.code, params={'value': value})
+ 143⋮ 143│ 
+ 144⋮ 144│ 
+ 145⋮ 145│ integer_validator = RegexValidator(
+
+ 208⋮ 208│ 
+ 209⋮ 209│     def __call__(self, value):
+ 210⋮ 210│         if not value or '@' not in value:
+ 211⋮    │-            raise ValidationError(self.message, code=self.code)
+    ⋮ 211│+            raise ValidationError(self.message, code=self.code, params={'value': value})
+ 212⋮ 212│ 
+ 213⋮ 213│         user_part, domain_part = value.rsplit('@', 1)
+ 214⋮ 214│ 
+ 215⋮ 215│         if not self.user_regex.match(user_part):
+ 216⋮    │-            raise ValidationError(self.message, code=self.code)
+    ⋮ 216│+            raise ValidationError(self.message, code=self.code, params={'value': value})
+ 217⋮ 217│ 
+ 218⋮ 218│         if (domain_part not in self.domain_allowlist and
+ 219⋮ 219│                 not self.validate_domain_part(domain_part)):
+
+ 225⋮ 225│             else:
+ 226⋮ 226│                 if self.validate_domain_part(domain_part):
+ 227⋮ 227│                     return
+ 228⋮    │-            raise ValidationError(self.message, code=self.code)
+    ⋮ 228│+            raise ValidationError(self.message, code=self.code, params={'value': value})
+ 229⋮ 229│ 
+ 230⋮ 230│     def validate_domain_part(self, domain_part):
+ 231⋮ 231│         if self.domain_regex.match(domain_part):
+
+ 272⋮ 272│     try:
+ 273⋮ 273│         ipaddress.IPv4Address(value)
+ 274⋮ 274│     except ValueError:
+ 275⋮    │-        raise ValidationError(_('Enter a valid IPv4 address.'), code='invalid')
+    ⋮ 275│+        raise ValidationError(_('Enter a valid IPv4 address.'), code='invalid', params={'value': value})
+ 276⋮ 276│ 
+ 277⋮ 277│ 
+ 278⋮ 278│ def validate_ipv6_address(value):
+ 279⋮ 279│     if not is_valid_ipv6_address(value):
+ 280⋮    │-        raise ValidationError(_('Enter a valid IPv6 address.'), code='invalid')
+    ⋮ 280│+        raise ValidationError(_('Enter a valid IPv6 address.'), code='invalid', params={'value': value})
+ 281⋮ 281│ 
+ 282⋮ 282│ 
+ 283⋮ 283│ def validate_ipv46_address(value):
+
+ 287⋮ 287│         try:
+ 288⋮ 288│             validate_ipv6_address(value)
+ 289⋮ 289│         except ValidationError:
+ 290⋮    │-            raise ValidationError(_('Enter a valid IPv4 or IPv6 address.'), code='invalid')
+    ⋮ 290│+            raise ValidationError(_('Enter a valid IPv4 or IPv6 address.'), code='invalid', params={'value': value})
+ 291⋮ 291│ 
+ 292⋮ 292│ 
+ 293⋮ 293│ ip_address_validator_map = {
+
+ 438⋮ 438│     def __call__(self, value):
+ 439⋮ 439│         digit_tuple, exponent = value.as_tuple()[1:]
+ 440⋮ 440│         if exponent in {'F', 'n', 'N'}:
+ 441⋮    │-            raise ValidationError(self.messages['invalid'])
+    ⋮ 441│+            raise ValidationError(self.messages['invalid'], code='invalid', params={'value': value})
+ 442⋮ 442│         if exponent >= 0:
+ 443⋮ 443│             # A positive exponent adds that many trailing zeros.
+ 444⋮ 444│             digits = len(digit_tuple) + exponent
+
+ 460⋮ 460│             raise ValidationError(
+ 461⋮ 461│                 self.messages['max_digits'],
+ 462⋮ 462│                 code='max_digits',
+ 463⋮    │-                params={'max': self.max_digits},
+    ⋮ 463│+                params={'max': self.max_digits, 'value': value},
+ 464⋮ 464│             )
+ 465⋮ 465│         if self.decimal_places is not None and decimals > self.decimal_places:
+ 466⋮ 466│             raise ValidationError(
+ 467⋮ 467│                 self.messages['max_decimal_places'],
+ 468⋮ 468│                 code='max_decimal_places',
+ 469⋮    │-                params={'max': self.decimal_places},
+    ⋮ 469│+                params={'max': self.decimal_places, 'value': value},
+ 470⋮ 470│             )
+ 471⋮ 471│         if (self.max_digits is not None and self.decimal_places is not None and
+ 472⋮ 472│                 whole_digits > (self.max_digits - self.decimal_places)):
+ 473⋮ 473│             raise ValidationError(
+ 474⋮ 474│                 self.messages['max_whole_digits'],
+ 475⋮ 475│                 code='max_whole_digits',
+ 476⋮    │-                params={'max': (self.max_digits - self.decimal_places)},
+    ⋮ 476│+                params={'max': (self.max_digits - self.decimal_places), 'value': value},
+ 477⋮ 477│             )
+ 478⋮ 478│ 
+ 479⋮ 479│     def __eq__(self, other):
+
+ 509⋮ 509│                 code=self.code,
+ 510⋮ 510│                 params={
+ 511⋮ 511│                     'extension': extension,
+ 512⋮    │-                    'allowed_extensions': ', '.join(self.allowed_extensions)
+    ⋮ 512│+                    'allowed_extensions': ', '.join(self.allowed_extensions),
+    ⋮ 513│+                    'value': value,
+ 513⋮ 514│                 }
+ 514⋮ 515│             )
+ 515⋮ 516│ 
+
+ 550⋮ 551│ 
+ 551⋮ 552│     def __call__(self, value):
+ 552⋮ 553│         if '\x00' in str(value):
+ 553⋮    │-            raise ValidationError(self.message, code=self.code)
+    ⋮ 554│+            raise ValidationError(self.message, code=self.code, params={'value': value})
+ 554⋮ 555│ 
+ 555⋮ 556│     def __eq__(self, other):
+ 556⋮ 557│         return (
+
+django/forms/fields.py
+
+ 350⋮ 350│             raise ValidationError(self.error_messages['invalid'], code='invalid')
+ 351⋮ 351│         return value
+ 352⋮ 352│ 
+ 353⋮    │-    def validate(self, value):
+ 354⋮    │-        super().validate(value)
+ 355⋮    │-        if value in self.empty_values:
+ 356⋮    │-            return
+ 357⋮    │-        if not value.is_finite():
+ 358⋮    │-            raise ValidationError(self.error_messages['invalid'], code='invalid')
+ 359⋮    │-
+ 360⋮ 353│     def widget_attrs(self, widget):
+ 361⋮ 354│         attrs = super().widget_attrs(widget)
+ 362⋮ 355│         if isinstance(widget, NumberInput) and 'step' not in widget.attrs:

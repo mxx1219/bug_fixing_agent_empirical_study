@@ -1,0 +1,30 @@
+
+src/_pytest/logging.py
+
+ 40 ⋮ 40 │ else:
+ 41 ⋮ 41 │     logging_StreamHandler = logging.StreamHandler
+ 42 ⋮ 42 │ 
+ 43 ⋮    │-
+ 44 ⋮ 43 │ DEFAULT_LOG_FORMAT = "%(levelname)-8s %(name)s:%(filename)s:%(lineno)d %(message)s"
+ 45 ⋮ 44 │ DEFAULT_LOG_DATE_FORMAT = "%H:%M:%S"
+ 46 ⋮ 45 │ _ANSI_ESCAPE_SEQ = re.compile(r"\x1b\[[\d;]+m")
+
+ 345⋮ 344│         self.records = []
+ 346⋮ 345│         self.stream = StringIO()
+ 347⋮ 346│ 
+    ⋮ 347│+    def clear(self) -> None:
+    ⋮ 348│+        self.records.clear()
+    ⋮ 349│+        self.stream = StringIO()
+    ⋮ 350│+
+ 348⋮ 351│     def handleError(self, record: logging.LogRecord) -> None:
+ 349⋮ 352│         if logging.raiseExceptions:
+ 350⋮ 353│             # Fail the test if the log message is bad (emit failed).
+
+ 440⋮ 443│ 
+ 441⋮ 444│     def clear(self) -> None:
+ 442⋮ 445│         """Reset the list of log records and the captured log text."""
+ 443⋮    │-        self.handler.reset()
+    ⋮ 446│+        self.handler.clear()
+ 444⋮ 447│ 
+ 445⋮ 448│     def set_level(self, level: Union[int, str], logger: Optional[str] = None) -> None:
+ 446⋮ 449│         """Set the level of a logger for the duration of a test.

@@ -1,0 +1,16 @@
+
+django/core/management/__init__.py
+
+ 344⋮ 344│         # Preprocess options to extract --settings and --pythonpath.
+ 345⋮ 345│         # These options could affect the commands that are available, so they
+ 346⋮ 346│         # must be processed early.
+ 347⋮    │-        parser = CommandParser(usage='%(prog)s subcommand [options] [args]', add_help=False, allow_abbrev=False)
+    ⋮ 347│+        parser = CommandParser(
+    ⋮ 348│+            prog=self.prog_name,
+    ⋮ 349│+            usage='%(prog)s subcommand [options] [args]',
+    ⋮ 350│+            add_help=False,
+    ⋮ 351│+            allow_abbrev=False,
+    ⋮ 352│+        )
+ 348⋮ 353│         parser.add_argument('--settings')
+ 349⋮ 354│         parser.add_argument('--pythonpath')
+ 350⋮ 355│         parser.add_argument('args', nargs='*')  # catch-all

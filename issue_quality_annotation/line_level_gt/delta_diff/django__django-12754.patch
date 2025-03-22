@@ -1,0 +1,19 @@
+
+django/db/migrations/autodetector.py
+
+ 563⋮ 563│                 if isinstance(base, str) and "." in base:
+ 564⋮ 564│                     base_app_label, base_name = base.split(".", 1)
+ 565⋮ 565│                     dependencies.append((base_app_label, base_name, None, True))
+    ⋮ 566│+                    # Depend on the removal of base fields if the new model has
+    ⋮ 567│+                    # a field with the same name.
+    ⋮ 568│+                    old_base_model_state = self.from_state.models.get((base_app_label, base_name))
+    ⋮ 569│+                    new_base_model_state = self.to_state.models.get((base_app_label, base_name))
+    ⋮ 570│+                    if old_base_model_state and new_base_model_state:
+    ⋮ 571│+                        removed_base_fields = set(old_base_model_state.fields).difference(
+    ⋮ 572│+                            new_base_model_state.fields,
+    ⋮ 573│+                        ).intersection(model_state.fields)
+    ⋮ 574│+                        for removed_base_field in removed_base_fields:
+    ⋮ 575│+                            dependencies.append((base_app_label, base_name, removed_base_field, False))
+ 566⋮ 576│             # Depend on the other end of the primary key if it's a relation
+ 567⋮ 577│             if primary_key_rel:
+ 568⋮ 578│                 dependencies.append((

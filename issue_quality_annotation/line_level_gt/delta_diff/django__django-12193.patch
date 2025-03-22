@@ -1,0 +1,13 @@
+
+django/forms/widgets.py
+
+ 522⋮ 522│ 
+ 523⋮ 523│     def get_context(self, name, value, attrs):
+ 524⋮ 524│         if self.check_test(value):
+ 525⋮    │-            if attrs is None:
+ 526⋮    │-                attrs = {}
+ 527⋮    │-            attrs['checked'] = True
+    ⋮ 525│+            attrs = {**(attrs or {}), 'checked': True}
+ 528⋮ 526│         return super().get_context(name, value, attrs)
+ 529⋮ 527│ 
+ 530⋮ 528│     def value_from_datadict(self, data, files, name):

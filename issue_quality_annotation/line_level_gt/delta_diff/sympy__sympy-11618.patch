@@ -1,0 +1,23 @@
+
+sympy/geometry/point.py
+
+ 266⋮ 266│         sqrt(x**2 + y**2)
+ 267⋮ 267│ 
+ 268⋮ 268│         """
+    ⋮ 269│+        if type(p) is not type(self):
+    ⋮ 270│+            if len(p) == len(self):
+    ⋮ 271│+                return sqrt(sum([(a - b)**2 for a, b in zip(
+    ⋮ 272│+                    self.args, p.args if isinstance(p, Point) else p)]))
+    ⋮ 273│+            else:
+    ⋮ 274│+                p1 = [0] * max(len(p), len(self))
+    ⋮ 275│+                p2 = p.args if len(p.args) > len(self.args) else self.args
+    ⋮ 276│+
+    ⋮ 277│+                for i in range(min(len(p), len(self))):
+    ⋮ 278│+                    p1[i] = p.args[i] if len(p) < len(self) else self.args[i]
+    ⋮ 279│+
+    ⋮ 280│+                return sqrt(sum([(a - b)**2 for a, b in zip(
+    ⋮ 281│+                    p1, p2)]))
+    ⋮ 282│+
+ 269⋮ 283│         return sqrt(sum([(a - b)**2 for a, b in zip(
+ 270⋮ 284│             self.args, p.args if isinstance(p, Point) else p)]))
+ 271⋮ 285│ 

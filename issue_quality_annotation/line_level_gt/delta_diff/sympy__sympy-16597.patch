@@ -1,0 +1,222 @@
+
+sympy/assumptions/ask.py
+
+1484⋮1484│         Equivalent(Q.prime, Q.integer & Q.positive & ~Q.composite),
+1485⋮1485│         Implies(Q.integer, Q.rational),
+1486⋮1486│         Implies(Q.rational, Q.algebraic),
+    ⋮1487│+        Implies(Q.irrational, Q.finite),
+1487⋮1488│         Implies(Q.algebraic, Q.complex),
+1488⋮    │-        Equivalent(Q.transcendental | Q.algebraic, Q.complex),
+    ⋮1489│+        Implies(Q.algebraic, Q.finite),
+    ⋮1490│+        Equivalent(Q.transcendental | Q.algebraic, Q.complex & Q.finite),
+1489⋮1491│         Implies(Q.transcendental, ~Q.algebraic),
+    ⋮1492│+        Implies(Q.transcendental, Q.finite),
+1490⋮1493│         Implies(Q.imaginary, Q.complex & ~Q.real),
+1491⋮1494│         Implies(Q.imaginary, Q.antihermitian),
+1492⋮1495│         Implies(Q.antihermitian, ~Q.hermitian),
+1493⋮    │-        Equivalent(Q.irrational | Q.rational, Q.real),
+    ⋮1496│+        Equivalent(Q.irrational | Q.rational, Q.real & Q.finite),
+1494⋮1497│         Implies(Q.irrational, ~Q.rational),
+1495⋮1498│         Implies(Q.zero, Q.even),
+1496⋮1499│ 
+
+sympy/assumptions/ask_generated.py
+
+ 25 ⋮ 25 │         Q.even | ~Q.zero,
+ 26 ⋮ 26 │         Q.extended_real | ~Q.infinite,
+ 27 ⋮ 27 │         Q.extended_real | ~Q.real,
+    ⋮ 28 │+        Q.finite | ~Q.algebraic,
+    ⋮ 29 │+        Q.finite | ~Q.irrational,
+    ⋮ 30 │+        Q.finite | ~Q.rational,
+    ⋮ 31 │+        Q.finite | ~Q.transcendental,
+ 28 ⋮ 32 │         Q.fullrank | ~Q.invertible,
+ 29 ⋮ 33 │         Q.hermitian | ~Q.real,
+ 30 ⋮ 34 │         Q.integer | ~Q.even,
+
+ 70 ⋮ 74 │         ~Q.negative | ~Q.positive,
+ 71 ⋮ 75 │         ~Q.negative | ~Q.zero,
+ 72 ⋮ 76 │         ~Q.positive | ~Q.zero,
+ 73 ⋮    │-        Q.algebraic | Q.transcendental | ~Q.complex,
+ 74 ⋮ 77 │         Q.even | Q.odd | ~Q.integer,
+ 75 ⋮ 78 │         Q.infinite | Q.real | ~Q.extended_real,
+ 76 ⋮    │-        Q.irrational | Q.rational | ~Q.real,
+ 77 ⋮ 79 │         Q.lower_triangular | Q.upper_triangular | ~Q.triangular,
+ 78 ⋮ 80 │         Q.negative | Q.positive | ~Q.nonzero,
+ 79 ⋮ 81 │         Q.negative | Q.zero | ~Q.nonpositive,
+
+ 82 ⋮ 84 │         Q.invertible | ~Q.fullrank | ~Q.square,
+ 83 ⋮ 85 │         Q.orthogonal | ~Q.real | ~Q.unitary,
+ 84 ⋮ 86 │         Q.negative | Q.positive | Q.zero | ~Q.real,
+ 85 ⋮    │-        Q.composite | Q.prime | ~Q.integer | ~Q.positive
+    ⋮ 87 │+        Q.algebraic | Q.transcendental | ~Q.complex | ~Q.finite,
+    ⋮ 88 │+        Q.composite | Q.prime | ~Q.integer | ~Q.positive,
+    ⋮ 89 │+        Q.irrational | Q.rational | ~Q.finite | ~Q.real
+ 86 ⋮ 90 │     )
+ 87 ⋮ 91 │ 
+ 88 ⋮ 92 │ # -{ Known facts in compressed sets }-
+ 89 ⋮ 93 │ @cacheit
+ 90 ⋮ 94 │ def get_known_facts_dict():
+ 91 ⋮ 95 │     return {
+ 92 ⋮    │-        Q.algebraic: set([Q.algebraic, Q.complex]),
+    ⋮ 96 │+        Q.algebraic: set([Q.algebraic, Q.complex, Q.finite]),
+ 93 ⋮ 97 │         Q.antihermitian: set([Q.antihermitian]),
+ 94 ⋮ 98 │         Q.commutative: set([Q.commutative]),
+ 95 ⋮ 99 │         Q.complex: set([Q.complex]),
+
+ 98 ⋮ 102│         Q.diagonal: set([Q.diagonal, Q.lower_triangular, Q.normal, Q.square,
+ 99 ⋮ 103│         Q.symmetric, Q.triangular, Q.upper_triangular]),
+ 100⋮ 104│         Q.even: set([Q.algebraic, Q.complex, Q.even, Q.extended_real,
+ 101⋮    │-        Q.hermitian, Q.integer, Q.rational, Q.real]),
+    ⋮ 105│+        Q.finite, Q.hermitian, Q.integer, Q.rational, Q.real]),
+ 102⋮ 106│         Q.extended_real: set([Q.extended_real]),
+ 103⋮ 107│         Q.finite: set([Q.finite]),
+ 104⋮ 108│         Q.fullrank: set([Q.fullrank]),
+ 105⋮ 109│         Q.hermitian: set([Q.hermitian]),
+ 106⋮ 110│         Q.imaginary: set([Q.antihermitian, Q.complex, Q.imaginary]),
+ 107⋮ 111│         Q.infinite: set([Q.extended_real, Q.infinite]),
+ 108⋮    │-        Q.integer: set([Q.algebraic, Q.complex, Q.extended_real, Q.hermitian,
+ 109⋮    │-        Q.integer, Q.rational, Q.real]),
+    ⋮ 112│+        Q.integer: set([Q.algebraic, Q.complex, Q.extended_real, Q.finite,
+    ⋮ 113│+        Q.hermitian, Q.integer, Q.rational, Q.real]),
+ 110⋮ 114│         Q.integer_elements: set([Q.complex_elements, Q.integer_elements,
+ 111⋮ 115│         Q.real_elements]),
+ 112⋮ 116│         Q.invertible: set([Q.fullrank, Q.invertible, Q.square]),
+ 113⋮    │-        Q.irrational: set([Q.complex, Q.extended_real, Q.hermitian,
+    ⋮ 117│+        Q.irrational: set([Q.complex, Q.extended_real, Q.finite, Q.hermitian,
+ 114⋮ 118│         Q.irrational, Q.nonzero, Q.real]),
+ 115⋮ 119│         Q.is_true: set([Q.is_true]),
+ 116⋮ 120│         Q.lower_triangular: set([Q.lower_triangular, Q.triangular]),
+
+ 123⋮ 127│         Q.nonzero: set([Q.complex, Q.extended_real, Q.hermitian, Q.nonzero,
+ 124⋮ 128│         Q.real]),
+ 125⋮ 129│         Q.normal: set([Q.normal, Q.square]),
+ 126⋮    │-        Q.odd: set([Q.algebraic, Q.complex, Q.extended_real, Q.hermitian,
+ 127⋮    │-        Q.integer, Q.nonzero, Q.odd, Q.rational, Q.real]),
+    ⋮ 130│+        Q.odd: set([Q.algebraic, Q.complex, Q.extended_real, Q.finite,
+    ⋮ 131│+        Q.hermitian, Q.integer, Q.nonzero, Q.odd, Q.rational, Q.real]),
+ 128⋮ 132│         Q.orthogonal: set([Q.fullrank, Q.invertible, Q.normal, Q.orthogonal,
+ 129⋮ 133│         Q.positive_definite, Q.square, Q.unitary]),
+ 130⋮ 134│         Q.positive: set([Q.complex, Q.extended_real, Q.hermitian,
+ 131⋮ 135│         Q.nonnegative, Q.nonzero, Q.positive, Q.real]),
+ 132⋮ 136│         Q.positive_definite: set([Q.fullrank, Q.invertible,
+ 133⋮ 137│         Q.positive_definite, Q.square]),
+ 134⋮    │-        Q.prime: set([Q.algebraic, Q.complex, Q.extended_real, Q.hermitian,
+ 135⋮    │-        Q.integer, Q.nonnegative, Q.nonzero, Q.positive, Q.prime,
+ 136⋮    │-        Q.rational, Q.real]),
+ 137⋮    │-        Q.rational: set([Q.algebraic, Q.complex, Q.extended_real, Q.hermitian,
+ 138⋮    │-        Q.rational, Q.real]),
+    ⋮ 138│+        Q.prime: set([Q.algebraic, Q.complex, Q.extended_real, Q.finite,
+    ⋮ 139│+        Q.hermitian, Q.integer, Q.nonnegative, Q.nonzero, Q.positive,
+    ⋮ 140│+        Q.prime, Q.rational, Q.real]),
+    ⋮ 141│+        Q.rational: set([Q.algebraic, Q.complex, Q.extended_real, Q.finite,
+    ⋮ 142│+        Q.hermitian, Q.rational, Q.real]),
+ 139⋮ 143│         Q.real: set([Q.complex, Q.extended_real, Q.hermitian, Q.real]),
+ 140⋮ 144│         Q.real_elements: set([Q.complex_elements, Q.real_elements]),
+ 141⋮ 145│         Q.singular: set([Q.singular]),
+ 142⋮ 146│         Q.square: set([Q.square]),
+ 143⋮ 147│         Q.symmetric: set([Q.square, Q.symmetric]),
+ 144⋮    │-        Q.transcendental: set([Q.complex, Q.transcendental]),
+    ⋮ 148│+        Q.transcendental: set([Q.complex, Q.finite, Q.transcendental]),
+ 145⋮ 149│         Q.triangular: set([Q.triangular]),
+ 146⋮ 150│         Q.unit_triangular: set([Q.triangular, Q.unit_triangular]),
+ 147⋮ 151│         Q.unitary: set([Q.fullrank, Q.invertible, Q.normal, Q.square,
+ 148⋮ 152│         Q.unitary]),
+ 149⋮ 153│         Q.upper_triangular: set([Q.triangular, Q.upper_triangular]),
+ 150⋮ 154│         Q.zero: set([Q.algebraic, Q.complex, Q.even, Q.extended_real,
+ 151⋮    │-        Q.hermitian, Q.integer, Q.nonnegative, Q.nonpositive,
+ 152⋮    │-        Q.rational, Q.real, Q.zero]),
+    ⋮ 155│+        Q.finite, Q.hermitian, Q.integer, Q.nonnegative,
+    ⋮ 156│+        Q.nonpositive, Q.rational, Q.real, Q.zero]),
+ 153⋮ 157│     }
+
+sympy/core/assumptions.py
+
+ 163⋮ 163│ _assume_rules = FactRules([
+ 164⋮ 164│ 
+ 165⋮ 165│     'integer        ->  rational',
+ 166⋮    │-    'rational       ->  real',
+    ⋮ 166│+    'rational       ->  real & finite',
+ 167⋮ 167│     'rational       ->  algebraic',
+ 168⋮    │-    'algebraic      ->  complex',
+    ⋮ 168│+    'algebraic      ->  complex & finite',
+ 169⋮ 169│     'real           ->  complex',
+ 170⋮ 170│     'real           ->  hermitian',
+ 171⋮ 171│     'imaginary      ->  complex',
+
+ 176⋮ 176│     'even           ==  integer & !odd',
+ 177⋮ 177│ 
+ 178⋮ 178│     'real           ==  negative | zero | positive',
+ 179⋮    │-    'transcendental ==  complex & !algebraic',
+    ⋮ 179│+    'transcendental ==  complex & !algebraic & finite',
+ 180⋮ 180│ 
+ 181⋮ 181│     'negative       ==  nonpositive & nonzero',
+ 182⋮ 182│     'positive       ==  nonnegative & nonzero',
+
+ 191⋮ 191│     'composite      ->  integer & positive & !prime',
+ 192⋮ 192│     '!composite     ->  !positive | !even | prime',
+ 193⋮ 193│ 
+ 194⋮    │-    'irrational     ==  real & !rational',
+    ⋮ 194│+    'irrational     ==  real & !rational & finite',
+ 195⋮ 195│ 
+ 196⋮ 196│     'imaginary      ->  !real',
+ 197⋮ 197│ 
+
+sympy/core/power.py
+
+  9 ⋮  9 │ from .evalf import PrecisionExhausted
+ 10 ⋮ 10 │ from .function import (_coeff_isneg, expand_complex, expand_multinomial,
+ 11 ⋮ 11 │     expand_mul)
+ 12 ⋮    │-from .logic import fuzzy_bool, fuzzy_not
+    ⋮ 12 │+from .logic import fuzzy_bool, fuzzy_not, fuzzy_and
+ 13 ⋮ 13 │ from .compatibility import as_int, range
+ 14 ⋮ 14 │ from .evaluate import global_evaluate
+ 15 ⋮ 15 │ from sympy.utilities.iterables import sift
+
+1180⋮1180│             return True
+1181⋮1181│ 
+1182⋮1182│     def _eval_is_rational(self):
+    ⋮1183│+        # The evaluation of self.func below can be very expensive in the case
+    ⋮1184│+        # of integer**integer if the exponent is large.  We should try to exit
+    ⋮1185│+        # before that if possible:
+    ⋮1186│+        if (self.exp.is_integer and self.base.is_rational
+    ⋮1187│+                and fuzzy_not(fuzzy_and([self.exp.is_negative, self.base.is_zero]))):
+    ⋮1188│+            return True
+1183⋮1189│         p = self.func(*self.as_base_exp())  # in case it's unevaluated
+1184⋮1190│         if not p.is_Pow:
+1185⋮1191│             return p.is_rational
+
+sympy/printing/tree.py
+
+ 90 ⋮ 90 │     | commutative: True
+ 91 ⋮ 91 │     | complex: True
+ 92 ⋮ 92 │     | even: True
+    ⋮ 93 │+    | finite: True
+ 93 ⋮ 94 │     | hermitian: True
+ 94 ⋮ 95 │     | imaginary: False
+    ⋮ 96 │+    | infinite: False
+ 95 ⋮ 97 │     | integer: True
+ 96 ⋮ 98 │     | irrational: False
+ 97 ⋮ 99 │     | noninteger: False
+
+ 104⋮ 106│       commutative: True
+ 105⋮ 107│       complex: True
+ 106⋮ 108│       even: False
+    ⋮ 109│+      finite: True
+ 107⋮ 110│       hermitian: True
+ 108⋮ 111│       imaginary: False
+    ⋮ 112│+      infinite: False
+ 109⋮ 113│       integer: True
+ 110⋮ 114│       irrational: False
+ 111⋮ 115│       noninteger: False
+
+sympy/tensor/indexed.py
+
+ 602⋮ 602│                 raise ValueError(filldedent("""
+ 603⋮ 603│                     Idx range tuple must have length 2, but got %s""" % len(range)))
+ 604⋮ 604│             for bound in range:
+ 605⋮    │-                if bound.is_integer is False:
+    ⋮ 605│+                if (bound.is_integer is False and bound is not S.Infinity
+    ⋮ 606│+                        and bound is not S.NegativeInfinity):
+ 606⋮ 607│                     raise TypeError("Idx object requires integer bounds.")
+ 607⋮ 608│             args = label, Tuple(*range)
+ 608⋮ 609│         elif isinstance(range, Expr):

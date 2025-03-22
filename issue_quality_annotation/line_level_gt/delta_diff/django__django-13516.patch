@@ -1,0 +1,13 @@
+
+django/core/management/base.py
+
+ 140⋮ 140│     def __getattr__(self, name):
+ 141⋮ 141│         return getattr(self._out, name)
+ 142⋮ 142│ 
+    ⋮ 143│+    def flush(self):
+    ⋮ 144│+        if hasattr(self._out, 'flush'):
+    ⋮ 145│+            self._out.flush()
+    ⋮ 146│+
+ 143⋮ 147│     def isatty(self):
+ 144⋮ 148│         return hasattr(self._out, 'isatty') and self._out.isatty()
+ 145⋮ 149│ 

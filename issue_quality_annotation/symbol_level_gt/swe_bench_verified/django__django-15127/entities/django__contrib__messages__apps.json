@@ -1,0 +1,10 @@
+[
+    {
+        "type": "classes",
+        "line_range": "5-7"
+    },
+    {
+        "type": "imports",
+        "line_range": "1-2"
+    }
+]

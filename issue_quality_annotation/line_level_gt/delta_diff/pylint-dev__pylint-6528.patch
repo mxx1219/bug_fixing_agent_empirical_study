@@ -1,0 +1,74 @@
+
+pylint/lint/expand_modules.py
+
+ 46 ⋮ 46 │     return any(file_pattern.match(element) for file_pattern in ignore_list_re)
+ 47 ⋮ 47 │ 
+ 48 ⋮ 48 │ 
+    ⋮ 49 │+def _is_ignored_file(
+    ⋮ 50 │+    element: str,
+    ⋮ 51 │+    ignore_list: list[str],
+    ⋮ 52 │+    ignore_list_re: list[Pattern[str]],
+    ⋮ 53 │+    ignore_list_paths_re: list[Pattern[str]],
+    ⋮ 54 │+) -> bool:
+    ⋮ 55 │+    basename = os.path.basename(element)
+    ⋮ 56 │+    return (
+    ⋮ 57 │+        basename in ignore_list
+    ⋮ 58 │+        or _is_in_ignore_list_re(basename, ignore_list_re)
+    ⋮ 59 │+        or _is_in_ignore_list_re(element, ignore_list_paths_re)
+    ⋮ 60 │+    )
+    ⋮ 61 │+
+    ⋮ 62 │+
+ 49 ⋮ 63 │ def expand_modules(
+ 50 ⋮ 64 │     files_or_modules: Sequence[str],
+ 51 ⋮ 65 │     ignore_list: list[str],
+
+ 61 ⋮ 75 │ 
+ 62 ⋮ 76 │     for something in files_or_modules:
+ 63 ⋮ 77 │         basename = os.path.basename(something)
+ 64 ⋮    │-        if (
+ 65 ⋮    │-            basename in ignore_list
+ 66 ⋮    │-            or _is_in_ignore_list_re(os.path.basename(something), ignore_list_re)
+ 67 ⋮    │-            or _is_in_ignore_list_re(something, ignore_list_paths_re)
+    ⋮ 78 │+        if _is_ignored_file(
+    ⋮ 79 │+            something, ignore_list, ignore_list_re, ignore_list_paths_re
+ 68 ⋮ 80 │         ):
+ 69 ⋮ 81 │             continue
+ 70 ⋮ 82 │         module_path = get_python_path(something)
+
+pylint/lint/pylinter.py
+
+ 31 ⋮ 31 │ )
+ 32 ⋮ 32 │ from pylint.lint.base_options import _make_linter_options
+ 33 ⋮ 33 │ from pylint.lint.caching import load_results, save_results
+ 34 ⋮    │-from pylint.lint.expand_modules import expand_modules
+    ⋮ 34 │+from pylint.lint.expand_modules import _is_ignored_file, expand_modules
+ 35 ⋮ 35 │ from pylint.lint.message_state_handler import _MessageStateHandler
+ 36 ⋮ 36 │ from pylint.lint.parallel import check_parallel
+ 37 ⋮ 37 │ from pylint.lint.report_functions import (
+
+ 564⋮ 564│             if not msg.may_be_emitted():
+ 565⋮ 565│                 self._msgs_state[msg.msgid] = False
+ 566⋮ 566│ 
+ 567⋮    │-    @staticmethod
+ 568⋮    │-    def _discover_files(files_or_modules: Sequence[str]) -> Iterator[str]:
+    ⋮ 567│+    def _discover_files(self, files_or_modules: Sequence[str]) -> Iterator[str]:
+ 569⋮ 568│         """Discover python modules and packages in sub-directory.
+ 570⋮ 569│ 
+ 571⋮ 570│         Returns iterator of paths to discovered modules and packages.
+
+ 579⋮ 578│                     if any(root.startswith(s) for s in skip_subtrees):
+ 580⋮ 579│                         # Skip subtree of already discovered package.
+ 581⋮ 580│                         continue
+    ⋮ 581│+
+    ⋮ 582│+                    if _is_ignored_file(
+    ⋮ 583│+                        root,
+    ⋮ 584│+                        self.config.ignore,
+    ⋮ 585│+                        self.config.ignore_patterns,
+    ⋮ 586│+                        self.config.ignore_paths,
+    ⋮ 587│+                    ):
+    ⋮ 588│+                        skip_subtrees.append(root)
+    ⋮ 589│+                        continue
+    ⋮ 590│+
+ 582⋮ 591│                     if "__init__.py" in files:
+ 583⋮ 592│                         skip_subtrees.append(root)
+ 584⋮ 593│                         yield root

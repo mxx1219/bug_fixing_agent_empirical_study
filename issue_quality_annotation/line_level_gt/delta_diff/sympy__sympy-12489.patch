@@ -1,0 +1,292 @@
+
+sympy/combinatorics/permutations.py
+
+ 166⋮ 166│         inv_form[ai] = i
+ 167⋮ 167│     return inv_form
+ 168⋮ 168│ 
+    ⋮ 169│+
+ 169⋮ 170│ def _af_pow(a, n):
+ 170⋮ 171│     """
+ 171⋮ 172│     Routine for finding powers of a permutation.
+
+ 210⋮ 211│                 n = n // 2
+ 211⋮ 212│     return b
+ 212⋮ 213│ 
+    ⋮ 214│+
+ 213⋮ 215│ def _af_commutes_with(a, b):
+ 214⋮ 216│     """
+ 215⋮ 217│     Checks if the two permutations with array forms
+
+ 461⋮ 463│     def copy(self):
+ 462⋮ 464│         return Cycle(self)
+ 463⋮ 465│ 
+    ⋮ 466│+
+ 464⋮ 467│ class Permutation(Basic):
+ 465⋮ 468│     """
+ 466⋮ 469│     A permutation, alternatively known as an 'arrangement number' or 'ordering'
+
+ 857⋮ 860│         #g) (Permutation) = adjust size or return copy
+ 858⋮ 861│         ok = True
+ 859⋮ 862│         if not args:  # a
+ 860⋮    │-            return _af_new(list(range(size or 0)))
+    ⋮ 863│+            return cls._af_new(list(range(size or 0)))
+ 861⋮ 864│         elif len(args) > 1:  # c
+ 862⋮    │-            return _af_new(Cycle(*args).list(size))
+    ⋮ 865│+            return cls._af_new(Cycle(*args).list(size))
+ 863⋮ 866│         if len(args) == 1:
+ 864⋮ 867│             a = args[0]
+ 865⋮    │-            if isinstance(a, Perm):  # g
+    ⋮ 868│+            if isinstance(a, cls):  # g
+ 866⋮ 869│                 if size is None or size == a.size:
+ 867⋮ 870│                     return a
+ 868⋮    │-                return Perm(a.array_form, size=size)
+    ⋮ 871│+                return cls(a.array_form, size=size)
+ 869⋮ 872│             if isinstance(a, Cycle):  # f
+ 870⋮    │-                return _af_new(a.list(size))
+    ⋮ 873│+                return cls._af_new(a.list(size))
+ 871⋮ 874│             if not is_sequence(a):  # b
+ 872⋮    │-                return _af_new(list(range(a + 1)))
+    ⋮ 875│+                return cls._af_new(list(range(a + 1)))
+ 873⋮ 876│             if has_variety(is_sequence(ai) for ai in a):
+ 874⋮ 877│                 ok = False
+ 875⋮ 878│         else:
+
+ 878⋮ 881│             raise ValueError("Permutation argument must be a list of ints, "
+ 879⋮ 882│                              "a list of lists, Permutation or Cycle.")
+ 880⋮ 883│ 
+ 881⋮    │-
+ 882⋮ 884│         # safe to assume args are valid; this also makes a copy
+ 883⋮ 885│         # of the args
+ 884⋮ 886│         args = list(args[0])
+
+ 922⋮ 924│             # might split a cycle and lead to an invalid aform
+ 923⋮ 925│             # but do allow the permutation size to be increased
+ 924⋮ 926│             aform.extend(list(range(len(aform), size)))
+ 925⋮    │-        size = len(aform)
+ 926⋮    │-        obj = Basic.__new__(cls, aform)
+ 927⋮    │-        obj._array_form = aform
+ 928⋮    │-        obj._size = size
+ 929⋮    │-        return obj
+ 930⋮ 927│ 
+ 931⋮    │-    @staticmethod
+ 932⋮    │-    def _af_new(perm):
+    ⋮ 928│+        return cls._af_new(aform)
+    ⋮ 929│+
+    ⋮ 930│+    @classmethod
+    ⋮ 931│+    def _af_new(cls, perm):
+ 933⋮ 932│         """A method to produce a Permutation object from a list;
+ 934⋮ 933│         the list is bound to the _array_form attribute, so it must
+ 935⋮ 934│         not be modified; this method is meant for internal use only;
+
+ 948⋮ 947│         Permutation([2, 1, 3, 0])
+ 949⋮ 948│ 
+ 950⋮ 949│         """
+ 951⋮    │-        p = Basic.__new__(Perm, perm)
+    ⋮ 950│+        p = Basic.__new__(cls, perm)
+ 952⋮ 951│         p._array_form = perm
+ 953⋮ 952│         p._size = len(perm)
+ 954⋮ 953│         return p
+
+1163⋮1162│ 
+1164⋮1163│         """
+1165⋮1164│         rank = (self.rank() + other) % self.cardinality
+1166⋮    │-        rv = Perm.unrank_lex(self.size, rank)
+    ⋮1165│+        rv = self.unrank_lex(self.size, rank)
+1167⋮1166│         rv._rank = rank
+1168⋮1167│         return rv
+1169⋮1168│ 
+
+1223⋮1222│             rv = args[i]*rv
+1224⋮1223│         return rv
+1225⋮1224│ 
+1226⋮    │-    @staticmethod
+1227⋮    │-    def rmul_with_af(*args):
+    ⋮1225│+    @classmethod
+    ⋮1226│+    def rmul_with_af(cls, *args):
+1228⋮1227│         """
+1229⋮1228│         same as rmul, but the elements of args are Permutation objects
+1230⋮1229│         which have _array_form
+1231⋮1230│         """
+1232⋮1231│         a = [x._array_form for x in args]
+1233⋮    │-        rv = _af_new(_af_rmuln(*a))
+    ⋮1232│+        rv = cls._af_new(_af_rmuln(*a))
+1234⋮1233│         return rv
+1235⋮1234│ 
+1236⋮1235│     def mul_inv(self, other):
+
+1239⋮1238│         """
+1240⋮1239│         a = _af_invert(self._array_form)
+1241⋮1240│         b = other._array_form
+1242⋮    │-        return _af_new(_af_rmul(a, b))
+    ⋮1241│+        return self._af_new(_af_rmul(a, b))
+1243⋮1242│ 
+1244⋮1243│     def __rmul__(self, other):
+1245⋮    │-        """This is needed to coerse other to Permutation in rmul."""
+1246⋮    │-        return Perm(other)*self
+    ⋮1244│+        """This is needed to coerce other to Permutation in rmul."""
+    ⋮1245│+        cls = type(self)
+    ⋮1246│+        return cls(other)*self
+1247⋮1247│ 
+1248⋮1248│     def __mul__(self, other):
+1249⋮1249│         """
+
+1304⋮1304│         else:
+1305⋮1305│             b.extend(list(range(len(b), len(a))))
+1306⋮1306│             perm = [b[i] for i in a] + b[len(a):]
+1307⋮    │-        return _af_new(perm)
+    ⋮1307│+        return self._af_new(perm)
+1308⋮1308│ 
+1309⋮1309│     def commutes_with(self, other):
+1310⋮1310│         """
+
+1341⋮1341│         >>> p**4
+1342⋮1342│         Permutation([0, 1, 2, 3])
+1343⋮1343│         """
+1344⋮    │-        if type(n) == Perm:
+    ⋮1344│+        if isinstance(n, Permutation):
+1345⋮1345│             raise NotImplementedError(
+1346⋮1346│                 'p**p is not defined; do you mean p^p (conjugate)?')
+1347⋮1347│         n = int(n)
+1348⋮    │-        return _af_new(_af_pow(self.array_form, n))
+    ⋮1348│+        return self._af_new(_af_pow(self.array_form, n))
+1349⋮1349│ 
+1350⋮1350│     def __rxor__(self, i):
+1351⋮1351│         """Return self(i) when ``i`` is an int.
+
+1440⋮1440│         p = self._array_form
+1441⋮1441│         for i in range(self.size):
+1442⋮1442│             a[h[i]] = h[p[i]]
+1443⋮    │-        return _af_new(a)
+    ⋮1443│+        return self._af_new(a)
+1444⋮1444│ 
+1445⋮1445│     def transpositions(self):
+1446⋮1446│         """
+
+1523⋮1523│         >>> p*~p == ~p*p == Permutation([0, 1, 2, 3])
+1524⋮1524│         True
+1525⋮1525│         """
+1526⋮    │-        return _af_new(_af_invert(self._array_form))
+    ⋮1526│+        return self._af_new(_af_invert(self._array_form))
+1527⋮1527│ 
+1528⋮1528│     def __iter__(self):
+1529⋮1529│         """Yield elements from array form.
+
+1633⋮1633│                 perm[j], perm[i] = perm[i], perm[j]
+1634⋮1634│                 i += 1
+1635⋮1635│                 j -= 1
+1636⋮    │-        return _af_new(perm)
+    ⋮1636│+        return self._af_new(perm)
+1637⋮1637│ 
+1638⋮1638│     @classmethod
+1639⋮1639│     def unrank_nonlex(self, n, r):
+
+1665⋮1665│         n = int(n)
+1666⋮1666│         r = r % ifac(n)
+1667⋮1667│         _unrank1(n, r, id_perm)
+1668⋮    │-        return _af_new(id_perm)
+    ⋮1668│+        return self._af_new(id_perm)
+1669⋮1669│ 
+1670⋮1670│     def rank_nonlex(self, inv_perm=None):
+1671⋮1671│         """
+
+1728⋮1728│         r = self.rank_nonlex()
+1729⋮1729│         if r == ifac(self.size) - 1:
+1730⋮1730│             return None
+1731⋮    │-        return Perm.unrank_nonlex(self.size, r + 1)
+    ⋮1731│+        return self.unrank_nonlex(self.size, r + 1)
+1732⋮1732│ 
+1733⋮1733│     def rank(self):
+1734⋮1734│         """
+
+2129⋮2129│         invb = [None]*n
+2130⋮2130│         for i in range(n):
+2131⋮2131│             invb[b[i]] = i
+2132⋮    │-        return _af_new([a[b[inva[i]]] for i in invb])
+    ⋮2132│+        return self._af_new([a[b[inva[i]]] for i in invb])
+2133⋮2133│ 
+2134⋮2134│     def signature(self):
+2135⋮2135│         """
+
+2394⋮2394│         return rank
+2395⋮2395│ 
+2396⋮2396│     @classmethod
+2397⋮    │-    def unrank_trotterjohnson(self, size, rank):
+    ⋮2397│+    def unrank_trotterjohnson(cls, size, rank):
+2398⋮2398│         """
+2399⋮2399│         Trotter Johnson permutation unranking. See [4] section 2.4.
+2400⋮2400│ 
+
+2427⋮2427│                     perm[i] = perm[i - 1]
+2428⋮2428│                 perm[k] = j - 1
+2429⋮2429│             r2 = r1
+2430⋮    │-        return _af_new(perm)
+    ⋮2430│+        return cls._af_new(perm)
+2431⋮2431│ 
+2432⋮2432│     def next_trotterjohnson(self):
+2433⋮2433│         """
+
+2481⋮2481│                     done = True
+2482⋮2482│         if m == 0:
+2483⋮2483│             return None
+2484⋮    │-        return _af_new(pi)
+    ⋮2484│+        return self._af_new(pi)
+2485⋮2485│ 
+2486⋮2486│     def get_precedence_matrix(self):
+2487⋮2487│         """
+
+2665⋮2665│         return sum([abs(a[i] - b[i]) for i in range(len(a))])
+2666⋮2666│ 
+2667⋮2667│     @classmethod
+2668⋮    │-    def josephus(self, m, n, s=1):
+    ⋮2668│+    def josephus(cls, m, n, s=1):
+2669⋮2669│         """Return as a permutation the shuffling of range(n) using the Josephus
+2670⋮2670│         scheme in which every m-th item is selected until all have been chosen.
+2671⋮2671│         The returned permutation has elements listed by the order in which they
+
+2711⋮2711│                 Q.append(Q.popleft())
+2712⋮2712│             perm.append(Q.popleft())
+2713⋮2713│         perm.extend(list(Q))
+2714⋮    │-        return Perm(perm)
+    ⋮2714│+        return cls(perm)
+2715⋮2715│ 
+2716⋮2716│     @classmethod
+2717⋮    │-    def from_inversion_vector(self, inversion):
+    ⋮2717│+    def from_inversion_vector(cls, inversion):
+2718⋮2718│         """
+2719⋮2719│         Calculates the permutation from the inversion vector.
+2720⋮2720│ 
+
+2738⋮2738│         except IndexError:
+2739⋮2739│             raise ValueError("The inversion vector is not valid.")
+2740⋮2740│         perm.extend(N)
+2741⋮    │-        return _af_new(perm)
+    ⋮2741│+        return cls._af_new(perm)
+2742⋮2742│ 
+2743⋮2743│     @classmethod
+2744⋮    │-    def random(self, n):
+    ⋮2744│+    def random(cls, n):
+2745⋮2745│         """
+2746⋮2746│         Generates a random permutation of length ``n``.
+2747⋮2747│ 
+
+2757⋮2757│         """
+2758⋮2758│         perm_array = list(range(n))
+2759⋮2759│         random.shuffle(perm_array)
+2760⋮    │-        return _af_new(perm_array)
+    ⋮2760│+        return cls._af_new(perm_array)
+2761⋮2761│ 
+2762⋮2762│     @classmethod
+2763⋮    │-    def unrank_lex(self, size, rank):
+    ⋮2763│+    def unrank_lex(cls, size, rank):
+2764⋮2764│         """
+2765⋮2765│         Lexicographic permutation unranking.
+2766⋮2766│ 
+
+2791⋮2791│                 if perm_array[j] > d - 1:
+2792⋮2792│                     perm_array[j] += 1
+2793⋮2793│             psize = new_psize
+2794⋮    │-        return _af_new(perm_array)
+    ⋮2794│+        return cls._af_new(perm_array)
+2795⋮2795│ 
+2796⋮2796│     # global flag to control how permutations are printed
+2797⋮2797│     # when True, Permutation([0, 2, 1, 3]) -> Cycle(1, 2)

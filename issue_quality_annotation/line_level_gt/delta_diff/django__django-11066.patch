@@ -1,0 +1,11 @@
+
+django/contrib/contenttypes/management/__init__.py
+
+ 24 ⋮ 24 │             content_type.model = new_model
+ 25 ⋮ 25 │             try:
+ 26 ⋮ 26 │                 with transaction.atomic(using=db):
+ 27 ⋮    │-                    content_type.save(update_fields={'model'})
+    ⋮ 27 │+                    content_type.save(using=db, update_fields={'model'})
+ 28 ⋮ 28 │             except IntegrityError:
+ 29 ⋮ 29 │                 # Gracefully fallback if a stale content type causes a
+ 30 ⋮ 30 │                 # conflict as remove_stale_contenttypes will take care of

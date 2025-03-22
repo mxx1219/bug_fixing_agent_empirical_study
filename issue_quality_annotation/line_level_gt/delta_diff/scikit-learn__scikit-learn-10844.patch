@@ -1,0 +1,17 @@
+
+sklearn/metrics/cluster/supervised.py
+
+ 852⋮ 852│     labels_true, labels_pred = check_clusterings(labels_true, labels_pred)
+ 853⋮ 853│     n_samples, = labels_true.shape
+ 854⋮ 854│ 
+ 855⋮    │-    c = contingency_matrix(labels_true, labels_pred, sparse=True)
+    ⋮ 855│+    c = contingency_matrix(labels_true, labels_pred,
+    ⋮ 856│+                           sparse=True).astype(np.int64)
+ 856⋮ 857│     tk = np.dot(c.data, c.data) - n_samples
+ 857⋮ 858│     pk = np.sum(np.asarray(c.sum(axis=0)).ravel() ** 2) - n_samples
+ 858⋮ 859│     qk = np.sum(np.asarray(c.sum(axis=1)).ravel() ** 2) - n_samples
+ 859⋮    │-    return tk / np.sqrt(pk * qk) if tk != 0. else 0.
+    ⋮ 860│+    return np.sqrt(tk / pk) * np.sqrt(tk / qk) if tk != 0. else 0.
+ 860⋮ 861│ 
+ 861⋮ 862│ 
+ 862⋮ 863│ def entropy(labels):

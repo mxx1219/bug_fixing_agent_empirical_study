@@ -1,0 +1,11 @@
+
+sphinx/domains/python.py
+
+ 354⋮ 354│                             'keyword', 'kwarg', 'kwparam'),
+ 355⋮ 355│                      typerolename='class', typenames=('paramtype', 'type'),
+ 356⋮ 356│                      can_collapse=True),
+ 357⋮    │-        PyTypedField('variable', label=_('Variables'), rolename='obj',
+    ⋮ 357│+        PyTypedField('variable', label=_('Variables'),
+ 358⋮ 358│                      names=('var', 'ivar', 'cvar'),
+ 359⋮ 359│                      typerolename='class', typenames=('vartype',),
+ 360⋮ 360│                      can_collapse=True),

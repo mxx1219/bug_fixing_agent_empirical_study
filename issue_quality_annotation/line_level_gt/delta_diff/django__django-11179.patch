@@ -1,0 +1,10 @@
+
+django/db/models/deletion.py
+
+ 277⋮ 277│             if self.can_fast_delete(instance):
+ 278⋮ 278│                 with transaction.mark_for_rollback_on_error():
+ 279⋮ 279│                     count = sql.DeleteQuery(model).delete_batch([instance.pk], self.using)
+    ⋮ 280│+                setattr(instance, model._meta.pk.attname, None)
+ 280⋮ 281│                 return count, {model._meta.label: count}
+ 281⋮ 282│ 
+ 282⋮ 283│         with transaction.atomic(using=self.using, savepoint=False):

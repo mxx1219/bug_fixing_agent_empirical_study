@@ -1,0 +1,11 @@
+
+sympy/polys/domains/expressiondomain.py
+
+ 120⋮ 120│             return not f == g
+ 121⋮ 121│ 
+ 122⋮ 122│         def __bool__(f):
+ 123⋮    │-            return f.ex != 0
+    ⋮ 123│+            return not f.ex.is_zero
+ 124⋮ 124│ 
+ 125⋮ 125│         def gcd(f, g):
+ 126⋮ 126│             from sympy.polys import gcd

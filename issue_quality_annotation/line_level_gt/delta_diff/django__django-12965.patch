@@ -1,0 +1,11 @@
+
+django/db/models/sql/compiler.py
+
+1407⋮1407│ class SQLDeleteCompiler(SQLCompiler):
+1408⋮1408│     @cached_property
+1409⋮1409│     def single_alias(self):
+    ⋮1410│+        # Ensure base table is in aliases.
+    ⋮1411│+        self.query.get_initial_alias()
+1410⋮1412│         return sum(self.query.alias_refcount[t] > 0 for t in self.query.alias_map) == 1
+1411⋮1413│ 
+1412⋮1414│     def _as_sql(self, query):

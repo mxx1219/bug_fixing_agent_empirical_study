@@ -1,0 +1,16 @@
+
+django/forms/models.py
+
+ 48 ⋮ 48 │             continue
+ 49 ⋮ 49 │         # Leave defaults for fields that aren't in POST data, except for
+ 50 ⋮ 50 │         # checkbox inputs because they don't appear in POST data if not checked.
+ 51 ⋮    │-        if (f.has_default() and
+ 52 ⋮    │-                form[f.name].field.widget.value_omitted_from_data(form.data, form.files, form.add_prefix(f.name))):
+    ⋮ 51 │+        if (
+    ⋮ 52 │+            f.has_default() and
+    ⋮ 53 │+            form[f.name].field.widget.value_omitted_from_data(form.data, form.files, form.add_prefix(f.name)) and
+    ⋮ 54 │+            cleaned_data.get(f.name) in form[f.name].field.empty_values
+    ⋮ 55 │+        ):
+ 53 ⋮ 56 │             continue
+ 54 ⋮ 57 │         # Defer saving file-type fields until after the other fields, so a
+ 55 ⋮ 58 │         # callable upload_to can use the values from other fields.

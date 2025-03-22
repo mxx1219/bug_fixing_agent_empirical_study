@@ -1,0 +1,110 @@
+[
+    {
+        "type": "methods",
+        "line_range": "8-9"
+    },
+    {
+        "type": "methods",
+        "line_range": "11-12"
+    },
+    {
+        "type": "methods",
+        "line_range": "14-15"
+    },
+    {
+        "type": "methods",
+        "line_range": "17-18"
+    },
+    {
+        "type": "methods",
+        "line_range": "20-23"
+    },
+    {
+        "type": "methods",
+        "line_range": "25-27"
+    },
+    {
+        "type": "methods",
+        "line_range": "31-33"
+    },
+    {
+        "type": "methods",
+        "line_range": "35-40"
+    },
+    {
+        "type": "methods",
+        "line_range": "42-44"
+    },
+    {
+        "type": "methods",
+        "line_range": "46-48"
+    },
+    {
+        "type": "methods",
+        "line_range": "50-51"
+    },
+    {
+        "type": "methods",
+        "line_range": "53-54"
+    },
+    {
+        "type": "methods",
+        "line_range": "56-61"
+    },
+    {
+        "type": "methods",
+        "line_range": "63-66"
+    },
+    {
+        "type": "methods",
+        "line_range": "70-77"
+    },
+    {
+        "type": "methods",
+        "line_range": "79-86"
+    },
+    {
+        "type": "methods",
+        "line_range": "88-91"
+    },
+    {
+        "type": "methods",
+        "line_range": "93-96"
+    },
+    {
+        "type": "methods",
+        "line_range": "98-100"
+    },
+    {
+        "type": "methods",
+        "line_range": "102-106"
+    },
+    {
+        "type": "methods",
+        "line_range": "108-114"
+    },
+    {
+        "type": "methods",
+        "line_range": "116-121"
+    },
+    {
+        "type": "classes",
+        "line_range": "7,10,13,16,19,24"
+    },
+    {
+        "type": "classes",
+        "line_range": "30,34,41,45,49,52,55,62"
+    },
+    {
+        "type": "classes",
+        "line_range": "69,78,87,92,97,101,107,115"
+    },
+    {
+        "type": "imports",
+        "line_range": "1-2"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "4"
+    }
+]

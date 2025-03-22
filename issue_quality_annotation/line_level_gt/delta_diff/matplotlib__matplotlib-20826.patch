@@ -1,0 +1,18 @@
+
+lib/matplotlib/axis.py
+
+ 806⋮ 806│         # Clear the callback registry for this axis, or it may "leak"
+ 807⋮ 807│         self.callbacks = cbook.CallbackRegistry()
+ 808⋮ 808│ 
+ 809⋮    │-        self._reset_major_tick_kw()
+ 810⋮    │-        self._reset_minor_tick_kw()
+    ⋮ 809│+        # whether the grids are on
+    ⋮ 810│+        self._major_tick_kw['gridOn'] = (
+    ⋮ 811│+                mpl.rcParams['axes.grid'] and
+    ⋮ 812│+                mpl.rcParams['axes.grid.which'] in ('both', 'major'))
+    ⋮ 813│+        self._minor_tick_kw['gridOn'] = (
+    ⋮ 814│+                mpl.rcParams['axes.grid'] and
+    ⋮ 815│+                mpl.rcParams['axes.grid.which'] in ('both', 'minor'))
+ 811⋮ 816│         self.reset_ticks()
+ 812⋮ 817│ 
+ 813⋮ 818│         self.converter = None

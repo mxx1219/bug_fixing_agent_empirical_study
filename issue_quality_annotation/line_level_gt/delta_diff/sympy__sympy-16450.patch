@@ -1,0 +1,11 @@
+
+sympy/simplify/simplify.py
+
+ 251⋮ 251│             eq[i] = e.subs(reps)
+ 252⋮ 252│         return f(eq), {r: s for s, r in reps.items()}
+ 253⋮ 253│ 
+ 254⋮    │-    reps = {s: Dummy(s.name, positive=True)
+    ⋮ 254│+    reps = {s: Dummy(s.name, positive=True, **s.assumptions0)
+ 255⋮ 255│                  for s in eq.free_symbols if s.is_positive is None}
+ 256⋮ 256│     eq = eq.subs(reps)
+ 257⋮ 257│     return eq, {r: s for s, r in reps.items()}

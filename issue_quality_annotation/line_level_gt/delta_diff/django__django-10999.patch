@@ -1,0 +1,16 @@
+
+django/utils/dateparse.py
+
+ 29 ⋮ 29 │ standard_duration_re = re.compile(
+ 30 ⋮ 30 │     r'^'
+ 31 ⋮ 31 │     r'(?:(?P<days>-?\d+) (days?, )?)?'
+ 32 ⋮    │-    r'((?:(?P<hours>-?\d+):)(?=\d+:\d+))?'
+ 33 ⋮    │-    r'(?:(?P<minutes>-?\d+):)?'
+ 34 ⋮    │-    r'(?P<seconds>-?\d+)'
+    ⋮ 32 │+    r'(?P<sign>-?)'
+    ⋮ 33 │+    r'((?:(?P<hours>\d+):)(?=\d+:\d+))?'
+    ⋮ 34 │+    r'(?:(?P<minutes>\d+):)?'
+    ⋮ 35 │+    r'(?P<seconds>\d+)'
+ 35 ⋮ 36 │     r'(?:\.(?P<microseconds>\d{1,6})\d{0,6})?'
+ 36 ⋮ 37 │     r'$'
+ 37 ⋮ 38 │ )

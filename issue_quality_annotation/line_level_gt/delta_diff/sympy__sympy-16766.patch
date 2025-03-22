@@ -1,0 +1,14 @@
+
+sympy/printing/pycode.py
+
+ 357⋮ 357│         PREC = precedence(expr)
+ 358⋮ 358│         return self._operators['not'] + self.parenthesize(expr.args[0], PREC)
+ 359⋮ 359│ 
+    ⋮ 360│+    def _print_Indexed(self, expr):
+    ⋮ 361│+        base = expr.args[0]
+    ⋮ 362│+        index = expr.args[1:]
+    ⋮ 363│+        return "{}[{}]".format(str(base), ", ".join([self._print(ind) for ind in index]))
+    ⋮ 364│+
+ 360⋮ 365│ 
+ 361⋮ 366│ for k in PythonCodePrinter._kf:
+ 362⋮ 367│     setattr(PythonCodePrinter, '_print_%s' % k, _print_known_func)

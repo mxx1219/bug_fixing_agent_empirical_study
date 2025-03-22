@@ -1,0 +1,473 @@
+
+sympy/stats/crv_types.py
+
+ 47 ⋮ 47 │ 
+ 48 ⋮ 48 │ from sympy import (log, sqrt, pi, S, Dummy, Interval, sympify, gamma,
+ 49 ⋮ 49 │                    Piecewise, And, Eq, binomial, factorial, Sum, floor, Abs,
+ 50 ⋮    │-                   Lambda, Basic, lowergamma, erf, erfc, I)
+    ⋮ 50 │+                   Lambda, Basic, lowergamma, erf, erfc, I, uppergamma, hyper)
+ 51 ⋮ 51 │ from sympy import beta as beta_fn
+ 52 ⋮ 52 │ from sympy import cos, exp, besseli
+ 53 ⋮ 53 │ from sympy.stats.crv import (SingleContinuousPSpace, SingleContinuousDistribution,
+
+ 133⋮ 133│     dist = ContinuousDistributionHandmade(pdf, set)
+ 134⋮ 134│     return SingleContinuousPSpace(symbol, dist).value
+ 135⋮ 135│ 
+    ⋮ 136│+
+ 136⋮ 137│ def rv(symbol, cls, args):
+ 137⋮ 138│     args = list(map(sympify, args))
+ 138⋮ 139│     dist = cls(*args)
+
+ 153⋮ 154│     def pdf(self, x):
+ 154⋮ 155│         return 1/(pi*sqrt((x - self.a)*(self.b - x)))
+ 155⋮ 156│ 
+    ⋮ 157│+    def _cdf(self, x):
+    ⋮ 158│+        from sympy import asin
+    ⋮ 159│+        a, b = self.a, self.b
+    ⋮ 160│+        return Piecewise(
+    ⋮ 161│+            (S.Zero, x < a),
+    ⋮ 162│+            (2*asin(sqrt((x - a)/(b - a)))/pi, x <= b),
+    ⋮ 163│+            (S.One, True))
+    ⋮ 164│+
+    ⋮ 165│+
+ 156⋮ 166│ def Arcsin(name, a=0, b=1):
+ 157⋮ 167│     r"""
+ 158⋮ 168│     Create a Continuous Random Variable with an arcsin distribution.
+
+ 178⋮ 188│     Examples
+ 179⋮ 189│     ========
+ 180⋮ 190│ 
+ 181⋮    │-    >>> from sympy.stats import Arcsin, density
+    ⋮ 191│+    >>> from sympy.stats import Arcsin, density, cdf
+ 182⋮ 192│     >>> from sympy import Symbol, simplify
+ 183⋮ 193│ 
+ 184⋮ 194│     >>> a = Symbol("a", real=True)
+
+ 190⋮ 200│     >>> density(X)(z)
+ 191⋮ 201│     1/(pi*sqrt((-a + z)*(b - z)))
+ 192⋮ 202│ 
+    ⋮ 203│+    >>> cdf(X)(z)
+    ⋮ 204│+    Piecewise((0, a > z),
+    ⋮ 205│+            (2*asin(sqrt((-a + z)/(-a + b)))/pi, b >= z),
+    ⋮ 206│+            (1, True))
+    ⋮ 207│+
+    ⋮ 208│+
+ 193⋮ 209│     References
+ 194⋮ 210│     ==========
+ 195⋮ 211│ 
+
+ 603⋮ 619│     def _cdf(self, x):
+ 604⋮ 620│         k = self.k
+ 605⋮ 621│         return Piecewise(
+ 606⋮    │-                (S.One/gamma(k/2)*lowergamma(k/2, x/2), x>=0),
+    ⋮ 622│+                (S.One/gamma(k/2)*lowergamma(k/2, x/2), x >= 0),
+ 607⋮ 623│                 (0, True)
+ 608⋮ 624│         )
+ 609⋮ 625│ 
+
+ 670⋮ 686│         p, a, b = self.p, self.a, self.b
+ 671⋮ 687│         return a*p/x*((x/b)**(a*p)/(((x/b)**a + 1)**(p + 1)))
+ 672⋮ 688│ 
+    ⋮ 689│+    def _cdf(self, x):
+    ⋮ 690│+        p, a, b = self.p, self.a, self.b
+    ⋮ 691│+        return Piecewise(((S.One + (S(x)/b)**-a)**-p, x>=0),
+    ⋮ 692│+                    (S.Zero, True))
+    ⋮ 693│+
+ 673⋮ 694│ 
+ 674⋮ 695│ def Dagum(name, p, a, b):
+ 675⋮ 696│     r"""
+
+ 698⋮ 719│     Examples
+ 699⋮ 720│     ========
+ 700⋮ 721│ 
+ 701⋮    │-    >>> from sympy.stats import Dagum, density
+    ⋮ 722│+    >>> from sympy.stats import Dagum, density, cdf
+ 702⋮ 723│     >>> from sympy import Symbol, simplify
+ 703⋮ 724│ 
+ 704⋮ 725│     >>> p = Symbol("p", positive=True)
+
+ 711⋮ 732│     >>> density(X)(z)
+ 712⋮ 733│     a*p*(z/b)**(a*p)*((z/b)**a + 1)**(-p - 1)/z
+ 713⋮ 734│ 
+    ⋮ 735│+    >>> cdf(X)(z)
+    ⋮ 736│+    Piecewise(((1 + (z/b)**(-a))**(-p), z >= 0), (0, True))
+    ⋮ 737│+
+    ⋮ 738│+
+ 714⋮ 739│     References
+ 715⋮ 740│     ==========
+ 716⋮ 741│ 
+
+ 722⋮ 747│ #-------------------------------------------------------------------------------
+ 723⋮ 748│ # Erlang distribution ----------------------------------------------------------
+ 724⋮ 749│ 
+    ⋮ 750│+
+ 725⋮ 751│ def Erlang(name, k, l):
+ 726⋮ 752│     r"""
+ 727⋮ 753│     Create a continuous random variable with an Erlang distribution.
+
+ 786⋮ 812│     .. [2] http://mathworld.wolfram.com/ErlangDistribution.html
+ 787⋮ 813│     """
+ 788⋮ 814│ 
+ 789⋮    │-    return rv(name, GammaDistribution, (k, 1/l))
+    ⋮ 815│+    return rv(name, GammaDistribution, (k, S.One/l))
+ 790⋮ 816│ 
+ 791⋮ 817│ #-------------------------------------------------------------------------------
+ 792⋮ 818│ # Exponential distribution -----------------------------------------------------
+
+ 809⋮ 835│ 
+ 810⋮ 836│     def _cdf(self, x):
+ 811⋮ 837│         return Piecewise(
+ 812⋮    │-                (S.One - exp(-self.rate*x), x>=0),
+    ⋮ 838│+                (S.One - exp(-self.rate*x), x >= 0),
+ 813⋮ 839│                 (0, True),
+ 814⋮ 840│         )
+ 815⋮ 841│ 
+
+1042⋮1068│         a, s, m = self.a, self.s, self.m
+1043⋮1069│         return a/s * ((x-m)/s)**(-1-a) * exp(-((x-m)/s)**(-a))
+1044⋮1070│ 
+    ⋮1071│+    def _cdf(self, x):
+    ⋮1072│+        a, s, m = self.a, self.s, self.m
+    ⋮1073│+        return Piecewise((exp(-((x-m)/s)**(-a)), x >= m),
+    ⋮1074│+                        (S.Zero, True))
+    ⋮1075│+
+1045⋮1076│ def Frechet(name, a, s=1, m=0):
+1046⋮1077│     r"""
+1047⋮1078│     Create a continuous random variable with a Frechet distribution.
+
+1069⋮1100│     Examples
+1070⋮1101│     ========
+1071⋮1102│ 
+1072⋮    │-    >>> from sympy.stats import Frechet, density, E, std
+    ⋮1103│+    >>> from sympy.stats import Frechet, density, E, std, cdf
+1073⋮1104│     >>> from sympy import Symbol, simplify
+1074⋮1105│ 
+1075⋮1106│     >>> a = Symbol("a", positive=True)
+
+1082⋮1113│     >>> density(X)(z)
+1083⋮1114│     a*((-m + z)/s)**(-a - 1)*exp(-((-m + z)/s)**(-a))/s
+1084⋮1115│ 
+    ⋮1116│+    >>> cdf(X)(z)
+    ⋮1117│+     Piecewise((exp(-((-m + z)/s)**(-a)), m <= z), (0, True))
+    ⋮1118│+
+1085⋮1119│     References
+1086⋮1120│     ==========
+1087⋮1121│ 
+
+1111⋮1145│     def sample(self):
+1112⋮1146│         return random.gammavariate(self.k, self.theta)
+1113⋮1147│ 
+    ⋮1148│+    def _cdf(self, x):
+    ⋮1149│+        k, theta = self.k, self.theta
+    ⋮1150│+        return Piecewise(
+    ⋮1151│+                    (lowergamma(k, S(x)/theta)/gamma(k), x > 0),
+    ⋮1152│+                    (S.Zero, True))
+    ⋮1153│+
+1114⋮1154│ 
+1115⋮1155│ def Gamma(name, k, theta):
+1116⋮1156│     r"""
+
+1186⋮1226│ #-------------------------------------------------------------------------------
+1187⋮1227│ # Inverse Gamma distribution ---------------------------------------------------
+1188⋮1228│ 
+    ⋮1229│+
+1189⋮1230│ class GammaInverseDistribution(SingleContinuousDistribution):
+1190⋮1231│     _argnames = ('a', 'b')
+1191⋮1232│ 
+
+1200⋮1241│         a, b = self.a, self.b
+1201⋮1242│         return b**a/gamma(a) * x**(-a-1) * exp(-b/x)
+1202⋮1243│ 
+    ⋮1244│+    def _cdf(self, x):
+    ⋮1245│+        a, b = self.a, self.b
+    ⋮1246│+        return Piecewise((uppergamma(a,b/x)/gamma(a), x > 0),
+    ⋮1247│+                        (S.Zero, True))
+    ⋮1248│+
+    ⋮1249│+
+1203⋮1250│ def GammaInverse(name, a, b):
+1204⋮1251│     r"""
+1205⋮1252│     Create a continuous random variable with an inverse Gamma distribution.
+
+1244⋮1291│     ---------------
+1245⋮1292│        gamma(a)
+1246⋮1293│ 
+    ⋮1294│+    >>> cdf(X)(z)
+    ⋮1295│+    Piecewise((uppergamma(a, b/z)/gamma(a), z > 0), (0, True))
+    ⋮1296│+
+    ⋮1297│+
+1247⋮1298│     References
+1248⋮1299│     ==========
+1249⋮1300│ 
+
+1255⋮1306│ #-------------------------------------------------------------------------------
+1256⋮1307│ # Gumbel distribution --------------------------------------------------------
+1257⋮1308│ 
+    ⋮1309│+
+1258⋮1310│ class GumbelDistribution(SingleContinuousDistribution):
+1259⋮1311│     _argnames = ('beta', 'mu')
+1260⋮1312│ 
+
+1323⋮1375│         eta, b = self.eta, self.b
+1324⋮1376│         return b*eta*exp(b*x)*exp(eta)*exp(-eta*exp(b*x))
+1325⋮1377│ 
+    ⋮1378│+
+1326⋮1379│ def Gompertz(name, b, eta):
+1327⋮1380│     r"""
+1328⋮1381│     Create a Continuous Random Variable with Gompertz distribution.
+
+1371⋮1424│ #-------------------------------------------------------------------------------
+1372⋮1425│ # Kumaraswamy distribution -----------------------------------------------------
+1373⋮1426│ 
+    ⋮1427│+
+1374⋮1428│ class KumaraswamyDistribution(SingleContinuousDistribution):
+1375⋮1429│     _argnames = ('a', 'b')
+1376⋮1430│ 
+
+1385⋮1439│         a, b = self.a, self.b
+1386⋮1440│         return a * b * x**(a-1) * (1-x**a)**(b-1)
+1387⋮1441│ 
+    ⋮1442│+    def _cdf(self, x):
+    ⋮1443│+        a, b = self.a, self.b
+    ⋮1444│+        return Piecewise(
+    ⋮1445│+            (S.Zero, x < S.Zero),
+    ⋮1446│+            (1 - (1 - x**a)**b, x <= S.One),
+    ⋮1447│+            (S.One, True))
+    ⋮1448│+
+    ⋮1449│+
+1388⋮1450│ def Kumaraswamy(name, a, b):
+1389⋮1451│     r"""
+1390⋮1452│     Create a Continuous Random Variable with a Kumaraswamy distribution.
+
+1410⋮1472│     Examples
+1411⋮1473│     ========
+1412⋮1474│ 
+1413⋮    │-    >>> from sympy.stats import Kumaraswamy, density, E, variance
+    ⋮1475│+    >>> from sympy.stats import Kumaraswamy, density, E, variance, cdf
+1414⋮1476│     >>> from sympy import Symbol, simplify, pprint
+1415⋮1477│ 
+1416⋮1478│     >>> a = Symbol("a", positive=True)
+
+1425⋮1487│          a - 1 /   a    \
+1426⋮1488│     a*b*z     *\- z  + 1/
+1427⋮1489│ 
+    ⋮1490│+    >>> cdf(X)(z)
+    ⋮1491│+    Piecewise((0, z < 0),
+    ⋮1492│+            (-(-z**a + 1)**b + 1, z <= 1),
+    ⋮1493│+            (1, True))
+1428⋮1494│ 
+1429⋮1495│     References
+1430⋮1496│     ==========
+
+1445⋮1511│         mu, b = self.mu, self.b
+1446⋮1512│         return 1/(2*b)*exp(-Abs(x - mu)/b)
+1447⋮1513│ 
+    ⋮1514│+    def _cdf(self, x):
+    ⋮1515│+        mu, b = self.mu, self.b
+    ⋮1516│+        return Piecewise(
+    ⋮1517│+                    (S.Half*exp((x - mu)/b), x < mu),
+    ⋮1518│+                    (S.One - S.Half*exp(-(x - mu)/b), x >= mu)
+    ⋮1519│+                        )
+    ⋮1520│+
+1448⋮1521│ 
+1449⋮1522│ def Laplace(name, mu, b):
+1450⋮1523│     r"""
+
+1469⋮1542│     Examples
+1470⋮1543│     ========
+1471⋮1544│ 
+1472⋮    │-    >>> from sympy.stats import Laplace, density
+    ⋮1545│+    >>> from sympy.stats import Laplace, density, cdf
+1473⋮1546│     >>> from sympy import Symbol
+1474⋮1547│ 
+1475⋮1548│     >>> mu = Symbol("mu")
+
+1481⋮1554│     >>> density(X)(z)
+1482⋮1555│     exp(-Abs(mu - z)/b)/(2*b)
+1483⋮1556│ 
+    ⋮1557│+    >>> cdf(X)(z)
+    ⋮1558│+    Piecewise((exp((-mu + z)/b)/2, mu > z),
+    ⋮1559│+            (-exp((mu - z)/b)/2 + 1, True))
+    ⋮1560│+
+1484⋮1561│     References
+1485⋮1562│     ==========
+1486⋮1563│ 
+
+1501⋮1578│         mu, s = self.mu, self.s
+1502⋮1579│         return exp(-(x - mu)/s)/(s*(1 + exp(-(x - mu)/s))**2)
+1503⋮1580│ 
+    ⋮1581│+    def _cdf(self, x):
+    ⋮1582│+        mu, s = self.mu, self.s
+    ⋮1583│+        return S.One/(1 + exp(-(x - mu)/s))
+    ⋮1584│+
+1504⋮1585│ 
+1505⋮1586│ def Logistic(name, mu, s):
+1506⋮1587│     r"""
+
+1525⋮1606│     Examples
+1526⋮1607│     ========
+1527⋮1608│ 
+1528⋮    │-    >>> from sympy.stats import Logistic, density
+    ⋮1609│+    >>> from sympy.stats import Logistic, density, cdf
+1529⋮1610│     >>> from sympy import Symbol
+1530⋮1611│ 
+1531⋮1612│     >>> mu = Symbol("mu", real=True)
+
+1537⋮1618│     >>> density(X)(z)
+1538⋮1619│     exp((mu - z)/s)/(s*(exp((mu - z)/s) + 1)**2)
+1539⋮1620│ 
+    ⋮1621│+    >>> cdf(X)(z)
+    ⋮1622│+    1/(exp((mu - z)/s) + 1)
+    ⋮1623│+
+1540⋮1624│     References
+1541⋮1625│     ==========
+1542⋮1626│ 
+
+1565⋮1649│     def _cdf(self, x):
+1566⋮1650│         mean, std = self.mean, self.std
+1567⋮1651│         return Piecewise(
+1568⋮    │-                (S.Half + S.Half*erf((log(x) - mean)/sqrt(2)/std), x>0),
+    ⋮1652│+                (S.Half + S.Half*erf((log(x) - mean)/sqrt(2)/std), x > 0),
+1569⋮1653│                 (S.Zero, True)
+1570⋮1654│         )
+1571⋮1655│ 
+
+1711⋮1795│         mu, omega = self.mu, self.omega
+1712⋮1796│         return 2*mu**mu/(gamma(mu)*omega**mu)*x**(2*mu - 1)*exp(-mu/omega*x**2)
+1713⋮1797│ 
+    ⋮1798│+    def _cdf(self, x):
+    ⋮1799│+        mu, omega = self.mu, self.omega
+    ⋮1800│+        return Piecewise(
+    ⋮1801│+                    (lowergamma(mu, (mu/omega)*x**2)/gamma(mu), x > 0),
+    ⋮1802│+                    (S.Zero, True))
+    ⋮1803│+
+1714⋮1804│ 
+1715⋮1805│ def Nakagami(name, mu, omega):
+1716⋮1806│     r"""
+
+1738⋮1828│     Examples
+1739⋮1829│     ========
+1740⋮1830│ 
+1741⋮    │-    >>> from sympy.stats import Nakagami, density, E, variance
+    ⋮1831│+    >>> from sympy.stats import Nakagami, density, E, variance, cdf
+1742⋮1832│     >>> from sympy import Symbol, simplify, pprint
+1743⋮1833│ 
+1744⋮1834│     >>> mu = Symbol("mu", positive=True)
+
+1767⋮1857│     omega - -----------------------
+1768⋮1858│             gamma(mu)*gamma(mu + 1)
+1769⋮1859│ 
+    ⋮1860│+    >>> cdf(X)(z)
+    ⋮1861│+    Piecewise((lowergamma(mu, mu*z**2/omega)/gamma(mu), z > 0),
+    ⋮1862│+            (0, True))
+    ⋮1863│+
+    ⋮1864│+
+1770⋮1865│     References
+1771⋮1866│     ==========
+1772⋮1867│ 
+
+1946⋮2041│ #-------------------------------------------------------------------------------
+1947⋮2042│ # QuadraticU distribution ------------------------------------------------------
+1948⋮2043│ 
+    ⋮2044│+
+1949⋮2045│ class QuadraticUDistribution(SingleContinuousDistribution):
+1950⋮2046│     _argnames = ('a', 'b')
+1951⋮2047│ 
+
+2037⋮2133│                 ((1+cos(pi*(x-mu)/s)) / (2*s), And(mu-s<=x, x<=mu+s)),
+2038⋮2134│                 (S.Zero, True))
+2039⋮2135│ 
+    ⋮2136│+
+2040⋮2137│ def RaisedCosine(name, mu, s):
+2041⋮2138│     r"""
+2042⋮2139│     Create a Continuous Random Variable with a raised cosine distribution.
+
+2227⋮2324│         nu = self.nu
+2228⋮2325│         return 1/(sqrt(nu)*beta_fn(S(1)/2, nu/2))*(1 + x**2/nu)**(-(nu + 1)/2)
+2229⋮2326│ 
+    ⋮2327│+    def _cdf(self, x):
+    ⋮2328│+        nu = self.nu
+    ⋮2329│+        return S.Half + x*gamma((nu+1)/2)*hyper((S.Half, (nu+1)/2),
+    ⋮2330│+                                (S(3)/2,), -x**2/nu)/(sqrt(pi*nu)*gamma(nu/2))
+    ⋮2331│+
+2230⋮2332│ 
+2231⋮2333│ def StudentT(name, nu):
+2232⋮2334│     r"""
+
+2252⋮2354│     Examples
+2253⋮2355│     ========
+2254⋮2356│ 
+2255⋮    │-    >>> from sympy.stats import StudentT, density, E, variance
+    ⋮2357│+    >>> from sympy.stats import StudentT, density, E, variance, cdf
+2256⋮2358│     >>> from sympy import Symbol, simplify, pprint
+2257⋮2359│ 
+2258⋮2360│     >>> nu = Symbol("nu", positive=True)
+
+2274⋮2376│     \/ nu *beta|1/2, --|
+2275⋮2377│                \     2 /
+2276⋮2378│ 
+    ⋮2379│+    >>> cdf(X)(z)
+    ⋮2380│+    1/2 + z*gamma(nu/2 + 1/2)*hyper((1/2, nu/2 + 1/2), (3/2,),
+    ⋮2381│+                                -z**2/nu)/(sqrt(pi)*sqrt(nu)*gamma(nu/2))
+    ⋮2382│+
+    ⋮2383│+
+2277⋮2384│     References
+2278⋮2385│     ==========
+2279⋮2386│ 
+
+2286⋮2393│ #-------------------------------------------------------------------------------
+2287⋮2394│ # Trapezoidal distribution ------------------------------------------------------
+2288⋮2395│ 
+    ⋮2396│+
+2289⋮2397│ class TrapezoidalDistribution(SingleContinuousDistribution):
+2290⋮2398│     _argnames = ('a', 'b', 'c', 'd')
+2291⋮2399│ 
+
+2297⋮2405│             (2*(d-x) / ((d-c)*(d+c-a-b)), And(c <= x, x <= d)),
+2298⋮2406│             (S.Zero, True))
+2299⋮2407│ 
+    ⋮2408│+
+2300⋮2409│ def Trapezoidal(name, a, b, c, d):
+2301⋮2410│     r"""
+2302⋮2411│     Create a continuous random variable with a trapezoidal distribution.
+
+2554⋮2663│         return 1/factorial(
+2555⋮2664│             n - 1)*Sum((-1)**k*binomial(n, k)*(x - k)**(n - 1), (k, 0, floor(x)))
+2556⋮2665│ 
+    ⋮2666│+    def _cdf(self, x):
+    ⋮2667│+        n = self.n
+    ⋮2668│+        k = Dummy("k")
+    ⋮2669│+        return Piecewise((S.Zero, x < 0),
+    ⋮2670│+                        (1/factorial(n)*Sum((-1)**k*binomial(n, k)*(x - k)**(n),
+    ⋮2671│+                        (k, 0, floor(x))), x <= n),
+    ⋮2672│+                        (S.One, True))
+2557⋮2673│ 
+2558⋮2674│ 
+2559⋮2675│ def UniformSum(name, n):
+
+2582⋮2698│     Examples
+2583⋮2699│     ========
+2584⋮2700│ 
+2585⋮    │-    >>> from sympy.stats import UniformSum, density
+    ⋮2701│+    >>> from sympy.stats import UniformSum, density, cdf
+2586⋮2702│     >>> from sympy import Symbol, pprint
+2587⋮2703│ 
+2588⋮2704│     >>> n = Symbol("n", integer=True)
+
+2603⋮2719│     --------------------------------
+2604⋮2720│                 (n - 1)!
+2605⋮2721│ 
+    ⋮2722│+    >>> cdf(X)(z)
+    ⋮2723│+    Piecewise((0, z < 0), (Sum((-1)**_k*(-_k + z)**n*binomial(n, _k),
+    ⋮2724│+                    (_k, 0, floor(z)))/factorial(n), n >= z), (1, True))
+    ⋮2725│+
+    ⋮2726│+
+    ⋮2727│+    Compute cdf with specific 'x' and 'n' values as follows :
+    ⋮2728│+    >>> cdf(UniformSum("x", 5), evaluate=False)(2).doit()
+    ⋮2729│+    9/40
+    ⋮2730│+
+    ⋮2731│+    The argument evaluate=False prevents an attempt at evaluation
+    ⋮2732│+    of the sum for general n, before the argument 2 is passed.
+    ⋮2733│+
+2606⋮2734│     References
+2607⋮2735│     ==========
+2608⋮2736│ 

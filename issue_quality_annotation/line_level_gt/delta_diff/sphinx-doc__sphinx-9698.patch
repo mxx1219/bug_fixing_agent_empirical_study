@@ -1,0 +1,11 @@
+
+sphinx/domains/python.py
+
+ 796⋮ 796│         if 'classmethod' in self.options:
+ 797⋮ 797│             return _('%s() (%s class method)') % (methname, clsname)
+ 798⋮ 798│         elif 'property' in self.options:
+ 799⋮    │-            return _('%s() (%s property)') % (methname, clsname)
+    ⋮ 799│+            return _('%s (%s property)') % (methname, clsname)
+ 800⋮ 800│         elif 'staticmethod' in self.options:
+ 801⋮ 801│             return _('%s() (%s static method)') % (methname, clsname)
+ 802⋮ 802│         else:

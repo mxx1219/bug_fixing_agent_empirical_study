@@ -1,0 +1,20 @@
+
+requests/sessions.py
+
+ 13 ⋮ 13 │ from datetime import datetime
+ 14 ⋮ 14 │ 
+ 15 ⋮ 15 │ from .auth import _basic_auth_str
+ 16 ⋮    │-from .compat import cookielib, OrderedDict, urljoin, urlparse, builtin_str
+    ⋮ 16 │+from .compat import cookielib, OrderedDict, urljoin, urlparse
+ 17 ⋮ 17 │ from .cookies import (
+ 18 ⋮ 18 │     cookiejar_from_dict, extract_cookies_to_jar, RequestsCookieJar, merge_cookies)
+ 19 ⋮ 19 │ from .models import Request, PreparedRequest, DEFAULT_REDIRECT_LIMIT
+
+ 425⋮ 425│             If Tuple, ('cert', 'key') pair.
+ 426⋮ 426│         """
+ 427⋮ 427│ 
+ 428⋮    │-        method = builtin_str(method)
+    ⋮ 428│+        method = to_native_string(method)
+ 429⋮ 429│ 
+ 430⋮ 430│         # Create the Request.
+ 431⋮ 431│         req = Request(

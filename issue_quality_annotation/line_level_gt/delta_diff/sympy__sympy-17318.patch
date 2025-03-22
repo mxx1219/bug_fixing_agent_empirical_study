@@ -1,0 +1,35 @@
+
+sympy/simplify/radsimp.py
+
+ 920⋮ 920│ def rad_rationalize(num, den):
+ 921⋮ 921│     """
+ 922⋮ 922│     Rationalize num/den by removing square roots in the denominator;
+ 923⋮    │-    num and den are sum of terms whose squares are rationals
+    ⋮ 923│+    num and den are sum of terms whose squares are positive rationals.
+ 924⋮ 924│ 
+ 925⋮ 925│     Examples
+ 926⋮ 926│     ========
+
+1061⋮1061│ 
+1062⋮1062│ def split_surds(expr):
+1063⋮1063│     """
+1064⋮    │-    split an expression with terms whose squares are rationals
+    ⋮1064│+    Split an expression with terms whose squares are positive rationals
+1065⋮1065│     into a sum of terms whose surds squared have gcd equal to g
+1066⋮    │-    and a sum of terms with surds squared prime with g
+    ⋮1066│+    and a sum of terms with surds squared prime with g.
+1067⋮1067│ 
+1068⋮1068│     Examples
+1069⋮1069│     ========
+
+sympy/simplify/sqrtdenest.py
+
+ 156⋮ 156│         res = (p, S.Zero, S.Zero)
+ 157⋮ 157│     elif p.is_Add:
+ 158⋮ 158│         pargs = sorted(p.args, key=default_sort_key)
+ 159⋮    │-        if all((x**2).is_Rational for x in pargs):
+    ⋮ 159│+        sqargs = [x**2 for x in pargs]
+    ⋮ 160│+        if all(sq.is_Rational and sq.is_positive for sq in sqargs):
+ 160⋮ 161│             r, b, a = split_surds(p)
+ 161⋮ 162│             res = a, b, r
+ 162⋮ 163│             return list(res)

@@ -1,0 +1,16 @@
+
+django/db/models/sql/compiler.py
+
+ 727⋮ 727│         # If we get to this point and the field is a relation to another model,
+ 728⋮ 728│         # append the default ordering for that model unless it is the pk
+ 729⋮ 729│         # shortcut or the attribute name of the field that is specified.
+ 730⋮    │-        if field.is_relation and opts.ordering and getattr(field, 'attname', None) != name and name != 'pk':
+    ⋮ 730│+        if (
+    ⋮ 731│+            field.is_relation and
+    ⋮ 732│+            opts.ordering and
+    ⋮ 733│+            getattr(field, 'attname', None) != pieces[-1] and
+    ⋮ 734│+            name != 'pk'
+    ⋮ 735│+        ):
+ 731⋮ 736│             # Firstly, avoid infinite loops.
+ 732⋮ 737│             already_seen = already_seen or set()
+ 733⋮ 738│             join_tuple = tuple(getattr(self.query.alias_map[j], 'join_cols', None) for j in joins)

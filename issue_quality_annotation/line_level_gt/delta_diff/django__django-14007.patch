@@ -1,0 +1,38 @@
+
+django/db/models/sql/compiler.py
+
+1405⋮1405│             returning_fields and len(self.query.objs) != 1 and
+1406⋮1406│             not self.connection.features.can_return_rows_from_bulk_insert
+1407⋮1407│         )
+    ⋮1408│+        opts = self.query.get_meta()
+1408⋮1409│         self.returning_fields = returning_fields
+1409⋮1410│         with self.connection.cursor() as cursor:
+1410⋮1411│             for sql, params in self.as_sql():
+
+1412⋮1413│             if not self.returning_fields:
+1413⋮1414│                 return []
+1414⋮1415│             if self.connection.features.can_return_rows_from_bulk_insert and len(self.query.objs) > 1:
+1415⋮    │-                return self.connection.ops.fetch_returned_insert_rows(cursor)
+1416⋮    │-            if self.connection.features.can_return_columns_from_insert:
+    ⋮1416│+                rows = self.connection.ops.fetch_returned_insert_rows(cursor)
+    ⋮1417│+            elif self.connection.features.can_return_columns_from_insert:
+1417⋮1418│                 assert len(self.query.objs) == 1
+1418⋮    │-                return [self.connection.ops.fetch_returned_insert_columns(cursor, self.returning_params)]
+1419⋮    │-            return [(self.connection.ops.last_insert_id(
+1420⋮    │-                cursor, self.query.get_meta().db_table, self.query.get_meta().pk.column
+1421⋮    │-            ),)]
+    ⋮1419│+                rows = [self.connection.ops.fetch_returned_insert_columns(
+    ⋮1420│+                    cursor, self.returning_params,
+    ⋮1421│+                )]
+    ⋮1422│+            else:
+    ⋮1423│+                rows = [(self.connection.ops.last_insert_id(
+    ⋮1424│+                    cursor, opts.db_table, opts.pk.column,
+    ⋮1425│+                ),)]
+    ⋮1426│+        cols = [field.get_col(opts.db_table) for field in self.returning_fields]
+    ⋮1427│+        converters = self.get_converters(cols)
+    ⋮1428│+        if converters:
+    ⋮1429│+            rows = list(self.apply_converters(rows, converters))
+    ⋮1430│+        return rows
+1422⋮1431│ 
+1423⋮1432│ 
+1424⋮1433│ class SQLDeleteCompiler(SQLCompiler):

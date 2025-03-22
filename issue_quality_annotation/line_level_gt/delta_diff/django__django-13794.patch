@@ -1,0 +1,15 @@
+
+django/utils/functional.py
+
+ 176⋮ 176│                 return str(self) % rhs
+ 177⋮ 177│             return self.__cast() % rhs
+ 178⋮ 178│ 
+    ⋮ 179│+        def __add__(self, other):
+    ⋮ 180│+            return self.__cast() + other
+    ⋮ 181│+
+    ⋮ 182│+        def __radd__(self, other):
+    ⋮ 183│+            return other + self.__cast()
+    ⋮ 184│+
+ 179⋮ 185│         def __deepcopy__(self, memo):
+ 180⋮ 186│             # Instances of this class are effectively immutable. It's just a
+ 181⋮ 187│             # collection of functions. So we don't need to do anything

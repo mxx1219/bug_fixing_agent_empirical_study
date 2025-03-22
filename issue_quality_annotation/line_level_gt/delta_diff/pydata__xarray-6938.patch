@@ -1,0 +1,89 @@
+
+xarray/core/dataset.py
+
+3771⋮3771│         indexes: dict[Hashable, Index] = {}
+3772⋮3772│         for k, v in self.variables.items():
+3773⋮3773│             dims = tuple(dims_dict.get(dim, dim) for dim in v.dims)
+    ⋮3774│+            var: Variable
+3774⋮3775│             if k in result_dims:
+3775⋮3776│                 var = v.to_index_variable()
+3776⋮3777│                 var.dims = dims
+
+xarray/core/variable.py
+
+ 14 ⋮ 14 │     Iterable,
+ 15 ⋮ 15 │     Literal,
+ 16 ⋮ 16 │     Mapping,
+    ⋮ 17 │+    NoReturn,
+ 17 ⋮ 18 │     Sequence,
+ 18 ⋮ 19 │ )
+ 19 ⋮ 20 │ 
+
+ 536⋮ 537│     def values(self, values):
+ 537⋮ 538│         self.data = values
+ 538⋮ 539│ 
+ 539⋮    │-    def to_base_variable(self):
+    ⋮ 540│+    def to_base_variable(self) -> Variable:
+ 540⋮ 541│         """Return this variable as a base xarray.Variable"""
+ 541⋮ 542│         return Variable(
+ 542⋮    │-            self.dims, self._data, self._attrs, encoding=self._encoding, fastpath=True
+    ⋮ 543│+            self._dims, self._data, self._attrs, encoding=self._encoding, fastpath=True
+ 543⋮ 544│         )
+ 544⋮ 545│ 
+ 545⋮ 546│     to_variable = utils.alias(to_base_variable, "to_variable")
+ 546⋮ 547│ 
+ 547⋮    │-    def to_index_variable(self):
+    ⋮ 548│+    def to_index_variable(self) -> IndexVariable:
+ 548⋮ 549│         """Return this variable as an xarray.IndexVariable"""
+ 549⋮ 550│         return IndexVariable(
+ 550⋮    │-            self.dims, self._data, self._attrs, encoding=self._encoding, fastpath=True
+    ⋮ 551│+            self._dims, self._data, self._attrs, encoding=self._encoding, fastpath=True
+ 551⋮ 552│         )
+ 552⋮ 553│ 
+ 553⋮ 554│     to_coord = utils.alias(to_index_variable, "to_coord")
+ 554⋮ 555│ 
+ 555⋮    │-    def to_index(self):
+    ⋮ 556│+    def to_index(self) -> pd.Index:
+ 556⋮ 557│         """Convert this variable to a pandas.Index"""
+ 557⋮ 558│         return self.to_index_variable().to_index()
+ 558⋮ 559│ 
+
+2879⋮2880│     def _data_equals(self, other):
+2880⋮2881│         return self.to_index().equals(other.to_index())
+2881⋮2882│ 
+2882⋮    │-    def to_index_variable(self):
+    ⋮2883│+    def to_index_variable(self) -> IndexVariable:
+2883⋮2884│         """Return this variable as an xarray.IndexVariable"""
+2884⋮    │-        return self
+    ⋮2885│+        return self.copy()
+2885⋮2886│ 
+2886⋮2887│     to_coord = utils.alias(to_index_variable, "to_coord")
+2887⋮2888│ 
+2888⋮    │-    def to_index(self):
+    ⋮2889│+    def to_index(self) -> pd.Index:
+2889⋮2890│         """Convert this variable to a pandas.Index"""
+2890⋮2891│         # n.b. creating a new pandas.Index from an old pandas.Index is
+2891⋮2892│         # basically free as pandas.Index objects are immutable
+
+2904⋮2905│         return index
+2905⋮2906│ 
+2906⋮2907│     @property
+2907⋮    │-    def level_names(self):
+    ⋮2908│+    def level_names(self) -> list[str] | None:
+2908⋮2909│         """Return MultiIndex level names or None if this IndexVariable has no
+2909⋮2910│         MultiIndex.
+2910⋮2911│         """
+
+2922⋮2923│         return type(self)(self.dims, index.get_level_values(level))
+2923⋮2924│ 
+2924⋮2925│     @property
+2925⋮    │-    def name(self):
+    ⋮2926│+    def name(self) -> Hashable:
+2926⋮2927│         return self.dims[0]
+2927⋮2928│ 
+2928⋮2929│     @name.setter
+2929⋮    │-    def name(self, value):
+    ⋮2930│+    def name(self, value) -> NoReturn:
+2930⋮2931│         raise AttributeError("cannot modify name of IndexVariable in-place")
+2931⋮2932│ 
+2932⋮2933│     def _inplace_binary_op(self, other, f):

@@ -1,0 +1,79 @@
+
+django/contrib/admin/options.py
+
+2111⋮2111│             queryset = queryset.none()
+2112⋮2112│         return queryset
+2113⋮2113│ 
+    ⋮2114│+    def _has_any_perms_for_target_model(self, request, perms):
+    ⋮2115│+        """
+    ⋮2116│+        This method is called only when the ModelAdmin's model is for an
+    ⋮2117│+        ManyToManyField's implicit through model (if self.opts.auto_created).
+    ⋮2118│+        Return True if the user has any of the given permissions ('add',
+    ⋮2119│+        'change', etc.) for the model that points to the through model.
+    ⋮2120│+        """
+    ⋮2121│+        opts = self.opts
+    ⋮2122│+        # Find the target model of an auto-created many-to-many relationship.
+    ⋮2123│+        for field in opts.fields:
+    ⋮2124│+            if field.remote_field and field.remote_field.model != self.parent_model:
+    ⋮2125│+                opts = field.remote_field.model._meta
+    ⋮2126│+                break
+    ⋮2127│+        return any(
+    ⋮2128│+            request.user.has_perm('%s.%s' % (opts.app_label, get_permission_codename(perm, opts)))
+    ⋮2129│+            for perm in perms
+    ⋮2130│+        )
+    ⋮2131│+
+2114⋮2132│     def has_add_permission(self, request, obj):
+2115⋮2133│         if self.opts.auto_created:
+2116⋮    │-            # We're checking the rights to an auto-created intermediate model,
+2117⋮    │-            # which doesn't have its own individual permissions. The user needs
+2118⋮    │-            # to have the view permission for the related model in order to
+2119⋮    │-            # be able to do anything with the intermediate model.
+2120⋮    │-            return self.has_view_permission(request, obj)
+    ⋮2134│+            # Auto-created intermediate models don't have their own
+    ⋮2135│+            # permissions. The user needs to have the change permission for the
+    ⋮2136│+            # related model in order to be able to do anything with the
+    ⋮2137│+            # intermediate model.
+    ⋮2138│+            return self._has_any_perms_for_target_model(request, ['change'])
+2121⋮2139│         return super().has_add_permission(request)
+2122⋮2140│ 
+2123⋮2141│     def has_change_permission(self, request, obj=None):
+2124⋮2142│         if self.opts.auto_created:
+2125⋮    │-            # We're checking the rights to an auto-created intermediate model,
+2126⋮    │-            # which doesn't have its own individual permissions. The user needs
+2127⋮    │-            # to have the view permission for the related model in order to
+2128⋮    │-            # be able to do anything with the intermediate model.
+2129⋮    │-            return self.has_view_permission(request, obj)
+    ⋮2143│+            # Same comment as has_add_permission().
+    ⋮2144│+            return self._has_any_perms_for_target_model(request, ['change'])
+2130⋮2145│         return super().has_change_permission(request)
+2131⋮2146│ 
+2132⋮2147│     def has_delete_permission(self, request, obj=None):
+2133⋮2148│         if self.opts.auto_created:
+2134⋮    │-            # We're checking the rights to an auto-created intermediate model,
+2135⋮    │-            # which doesn't have its own individual permissions. The user needs
+2136⋮    │-            # to have the view permission for the related model in order to
+2137⋮    │-            # be able to do anything with the intermediate model.
+2138⋮    │-            return self.has_view_permission(request, obj)
+    ⋮2149│+            # Same comment as has_add_permission().
+    ⋮2150│+            return self._has_any_perms_for_target_model(request, ['change'])
+2139⋮2151│         return super().has_delete_permission(request, obj)
+2140⋮2152│ 
+2141⋮2153│     def has_view_permission(self, request, obj=None):
+2142⋮2154│         if self.opts.auto_created:
+2143⋮    │-            opts = self.opts
+2144⋮    │-            # The model was auto-created as intermediary for a many-to-many
+2145⋮    │-            # Many-relationship; find the target model.
+2146⋮    │-            for field in opts.fields:
+2147⋮    │-                if field.remote_field and field.remote_field.model != self.parent_model:
+2148⋮    │-                    opts = field.remote_field.model._meta
+2149⋮    │-                    break
+2150⋮    │-            return (
+2151⋮    │-                request.user.has_perm('%s.%s' % (opts.app_label, get_permission_codename('view', opts))) or
+2152⋮    │-                request.user.has_perm('%s.%s' % (opts.app_label, get_permission_codename('change', opts)))
+2153⋮    │-            )
+    ⋮2155│+            # Same comment as has_add_permission(). The 'change' permission
+    ⋮2156│+            # also implies the 'view' permission.
+    ⋮2157│+            return self._has_any_perms_for_target_model(request, ['view', 'change'])
+2154⋮2158│         return super().has_view_permission(request)
+2155⋮2159│ 
+2156⋮2160│ 

@@ -1,0 +1,16 @@
+
+django/db/backends/base/schema.py
+
+ 393⋮ 393│         news = {tuple(fields) for fields in new_index_together}
+ 394⋮ 394│         # Deleted indexes
+ 395⋮ 395│         for fields in olds.difference(news):
+ 396⋮    │-            self._delete_composed_index(model, fields, {'index': True}, self.sql_delete_index)
+    ⋮ 396│+            self._delete_composed_index(
+    ⋮ 397│+                model,
+    ⋮ 398│+                fields,
+    ⋮ 399│+                {'index': True, 'unique': False},
+    ⋮ 400│+                self.sql_delete_index,
+    ⋮ 401│+            )
+ 397⋮ 402│         # Created indexes
+ 398⋮ 403│         for field_names in news.difference(olds):
+ 399⋮ 404│             fields = [model._meta.get_field(field) for field in field_names]

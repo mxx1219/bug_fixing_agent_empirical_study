@@ -1,0 +1,12 @@
+
+django/utils/datastructures.py
+
+ 25 ⋮ 25 │     def __iter__(self):
+ 26 ⋮ 26 │         return iter(self.dict)
+ 27 ⋮ 27 │ 
+    ⋮ 28 │+    def __reversed__(self):
+    ⋮ 29 │+        return reversed(self.dict)
+    ⋮ 30 │+
+ 28 ⋮ 31 │     def __contains__(self, item):
+ 29 ⋮ 32 │         return item in self.dict
+ 30 ⋮ 33 │ 

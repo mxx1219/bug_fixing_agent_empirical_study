@@ -1,0 +1,19 @@
+
+sphinx/ext/autodoc/typehints.py
+
+ 149⋮ 149│         elif parts[0] == 'type':
+ 150⋮ 150│             name = ' '.join(parts[1:])
+ 151⋮ 151│             has_type.add(name)
+ 152⋮    │-        elif parts[0] == 'return':
+    ⋮ 152│+        elif parts[0] in ('return', 'returns'):
+ 153⋮ 153│             has_description.add('return')
+ 154⋮ 154│         elif parts[0] == 'rtype':
+ 155⋮ 155│             has_type.add('return')
+ 156⋮ 156│ 
+ 157⋮ 157│     # Add 'type' for parameters with a description but no declared type.
+ 158⋮ 158│     for name in annotations:
+ 159⋮    │-        if name == 'return':
+    ⋮ 159│+        if name in ('return', 'returns'):
+ 160⋮ 160│             continue
+ 161⋮ 161│         if name in has_description and name not in has_type:
+ 162⋮ 162│             field = nodes.field()

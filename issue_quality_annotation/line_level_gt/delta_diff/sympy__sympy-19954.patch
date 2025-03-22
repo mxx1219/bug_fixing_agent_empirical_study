@@ -1,0 +1,26 @@
+
+sympy/combinatorics/perm_groups.py
+
+2194⋮2194│                 # check if the system is minimal with
+2195⋮2195│                 # respect to the already discovere ones
+2196⋮2196│                 minimal = True
+2197⋮    │-                to_remove = []
+    ⋮2197│+                blocks_remove_mask = [False] * len(blocks)
+2198⋮2198│                 for i, r in enumerate(rep_blocks):
+2199⋮2199│                     if len(r) > len(rep) and rep.issubset(r):
+2200⋮2200│                         # i-th block system is not minimal
+2201⋮    │-                        del num_blocks[i], blocks[i]
+2202⋮    │-                        to_remove.append(rep_blocks[i])
+    ⋮2201│+                        blocks_remove_mask[i] = True
+2203⋮2202│                     elif len(r) < len(rep) and r.issubset(rep):
+2204⋮2203│                         # the system being checked is not minimal
+2205⋮2204│                         minimal = False
+2206⋮2205│                         break
+2207⋮2206│                 # remove non-minimal representative blocks
+2208⋮    │-                rep_blocks = [r for r in rep_blocks if r not in to_remove]
+    ⋮2207│+                blocks = [b for i, b in enumerate(blocks) if not blocks_remove_mask[i]]
+    ⋮2208│+                num_blocks = [n for i, n in enumerate(num_blocks) if not blocks_remove_mask[i]]
+    ⋮2209│+                rep_blocks = [r for i, r in enumerate(rep_blocks) if not blocks_remove_mask[i]]
+2209⋮2210│ 
+2210⋮2211│                 if minimal and num_block not in num_blocks:
+2211⋮2212│                     blocks.append(block)

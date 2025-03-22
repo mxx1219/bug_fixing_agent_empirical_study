@@ -1,0 +1,19 @@
+
+django/template/defaultfilters.py
+
+ 444⋮ 444│     return conditional_escape(value)
+ 445⋮ 445│ 
+ 446⋮ 446│ 
+    ⋮ 447│+@register.filter(is_safe=True)
+    ⋮ 448│+def escapeseq(value):
+    ⋮ 449│+    """
+    ⋮ 450│+    An "escape" filter for sequences. Mark each element in the sequence,
+    ⋮ 451│+    individually, as a string that should be auto-escaped. Return a list with
+    ⋮ 452│+    the results.
+    ⋮ 453│+    """
+    ⋮ 454│+    return [conditional_escape(obj) for obj in value]
+    ⋮ 455│+
+    ⋮ 456│+
+ 447⋮ 457│ @register.filter(is_safe=True)
+ 448⋮ 458│ @stringfilter
+ 449⋮ 459│ def force_escape(value):

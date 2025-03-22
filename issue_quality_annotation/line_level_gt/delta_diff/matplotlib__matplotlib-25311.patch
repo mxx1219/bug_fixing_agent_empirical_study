@@ -1,0 +1,20 @@
+
+lib/matplotlib/offsetbox.py
+
+1505⋮1505│         if not ref_artist.pickable():
+1506⋮1506│             ref_artist.set_picker(True)
+1507⋮1507│         self.got_artist = False
+1508⋮    │-        self.canvas = self.ref_artist.figure.canvas
+1509⋮1508│         self._use_blit = use_blit and self.canvas.supports_blit
+1510⋮1509│         self.cids = [
+1511⋮1510│             self.canvas.callbacks._connect_picklable(
+
+1514⋮1513│                 'button_release_event', self.on_release),
+1515⋮1514│         ]
+1516⋮1515│ 
+    ⋮1516│+    # A property, not an attribute, to maintain picklability.
+    ⋮1517│+    canvas = property(lambda self: self.ref_artist.figure.canvas)
+    ⋮1518│+
+1517⋮1519│     def on_motion(self, evt):
+1518⋮1520│         if self._check_still_parented() and self.got_artist:
+1519⋮1521│             dx = evt.x - self.mouse_x

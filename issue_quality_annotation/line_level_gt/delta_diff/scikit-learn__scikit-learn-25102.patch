@@ -1,0 +1,90 @@
+
+sklearn/base.py
+
+ 498⋮ 498│         y="no_validation",
+ 499⋮ 499│         reset=True,
+ 500⋮ 500│         validate_separately=False,
+    ⋮ 501│+        cast_to_ndarray=True,
+ 501⋮ 502│         **check_params,
+ 502⋮ 503│     ):
+ 503⋮ 504│         """Validate input data and set or check the `n_features_in_` attribute.
+
+ 543⋮ 544│             `estimator=self` is automatically added to these dicts to generate
+ 544⋮ 545│             more informative error message in case of invalid input data.
+ 545⋮ 546│ 
+    ⋮ 547│+        cast_to_ndarray : bool, default=True
+    ⋮ 548│+            Cast `X` and `y` to ndarray with checks in `check_params`. If
+    ⋮ 549│+            `False`, `X` and `y` are unchanged and only `feature_names` and
+    ⋮ 550│+            `n_features_in_` are checked.
+    ⋮ 551│+
+ 546⋮ 552│         **check_params : kwargs
+ 547⋮ 553│             Parameters passed to :func:`sklearn.utils.check_array` or
+ 548⋮ 554│             :func:`sklearn.utils.check_X_y`. Ignored if validate_separately
+
+ 574⋮ 580│         if no_val_X and no_val_y:
+ 575⋮ 581│             raise ValueError("Validation should be done on X, y or both.")
+ 576⋮ 582│         elif not no_val_X and no_val_y:
+ 577⋮    │-            X = check_array(X, input_name="X", **check_params)
+    ⋮ 583│+            if cast_to_ndarray:
+    ⋮ 584│+                X = check_array(X, input_name="X", **check_params)
+ 578⋮ 585│             out = X
+ 579⋮ 586│         elif no_val_X and not no_val_y:
+ 580⋮    │-            y = _check_y(y, **check_params)
+    ⋮ 587│+            if cast_to_ndarray:
+    ⋮ 588│+                y = _check_y(y, **check_params) if cast_to_ndarray else y
+ 581⋮ 589│             out = y
+ 582⋮ 590│         else:
+ 583⋮    │-            if validate_separately:
+    ⋮ 591│+            if validate_separately and cast_to_ndarray:
+ 584⋮ 592│                 # We need this because some estimators validate X and y
+ 585⋮ 593│                 # separately, and in general, separately calling check_array()
+ 586⋮ 594│                 # on X and y isn't equivalent to just calling check_X_y()
+
+sklearn/feature_selection/_base.py
+
+ 14 ⋮ 14 │ from ..cross_decomposition._pls import _PLS
+ 15 ⋮ 15 │ from ..utils import (
+ 16 ⋮ 16 │     check_array,
+ 17 ⋮    │-    safe_mask,
+ 18 ⋮ 17 │     safe_sqr,
+ 19 ⋮ 18 │ )
+ 20 ⋮ 19 │ from ..utils._tags import _safe_tags
+    ⋮ 20 │+from ..utils import _safe_indexing
+    ⋮ 21 │+from ..utils._set_output import _get_output_config
+ 21 ⋮ 22 │ from ..utils.validation import _check_feature_names_in, check_is_fitted
+ 22 ⋮ 23 │ 
+ 23 ⋮ 24 │ 
+
+ 78 ⋮ 79 │         X_r : array of shape [n_samples, n_selected_features]
+ 79 ⋮ 80 │             The input samples with only the selected features.
+ 80 ⋮ 81 │         """
+    ⋮ 82 │+        # Preserve X when X is a dataframe and the output is configured to
+    ⋮ 83 │+        # be pandas.
+    ⋮ 84 │+        output_config_dense = _get_output_config("transform", estimator=self)["dense"]
+    ⋮ 85 │+        preserve_X = hasattr(X, "iloc") and output_config_dense == "pandas"
+    ⋮ 86 │+
+ 81 ⋮ 87 │         # note: we use _safe_tags instead of _get_tags because this is a
+ 82 ⋮ 88 │         # public Mixin.
+ 83 ⋮ 89 │         X = self._validate_data(
+
+ 85 ⋮ 91 │             dtype=None,
+ 86 ⋮ 92 │             accept_sparse="csr",
+ 87 ⋮ 93 │             force_all_finite=not _safe_tags(self, key="allow_nan"),
+    ⋮ 94 │+            cast_to_ndarray=not preserve_X,
+ 88 ⋮ 95 │             reset=False,
+ 89 ⋮ 96 │         )
+ 90 ⋮ 97 │         return self._transform(X)
+
+ 98 ⋮ 105│                 " too noisy or the selection test too strict.",
+ 99 ⋮ 106│                 UserWarning,
+ 100⋮ 107│             )
+    ⋮ 108│+            if hasattr(X, "iloc"):
+    ⋮ 109│+                return X.iloc[:, :0]
+ 101⋮ 110│             return np.empty(0, dtype=X.dtype).reshape((X.shape[0], 0))
+ 102⋮    │-        if len(mask) != X.shape[1]:
+ 103⋮    │-            raise ValueError("X has a different shape than during fitting.")
+ 104⋮    │-        return X[:, safe_mask(X, mask)]
+    ⋮ 111│+        return _safe_indexing(X, mask, axis=1)
+ 105⋮ 112│ 
+ 106⋮ 113│     def inverse_transform(self, X):
+ 107⋮ 114│         """Reverse the transformation operation.

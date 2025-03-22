@@ -1,0 +1,20 @@
+
+astropy/io/ascii/qdp.py
+
+ 68 ⋮ 68 │     _new_re = rf"NO({sep}NO)+"
+ 69 ⋮ 69 │     _data_re = rf"({_decimal_re}|NO|[-+]?nan)({sep}({_decimal_re}|NO|[-+]?nan))*)"
+ 70 ⋮ 70 │     _type_re = rf"^\s*((?P<command>{_command_re})|(?P<new>{_new_re})|(?P<data>{_data_re})?\s*(\!(?P<comment>.*))?\s*$"
+ 71 ⋮    │-    _line_type_re = re.compile(_type_re)
+    ⋮ 71 │+    _line_type_re = re.compile(_type_re, re.IGNORECASE)
+ 72 ⋮ 72 │     line = line.strip()
+ 73 ⋮ 73 │     if not line:
+ 74 ⋮ 74 │         return "comment"
+
+ 306⋮ 306│ 
+ 307⋮ 307│             values = []
+ 308⋮ 308│             for v in line.split(delimiter):
+ 309⋮    │-                if v == "NO":
+    ⋮ 309│+                if v.upper() == "NO":
+ 310⋮ 310│                     values.append(np.ma.masked)
+ 311⋮ 311│                 else:
+ 312⋮ 312│                     # Understand if number is int or float

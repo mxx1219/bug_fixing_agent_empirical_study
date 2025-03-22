@@ -1,0 +1,13 @@
+
+django/db/models/aggregates.py
+
+ 65 ⋮ 65 │         if hasattr(default, 'resolve_expression'):
+ 66 ⋮ 66 │             default = default.resolve_expression(query, allow_joins, reuse, summarize)
+ 67 ⋮ 67 │         c.default = None  # Reset the default argument before wrapping.
+ 68 ⋮    │-        return Coalesce(c, default, output_field=c._output_field_or_none)
+    ⋮ 68 │+        coalesce = Coalesce(c, default, output_field=c._output_field_or_none)
+    ⋮ 69 │+        coalesce.is_summary = c.is_summary
+    ⋮ 70 │+        return coalesce
+ 69 ⋮ 71 │ 
+ 70 ⋮ 72 │     @property
+ 71 ⋮ 73 │     def default_alias(self):

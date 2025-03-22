@@ -1,0 +1,31 @@
+
+sphinx/extension.py
+
+ 10 ⋮ 10 │ 
+ 11 ⋮ 11 │ from typing import TYPE_CHECKING, Any, Dict
+ 12 ⋮ 12 │ 
+    ⋮ 13 │+from packaging.version import InvalidVersion, Version
+    ⋮ 14 │+
+ 13 ⋮ 15 │ from sphinx.config import Config
+ 14 ⋮ 16 │ from sphinx.errors import VersionRequirementError
+ 15 ⋮ 17 │ from sphinx.locale import __
+
+ 51 ⋮ 53 │                               'but it is not loaded.'), extname)
+ 52 ⋮ 54 │             continue
+ 53 ⋮ 55 │ 
+ 54 ⋮    │-        if extension.version == 'unknown version' or reqversion > extension.version:
+    ⋮ 56 │+        fulfilled = True
+    ⋮ 57 │+        if extension.version == 'unknown version':
+    ⋮ 58 │+            fulfilled = False
+    ⋮ 59 │+        else:
+    ⋮ 60 │+            try:
+    ⋮ 61 │+                if Version(reqversion) > Version(extension.version):
+    ⋮ 62 │+                    fulfilled = False
+    ⋮ 63 │+            except InvalidVersion:
+    ⋮ 64 │+                if reqversion > extension.version:
+    ⋮ 65 │+                    fulfilled = False
+    ⋮ 66 │+
+    ⋮ 67 │+        if not fulfilled:
+ 55 ⋮ 68 │             raise VersionRequirementError(__('This project needs the extension %s at least in '
+ 56 ⋮ 69 │                                              'version %s and therefore cannot be built with '
+ 57 ⋮ 70 │                                              'the loaded version (%s).') %

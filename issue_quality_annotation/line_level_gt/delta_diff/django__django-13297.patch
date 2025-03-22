@@ -1,0 +1,28 @@
+
+django/views/generic/base.py
+
+ 11 ⋮ 11 │ from django.urls import reverse
+ 12 ⋮ 12 │ from django.utils.decorators import classonlymethod
+ 13 ⋮ 13 │ from django.utils.deprecation import RemovedInDjango40Warning
+ 14 ⋮    │-from django.utils.functional import SimpleLazyObject
+    ⋮ 14 │+from django.utils.functional import lazy
+ 15 ⋮ 15 │ 
+ 16 ⋮ 16 │ logger = logging.getLogger('django.request')
+ 17 ⋮ 17 │ 
+
+ 169⋮ 169│     context_kwargs = {}
+ 170⋮ 170│     for key, value in url_kwargs.items():
+ 171⋮ 171│         # Bind into function closure.
+ 172⋮    │-        @SimpleLazyObject
+ 173⋮ 172│         def access_value(key=key, value=value):
+ 174⋮ 173│             warnings.warn(
+ 175⋮ 174│                 'TemplateView passing URL kwargs to the context is '
+
+ 178⋮ 177│                 RemovedInDjango40Warning, stacklevel=2,
+ 179⋮ 178│             )
+ 180⋮ 179│             return value
+ 181⋮    │-        context_kwargs[key] = access_value
+    ⋮ 180│+        context_kwargs[key] = lazy(access_value, type(value))()
+ 182⋮ 181│     return context_kwargs
+ 183⋮ 182│ 
+ 184⋮ 183│ 

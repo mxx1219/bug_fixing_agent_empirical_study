@@ -1,0 +1,21 @@
+
+django/db/models/query.py
+
+ 689⋮ 689│         """
+ 690⋮ 690│         assert not self.query.is_sliced, \
+ 691⋮ 691│             "Cannot use 'limit' or 'offset' with in_bulk"
+ 692⋮    │-        if field_name != 'pk' and not self.model._meta.get_field(field_name).unique:
+    ⋮ 692│+        opts = self.model._meta
+    ⋮ 693│+        unique_fields = [
+    ⋮ 694│+            constraint.fields[0]
+    ⋮ 695│+            for constraint in opts.total_unique_constraints
+    ⋮ 696│+            if len(constraint.fields) == 1
+    ⋮ 697│+        ]
+    ⋮ 698│+        if (
+    ⋮ 699│+            field_name != 'pk' and
+    ⋮ 700│+            not opts.get_field(field_name).unique and
+    ⋮ 701│+            field_name not in unique_fields
+    ⋮ 702│+        ):
+ 693⋮ 703│             raise ValueError("in_bulk()'s field_name must be a unique field but %r isn't." % field_name)
+ 694⋮ 704│         if id_list is not None:
+ 695⋮ 705│             if not id_list:

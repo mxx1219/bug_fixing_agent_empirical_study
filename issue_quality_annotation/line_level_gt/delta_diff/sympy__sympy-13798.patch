@@ -1,0 +1,32 @@
+
+sympy/printing/latex.py
+
+ 155⋮ 155│             "dot": r" \cdot ",
+ 156⋮ 156│             "times": r" \times "
+ 157⋮ 157│         }
+ 158⋮    │-
+ 159⋮    │-        self._settings['mul_symbol_latex'] = \
+ 160⋮    │-            mul_symbol_table[self._settings['mul_symbol']]
+ 161⋮    │-
+ 162⋮    │-        self._settings['mul_symbol_latex_numbers'] = \
+ 163⋮    │-            mul_symbol_table[self._settings['mul_symbol'] or 'dot']
+    ⋮ 158│+        try:
+    ⋮ 159│+            self._settings['mul_symbol_latex'] = \
+    ⋮ 160│+                mul_symbol_table[self._settings['mul_symbol']]
+    ⋮ 161│+        except KeyError:
+    ⋮ 162│+            self._settings['mul_symbol_latex'] = \
+    ⋮ 163│+                self._settings['mul_symbol']
+    ⋮ 164│+        try:
+    ⋮ 165│+            self._settings['mul_symbol_latex_numbers'] = \
+    ⋮ 166│+                mul_symbol_table[self._settings['mul_symbol'] or 'dot']
+    ⋮ 167│+        except KeyError:
+    ⋮ 168│+            if (self._settings['mul_symbol'].strip() in
+    ⋮ 169│+                    ['', ' ', '\\', '\\,', '\\:', '\\;', '\\quad']):
+    ⋮ 170│+                self._settings['mul_symbol_latex_numbers'] = \
+    ⋮ 171│+                    mul_symbol_table['dot']
+    ⋮ 172│+            else:
+    ⋮ 173│+                self._settings['mul_symbol_latex_numbers'] = \
+    ⋮ 174│+                    self._settings['mul_symbol']
+ 164⋮ 175│ 
+ 165⋮ 176│         self._delim_dict = {'(': ')', '[': ']'}
+ 166⋮ 177│ 

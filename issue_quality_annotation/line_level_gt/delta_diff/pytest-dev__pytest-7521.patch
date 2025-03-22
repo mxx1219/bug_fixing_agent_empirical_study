@@ -1,0 +1,10 @@
+
+src/_pytest/capture.py
+
+ 388⋮ 388│                 TemporaryFile(buffering=0),  # type: ignore[arg-type]
+ 389⋮ 389│                 encoding="utf-8",
+ 390⋮ 390│                 errors="replace",
+    ⋮ 391│+                newline="",
+ 391⋮ 392│                 write_through=True,
+ 392⋮ 393│             )
+ 393⋮ 394│             if targetfd in patchsysdict:

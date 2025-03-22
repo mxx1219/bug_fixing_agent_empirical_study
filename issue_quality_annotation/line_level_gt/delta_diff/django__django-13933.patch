@@ -1,0 +1,15 @@
+
+django/forms/models.py
+
+1284⋮1284│                 value = getattr(value, key)
+1285⋮1285│             value = self.queryset.get(**{key: value})
+1286⋮1286│         except (ValueError, TypeError, self.queryset.model.DoesNotExist):
+1287⋮    │-            raise ValidationError(self.error_messages['invalid_choice'], code='invalid_choice')
+    ⋮1287│+            raise ValidationError(
+    ⋮1288│+                self.error_messages['invalid_choice'],
+    ⋮1289│+                code='invalid_choice',
+    ⋮1290│+                params={'value': value},
+    ⋮1291│+            )
+1288⋮1292│         return value
+1289⋮1293│ 
+1290⋮1294│     def validate(self, value):

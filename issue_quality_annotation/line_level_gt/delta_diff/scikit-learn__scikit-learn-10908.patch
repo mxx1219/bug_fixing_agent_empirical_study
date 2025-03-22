@@ -1,0 +1,12 @@
+
+sklearn/feature_extraction/text.py
+
+ 971⋮ 971│ 
+ 972⋮ 972│     def get_feature_names(self):
+ 973⋮ 973│         """Array mapping from feature integer indices to feature name"""
+    ⋮ 974│+        if not hasattr(self, 'vocabulary_'):
+    ⋮ 975│+            self._validate_vocabulary()
+    ⋮ 976│+
+ 974⋮ 977│         self._check_vocabulary()
+ 975⋮ 978│ 
+ 976⋮ 979│         return [t for t, i in sorted(six.iteritems(self.vocabulary_),

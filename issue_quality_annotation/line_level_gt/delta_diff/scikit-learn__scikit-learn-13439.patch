@@ -1,0 +1,15 @@
+
+sklearn/pipeline.py
+
+ 199⋮ 199│             if trans is not None and trans != 'passthrough':
+ 200⋮ 200│                 yield idx, name, trans
+ 201⋮ 201│ 
+    ⋮ 202│+    def __len__(self):
+    ⋮ 203│+        """
+    ⋮ 204│+        Returns the length of the Pipeline
+    ⋮ 205│+        """
+    ⋮ 206│+        return len(self.steps)
+    ⋮ 207│+
+ 202⋮ 208│     def __getitem__(self, ind):
+ 203⋮ 209│         """Returns a sub-pipeline or a single esimtator in the pipeline
+ 204⋮ 210│ 

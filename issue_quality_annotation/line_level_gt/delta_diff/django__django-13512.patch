@@ -1,0 +1,29 @@
+
+django/contrib/admin/utils.py
+
+  1 ⋮  1 │ import datetime
+  2 ⋮  2 │ import decimal
+    ⋮  3 │+import json
+  3 ⋮  4 │ from collections import defaultdict
+  4 ⋮  5 │ 
+  5 ⋮  6 │ from django.core.exceptions import FieldDoesNotExist
+
+ 400⋮ 401│         return format_html('<a href="{}">{}</a>', value.url, value)
+ 401⋮ 402│     elif isinstance(field, models.JSONField) and value:
+ 402⋮ 403│         try:
+ 403⋮    │-            return field.get_prep_value(value)
+    ⋮ 404│+            return json.dumps(value, ensure_ascii=False, cls=field.encoder)
+ 404⋮ 405│         except TypeError:
+ 405⋮ 406│             return display_for_value(value, empty_value_display)
+ 406⋮ 407│     else:
+
+django/forms/fields.py
+
+1258⋮1258│     def prepare_value(self, value):
+1259⋮1259│         if isinstance(value, InvalidJSONInput):
+1260⋮1260│             return value
+1261⋮    │-        return json.dumps(value, cls=self.encoder)
+    ⋮1261│+        return json.dumps(value, ensure_ascii=False, cls=self.encoder)
+1262⋮1262│ 
+1263⋮1263│     def has_changed(self, initial, data):
+1264⋮1264│         if super().has_changed(initial, data):

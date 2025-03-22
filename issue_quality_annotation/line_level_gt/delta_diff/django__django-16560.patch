@@ -1,0 +1,241 @@
+
+django/contrib/postgres/constraints.py
+
+ 32 ⋮ 32 │         condition=None,
+ 33 ⋮ 33 │         deferrable=None,
+ 34 ⋮ 34 │         include=None,
+    ⋮ 35 │+        violation_error_code=None,
+ 35 ⋮ 36 │         violation_error_message=None,
+ 36 ⋮ 37 │     ):
+ 37 ⋮ 38 │         if index_type and index_type.lower() not in {"gist", "spgist"}:
+
+ 60 ⋮ 61 │         self.condition = condition
+ 61 ⋮ 62 │         self.deferrable = deferrable
+ 62 ⋮ 63 │         self.include = tuple(include) if include else ()
+ 63 ⋮    │-        super().__init__(name=name, violation_error_message=violation_error_message)
+    ⋮ 64 │+        super().__init__(
+    ⋮ 65 │+            name=name,
+    ⋮ 66 │+            violation_error_code=violation_error_code,
+    ⋮ 67 │+            violation_error_message=violation_error_message,
+    ⋮ 68 │+        )
+ 64 ⋮ 69 │ 
+ 65 ⋮ 70 │     def _get_expressions(self, schema_editor, query):
+ 66 ⋮ 71 │         expressions = []
+
+ 149⋮ 154│                 and self.condition == other.condition
+ 150⋮ 155│                 and self.deferrable == other.deferrable
+ 151⋮ 156│                 and self.include == other.include
+    ⋮ 157│+                and self.violation_error_code == other.violation_error_code
+ 152⋮ 158│                 and self.violation_error_message == other.violation_error_message
+ 153⋮ 159│             )
+ 154⋮ 160│         return super().__eq__(other)
+ 155⋮ 161│ 
+ 156⋮ 162│     def __repr__(self):
+ 157⋮    │-        return "<%s: index_type=%s expressions=%s name=%s%s%s%s%s>" % (
+    ⋮ 163│+        return "<%s: index_type=%s expressions=%s name=%s%s%s%s%s%s>" % (
+ 158⋮ 164│             self.__class__.__qualname__,
+ 159⋮ 165│             repr(self.index_type),
+ 160⋮ 166│             repr(self.expressions),
+
+ 162⋮ 168│             "" if self.condition is None else " condition=%s" % self.condition,
+ 163⋮ 169│             "" if self.deferrable is None else " deferrable=%r" % self.deferrable,
+ 164⋮ 170│             "" if not self.include else " include=%s" % repr(self.include),
+    ⋮ 171│+            (
+    ⋮ 172│+                ""
+    ⋮ 173│+                if self.violation_error_code is None
+    ⋮ 174│+                else " violation_error_code=%r" % self.violation_error_code
+    ⋮ 175│+            ),
+ 165⋮ 176│             (
+ 166⋮ 177│                 ""
+ 167⋮ 178│                 if self.violation_error_message is None
+
+ 204⋮ 215│             queryset = queryset.exclude(pk=model_class_pk)
+ 205⋮ 216│         if not self.condition:
+ 206⋮ 217│             if queryset.exists():
+ 207⋮    │-                raise ValidationError(self.get_violation_error_message())
+    ⋮ 218│+                raise ValidationError(
+    ⋮ 219│+                    self.get_violation_error_message(), code=self.violation_error_code
+    ⋮ 220│+                )
+ 208⋮ 221│         else:
+ 209⋮ 222│             if (self.condition & Exists(queryset.filter(self.condition))).check(
+ 210⋮ 223│                 replacement_map, using=using
+ 211⋮ 224│             ):
+ 212⋮    │-                raise ValidationError(self.get_violation_error_message())
+    ⋮ 225│+                raise ValidationError(
+    ⋮ 226│+                    self.get_violation_error_message(), code=self.violation_error_code
+    ⋮ 227│+                )
+
+django/db/models/constraints.py
+
+ 18 ⋮ 18 │ 
+ 19 ⋮ 19 │ class BaseConstraint:
+ 20 ⋮ 20 │     default_violation_error_message = _("Constraint “%(name)s” is violated.")
+    ⋮ 21 │+    violation_error_code = None
+ 21 ⋮ 22 │     violation_error_message = None
+ 22 ⋮ 23 │ 
+ 23 ⋮ 24 │     # RemovedInDjango60Warning: When the deprecation ends, replace with:
+ 24 ⋮    │-    # def __init__(self, *, name, violation_error_message=None):
+ 25 ⋮    │-    def __init__(self, *args, name=None, violation_error_message=None):
+    ⋮ 25 │+    # def __init__(
+    ⋮ 26 │+    #     self, *, name, violation_error_code=None, violation_error_message=None
+    ⋮ 27 │+    # ):
+    ⋮ 28 │+    def __init__(
+    ⋮ 29 │+        self, *args, name=None, violation_error_code=None, violation_error_message=None
+    ⋮ 30 │+    ):
+ 26 ⋮ 31 │         # RemovedInDjango60Warning.
+ 27 ⋮ 32 │         if name is None and not args:
+ 28 ⋮ 33 │             raise TypeError(
+
+ 30 ⋮ 35 │                 f"argument: 'name'"
+ 31 ⋮ 36 │             )
+ 32 ⋮ 37 │         self.name = name
+    ⋮ 38 │+        if violation_error_code is not None:
+    ⋮ 39 │+            self.violation_error_code = violation_error_code
+ 33 ⋮ 40 │         if violation_error_message is not None:
+ 34 ⋮ 41 │             self.violation_error_message = violation_error_message
+ 35 ⋮ 42 │         else:
+
+ 74 ⋮ 81 │             and self.violation_error_message != self.default_violation_error_message
+ 75 ⋮ 82 │         ):
+ 76 ⋮ 83 │             kwargs["violation_error_message"] = self.violation_error_message
+    ⋮ 84 │+        if self.violation_error_code is not None:
+    ⋮ 85 │+            kwargs["violation_error_code"] = self.violation_error_code
+ 77 ⋮ 86 │         return (path, (), kwargs)
+ 78 ⋮ 87 │ 
+ 79 ⋮ 88 │     def clone(self):
+
+ 82 ⋮ 91 │ 
+ 83 ⋮ 92 │ 
+ 84 ⋮ 93 │ class CheckConstraint(BaseConstraint):
+ 85 ⋮    │-    def __init__(self, *, check, name, violation_error_message=None):
+    ⋮ 94 │+    def __init__(
+    ⋮ 95 │+        self, *, check, name, violation_error_code=None, violation_error_message=None
+    ⋮ 96 │+    ):
+ 86 ⋮ 97 │         self.check = check
+ 87 ⋮ 98 │         if not getattr(check, "conditional", False):
+ 88 ⋮ 99 │             raise TypeError(
+ 89 ⋮ 100│                 "CheckConstraint.check must be a Q instance or boolean expression."
+ 90 ⋮ 101│             )
+ 91 ⋮    │-        super().__init__(name=name, violation_error_message=violation_error_message)
+    ⋮ 102│+        super().__init__(
+    ⋮ 103│+            name=name,
+    ⋮ 104│+            violation_error_code=violation_error_code,
+    ⋮ 105│+            violation_error_message=violation_error_message,
+    ⋮ 106│+        )
+ 92 ⋮ 107│ 
+ 93 ⋮ 108│     def _get_check_sql(self, model, schema_editor):
+ 94 ⋮ 109│         query = Query(model=model, alias_cols=False)
+
+ 112⋮ 127│         against = instance._get_field_value_map(meta=model._meta, exclude=exclude)
+ 113⋮ 128│         try:
+ 114⋮ 129│             if not Q(self.check).check(against, using=using):
+ 115⋮    │-                raise ValidationError(self.get_violation_error_message())
+    ⋮ 130│+                raise ValidationError(
+    ⋮ 131│+                    self.get_violation_error_message(), code=self.violation_error_code
+    ⋮ 132│+                )
+ 116⋮ 133│         except FieldError:
+ 117⋮ 134│             pass
+ 118⋮ 135│ 
+ 119⋮ 136│     def __repr__(self):
+ 120⋮    │-        return "<%s: check=%s name=%s%s>" % (
+    ⋮ 137│+        return "<%s: check=%s name=%s%s%s>" % (
+ 121⋮ 138│             self.__class__.__qualname__,
+ 122⋮ 139│             self.check,
+ 123⋮ 140│             repr(self.name),
+    ⋮ 141│+            (
+    ⋮ 142│+                ""
+    ⋮ 143│+                if self.violation_error_code is None
+    ⋮ 144│+                else " violation_error_code=%r" % self.violation_error_code
+    ⋮ 145│+            ),
+ 124⋮ 146│             (
+ 125⋮ 147│                 ""
+ 126⋮ 148│                 if self.violation_error_message is None
+
+ 134⋮ 156│             return (
+ 135⋮ 157│                 self.name == other.name
+ 136⋮ 158│                 and self.check == other.check
+    ⋮ 159│+                and self.violation_error_code == other.violation_error_code
+ 137⋮ 160│                 and self.violation_error_message == other.violation_error_message
+ 138⋮ 161│             )
+ 139⋮ 162│         return super().__eq__(other)
+
+ 163⋮ 186│         deferrable=None,
+ 164⋮ 187│         include=None,
+ 165⋮ 188│         opclasses=(),
+    ⋮ 189│+        violation_error_code=None,
+ 166⋮ 190│         violation_error_message=None,
+ 167⋮ 191│     ):
+ 168⋮ 192│         if not name:
+
+ 213⋮ 237│             F(expression) if isinstance(expression, str) else expression
+ 214⋮ 238│             for expression in expressions
+ 215⋮ 239│         )
+ 216⋮    │-        super().__init__(name=name, violation_error_message=violation_error_message)
+    ⋮ 240│+        super().__init__(
+    ⋮ 241│+            name=name,
+    ⋮ 242│+            violation_error_code=violation_error_code,
+    ⋮ 243│+            violation_error_message=violation_error_message,
+    ⋮ 244│+        )
+ 217⋮ 245│ 
+ 218⋮ 246│     @property
+ 219⋮ 247│     def contains_expressions(self):
+
+ 293⋮ 321│         )
+ 294⋮ 322│ 
+ 295⋮ 323│     def __repr__(self):
+ 296⋮    │-        return "<%s:%s%s%s%s%s%s%s%s>" % (
+    ⋮ 324│+        return "<%s:%s%s%s%s%s%s%s%s%s>" % (
+ 297⋮ 325│             self.__class__.__qualname__,
+ 298⋮ 326│             "" if not self.fields else " fields=%s" % repr(self.fields),
+ 299⋮ 327│             "" if not self.expressions else " expressions=%s" % repr(self.expressions),
+
+ 302⋮ 330│             "" if self.deferrable is None else " deferrable=%r" % self.deferrable,
+ 303⋮ 331│             "" if not self.include else " include=%s" % repr(self.include),
+ 304⋮ 332│             "" if not self.opclasses else " opclasses=%s" % repr(self.opclasses),
+    ⋮ 333│+            (
+    ⋮ 334│+                ""
+    ⋮ 335│+                if self.violation_error_code is None
+    ⋮ 336│+                else " violation_error_code=%r" % self.violation_error_code
+    ⋮ 337│+            ),
+ 305⋮ 338│             (
+ 306⋮ 339│                 ""
+ 307⋮ 340│                 if self.violation_error_message is None
+
+ 320⋮ 353│                 and self.include == other.include
+ 321⋮ 354│                 and self.opclasses == other.opclasses
+ 322⋮ 355│                 and self.expressions == other.expressions
+    ⋮ 356│+                and self.violation_error_code == other.violation_error_code
+ 323⋮ 357│                 and self.violation_error_message == other.violation_error_message
+ 324⋮ 358│             )
+ 325⋮ 359│         return super().__eq__(other)
+
+ 385⋮ 419│         if not self.condition:
+ 386⋮ 420│             if queryset.exists():
+ 387⋮ 421│                 if self.expressions:
+ 388⋮    │-                    raise ValidationError(self.get_violation_error_message())
+    ⋮ 422│+                    raise ValidationError(
+    ⋮ 423│+                        self.get_violation_error_message(),
+    ⋮ 424│+                        code=self.violation_error_code,
+    ⋮ 425│+                    )
+ 389⋮ 426│                 # When fields are defined, use the unique_error_message() for
+ 390⋮ 427│                 # backward compatibility.
+ 391⋮ 428│                 for model, constraints in instance.get_constraints():
+ 392⋮ 429│                     for constraint in constraints:
+ 393⋮ 430│                         if constraint is self:
+ 394⋮ 431│                             raise ValidationError(
+ 395⋮    │-                                instance.unique_error_message(model, self.fields)
+    ⋮ 432│+                                instance.unique_error_message(model, self.fields),
+ 396⋮ 433│                             )
+ 397⋮ 434│         else:
+ 398⋮ 435│             against = instance._get_field_value_map(meta=model._meta, exclude=exclude)
+
+ 400⋮ 437│                 if (self.condition & Exists(queryset.filter(self.condition))).check(
+ 401⋮ 438│                     against, using=using
+ 402⋮ 439│                 ):
+ 403⋮    │-                    raise ValidationError(self.get_violation_error_message())
+    ⋮ 440│+                    raise ValidationError(
+    ⋮ 441│+                        self.get_violation_error_message(),
+    ⋮ 442│+                        code=self.violation_error_code,
+    ⋮ 443│+                    )
+ 404⋮ 444│             except FieldError:
+ 405⋮ 445│                 pass

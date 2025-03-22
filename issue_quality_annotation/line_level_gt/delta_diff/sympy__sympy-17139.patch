@@ -1,0 +1,11 @@
+
+sympy/simplify/fu.py
+
+ 500⋮ 500│         # change is not going to allow a simplification as far as I can tell.
+ 501⋮ 501│         if not (rv.is_Pow and rv.base.func == f):
+ 502⋮ 502│             return rv
+    ⋮ 503│+        if not rv.exp.is_real:
+    ⋮ 504│+            return rv
+ 503⋮ 505│ 
+ 504⋮ 506│         if (rv.exp < 0) == True:
+ 505⋮ 507│             return rv

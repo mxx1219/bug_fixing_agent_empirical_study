@@ -1,0 +1,68 @@
+
+django/db/models/expressions.py
+
+ 443⋮ 443│         self.lhs, self.rhs = exprs
+ 444⋮ 444│ 
+ 445⋮ 445│     def as_sql(self, compiler, connection):
+ 446⋮    │-        try:
+ 447⋮    │-            lhs_type = self.lhs.output_field.get_internal_type()
+ 448⋮    │-        except FieldError:
+ 449⋮    │-            lhs_type = None
+ 450⋮    │-        try:
+ 451⋮    │-            rhs_type = self.rhs.output_field.get_internal_type()
+ 452⋮    │-        except FieldError:
+ 453⋮    │-            rhs_type = None
+ 454⋮    │-        if (
+ 455⋮    │-            not connection.features.has_native_duration_field and
+ 456⋮    │-            'DurationField' in {lhs_type, rhs_type} and
+ 457⋮    │-            lhs_type != rhs_type
+ 458⋮    │-        ):
+ 459⋮    │-            return DurationExpression(self.lhs, self.connector, self.rhs).as_sql(compiler, connection)
+ 460⋮    │-        datetime_fields = {'DateField', 'DateTimeField', 'TimeField'}
+ 461⋮    │-        if self.connector == self.SUB and lhs_type in datetime_fields and lhs_type == rhs_type:
+ 462⋮    │-            return TemporalSubtraction(self.lhs, self.rhs).as_sql(compiler, connection)
+ 463⋮ 446│         expressions = []
+ 464⋮ 447│         expression_params = []
+ 465⋮ 448│         sql, params = compiler.compile(self.lhs)
+
+ 474⋮ 457│         return expression_wrapper % sql, expression_params
+ 475⋮ 458│ 
+ 476⋮ 459│     def resolve_expression(self, query=None, allow_joins=True, reuse=None, summarize=False, for_save=False):
+    ⋮ 460│+        lhs = self.lhs.resolve_expression(query, allow_joins, reuse, summarize, for_save)
+    ⋮ 461│+        rhs = self.rhs.resolve_expression(query, allow_joins, reuse, summarize, for_save)
+    ⋮ 462│+        if not isinstance(self, (DurationExpression, TemporalSubtraction)):
+    ⋮ 463│+            try:
+    ⋮ 464│+                lhs_type = lhs.output_field.get_internal_type()
+    ⋮ 465│+            except (AttributeError, FieldError):
+    ⋮ 466│+                lhs_type = None
+    ⋮ 467│+            try:
+    ⋮ 468│+                rhs_type = rhs.output_field.get_internal_type()
+    ⋮ 469│+            except (AttributeError, FieldError):
+    ⋮ 470│+                rhs_type = None
+    ⋮ 471│+            if 'DurationField' in {lhs_type, rhs_type} and lhs_type != rhs_type:
+    ⋮ 472│+                return DurationExpression(self.lhs, self.connector, self.rhs).resolve_expression(
+    ⋮ 473│+                    query, allow_joins, reuse, summarize, for_save,
+    ⋮ 474│+                )
+    ⋮ 475│+            datetime_fields = {'DateField', 'DateTimeField', 'TimeField'}
+    ⋮ 476│+            if self.connector == self.SUB and lhs_type in datetime_fields and lhs_type == rhs_type:
+    ⋮ 477│+                return TemporalSubtraction(self.lhs, self.rhs).resolve_expression(
+    ⋮ 478│+                    query, allow_joins, reuse, summarize, for_save,
+    ⋮ 479│+                )
+ 477⋮ 480│         c = self.copy()
+ 478⋮ 481│         c.is_summary = summarize
+ 479⋮    │-        c.lhs = c.lhs.resolve_expression(query, allow_joins, reuse, summarize, for_save)
+ 480⋮    │-        c.rhs = c.rhs.resolve_expression(query, allow_joins, reuse, summarize, for_save)
+    ⋮ 482│+        c.lhs = lhs
+    ⋮ 483│+        c.rhs = rhs
+ 481⋮ 484│         return c
+ 482⋮ 485│ 
+ 483⋮ 486│ 
+
+ 494⋮ 497│         return compiler.compile(side)
+ 495⋮ 498│ 
+ 496⋮ 499│     def as_sql(self, compiler, connection):
+    ⋮ 500│+        if connection.features.has_native_duration_field:
+    ⋮ 501│+            return super().as_sql(compiler, connection)
+ 497⋮ 502│         connection.ops.check_expression_support(self)
+ 498⋮ 503│         expressions = []
+ 499⋮ 504│         expression_params = []

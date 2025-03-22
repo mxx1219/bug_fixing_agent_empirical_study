@@ -1,0 +1,10 @@
+
+django/utils/timesince.py
+
+ 97 ⋮ 97 │             d.hour,
+ 98 ⋮ 98 │             d.minute,
+ 99 ⋮ 99 │             d.second,
+    ⋮ 100│+            tzinfo=d.tzinfo,
+ 100⋮ 101│         )
+ 101⋮ 102│     else:
+ 102⋮ 103│         pivot = d

@@ -1,0 +1,25 @@
+
+lib/matplotlib/cm.py
+
+ 146⋮ 146│                                "that was already in the registry.")
+ 147⋮ 147│ 
+ 148⋮ 148│         self._cmaps[name] = cmap.copy()
+    ⋮ 149│+        # Someone may set the extremes of a builtin colormap and want to register it
+    ⋮ 150│+        # with a different name for future lookups. The object would still have the
+    ⋮ 151│+        # builtin name, so we should update it to the registered name
+    ⋮ 152│+        if self._cmaps[name].name != name:
+    ⋮ 153│+            self._cmaps[name].name = name
+ 149⋮ 154│ 
+ 150⋮ 155│     def unregister(self, name):
+ 151⋮ 156│         """
+
+lib/matplotlib/colors.py
+
+ 774⋮ 774│         return cmapobject
+ 775⋮ 775│ 
+ 776⋮ 776│     def __eq__(self, other):
+ 777⋮    │-        if (not isinstance(other, Colormap) or self.name != other.name or
+    ⋮ 777│+        if (not isinstance(other, Colormap) or
+ 778⋮ 778│                 self.colorbar_extend != other.colorbar_extend):
+ 779⋮ 779│             return False
+ 780⋮ 780│         # To compare lookup tables the Colormaps have to be initialized

@@ -1,0 +1,8 @@
+
+sympy/sets/contains.py
+
+ 45 ⋮ 45 │             isinstance(i, (Eq, Ne))])
+ 46 ⋮ 46 │ 
+ 47 ⋮ 47 │     def as_set(self):
+ 48 ⋮    │-        raise NotImplementedError()
+    ⋮ 48 │+        return self.args[1]

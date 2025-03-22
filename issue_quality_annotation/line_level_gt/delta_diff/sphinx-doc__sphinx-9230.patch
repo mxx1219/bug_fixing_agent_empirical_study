@@ -1,0 +1,11 @@
+
+sphinx/util/docfields.py
+
+ 298⋮ 298│             # also support syntax like ``:param type name:``
+ 299⋮ 299│             if typedesc.is_typed:
+ 300⋮ 300│                 try:
+ 301⋮    │-                    argtype, argname = fieldarg.split(None, 1)
+    ⋮ 301│+                    argtype, argname = fieldarg.rsplit(None, 1)
+ 302⋮ 302│                 except ValueError:
+ 303⋮ 303│                     pass
+ 304⋮ 304│                 else:

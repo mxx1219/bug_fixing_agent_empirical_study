@@ -1,0 +1,22 @@
+
+sklearn/svm/base.py
+
+ 287⋮ 287│         n_SV = self.support_vectors_.shape[0]
+ 288⋮ 288│ 
+ 289⋮ 289│         dual_coef_indices = np.tile(np.arange(n_SV), n_class)
+ 290⋮    │-        dual_coef_indptr = np.arange(0, dual_coef_indices.size + 1,
+ 291⋮    │-                                     dual_coef_indices.size / n_class)
+ 292⋮    │-        self.dual_coef_ = sp.csr_matrix(
+ 293⋮    │-            (dual_coef_data, dual_coef_indices, dual_coef_indptr),
+ 294⋮    │-            (n_class, n_SV))
+    ⋮ 290│+        if not n_SV:
+    ⋮ 291│+            self.dual_coef_ = sp.csr_matrix([])
+    ⋮ 292│+        else:
+    ⋮ 293│+            dual_coef_indptr = np.arange(0, dual_coef_indices.size + 1,
+    ⋮ 294│+                                         dual_coef_indices.size / n_class)
+    ⋮ 295│+            self.dual_coef_ = sp.csr_matrix(
+    ⋮ 296│+                (dual_coef_data, dual_coef_indices, dual_coef_indptr),
+    ⋮ 297│+                (n_class, n_SV))
+ 295⋮ 298│ 
+ 296⋮ 299│     def predict(self, X):
+ 297⋮ 300│         """Perform regression on samples in X.

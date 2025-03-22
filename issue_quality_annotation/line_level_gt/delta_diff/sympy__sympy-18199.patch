@@ -1,0 +1,75 @@
+
+sympy/ntheory/residue_ntheory.py
+
+  2 ⋮  2 │ 
+  3 ⋮  3 │ from sympy.core.compatibility import as_int, range
+  4 ⋮  4 │ from sympy.core.function import Function
+    ⋮  5 │+from sympy.utilities.iterables import cartes
+  5 ⋮  6 │ from sympy.core.numbers import igcd, igcdex, mod_inverse
+  6 ⋮  7 │ from sympy.core.power import isqrt
+  7 ⋮  8 │ from sympy.core.singleton import S
+
+ 742⋮ 743│         return res
+ 743⋮ 744│     return min(res)
+ 744⋮ 745│ 
+    ⋮ 746│+def _nthroot_mod_composite(a, n, m):
+    ⋮ 747│+    """
+    ⋮ 748│+    Find the solutions to ``x**n = a mod m`` when m is not prime.
+    ⋮ 749│+    """
+    ⋮ 750│+    from sympy.ntheory.modular import crt
+    ⋮ 751│+    f = factorint(m)
+    ⋮ 752│+    dd = {}
+    ⋮ 753│+    for p, e in f.items():
+    ⋮ 754│+        tot_roots = set()
+    ⋮ 755│+        if e == 1:
+    ⋮ 756│+            tot_roots.update(nthroot_mod(a, n, p, True) or [])
+    ⋮ 757│+        else:
+    ⋮ 758│+            for root in nthroot_mod(a, n, p, True) or []:
+    ⋮ 759│+                rootn = pow(root, n)
+    ⋮ 760│+                diff = (rootn // (root or 1) * n) % p
+    ⋮ 761│+                if diff != 0:
+    ⋮ 762│+                    ppow = p
+    ⋮ 763│+                    for j in range(1, e):
+    ⋮ 764│+                        ppow *= p
+    ⋮ 765│+                        root = (root - (rootn - a) * mod_inverse(diff, p)) % ppow
+    ⋮ 766│+                    tot_roots.add(root)
+    ⋮ 767│+                else:
+    ⋮ 768│+                    new_base = p
+    ⋮ 769│+                    roots_in_base = {root}
+    ⋮ 770│+                    while new_base < pow(p, e):
+    ⋮ 771│+                        new_base *= p
+    ⋮ 772│+                        new_roots = set()
+    ⋮ 773│+                        for k in roots_in_base:
+    ⋮ 774│+                            if (pow(k, n) - a) % (new_base) != 0:
+    ⋮ 775│+                                continue
+    ⋮ 776│+                            while k not in new_roots:
+    ⋮ 777│+                                new_roots.add(k)
+    ⋮ 778│+                                k = (k + (new_base // p)) % new_base
+    ⋮ 779│+                        roots_in_base = new_roots
+    ⋮ 780│+                    tot_roots = tot_roots | roots_in_base
+    ⋮ 781│+        dd[pow(p, e)] = tot_roots
+    ⋮ 782│+    a = []
+    ⋮ 783│+    m = []
+    ⋮ 784│+    for x, y in dd.items():
+    ⋮ 785│+        m.append(x)
+    ⋮ 786│+        a.append(list(y))
+    ⋮ 787│+    return sorted(set(crt(m, list(i))[0] for i in cartes(*a)))
+ 745⋮ 788│ 
+ 746⋮ 789│ def nthroot_mod(a, n, p, all_roots=False):
+ 747⋮ 790│     """
+
+ 771⋮ 814│     if n == 2:
+ 772⋮ 815│         return sqrt_mod(a, p, all_roots)
+ 773⋮ 816│     # see Hackman "Elementary Number Theory" (2009), page 76
+    ⋮ 817│+    if not isprime(p):
+    ⋮ 818│+        return _nthroot_mod_composite(a, n, p)
+    ⋮ 819│+    if a % p == 0:
+    ⋮ 820│+        return [0]
+ 774⋮ 821│     if not is_nthpow_residue(a, n, p):
+ 775⋮ 822│         return None
+ 776⋮    │-    if not isprime(p):
+ 777⋮    │-        raise NotImplementedError("Not implemented for composite p")
+ 778⋮    │-
+ 779⋮ 823│     if (p - 1) % n == 0:
+ 780⋮ 824│         return _nthroot_mod1(a, n, p, all_roots)
+ 781⋮ 825│     # The roots of ``x**n - a = 0 (mod p)`` are roots of

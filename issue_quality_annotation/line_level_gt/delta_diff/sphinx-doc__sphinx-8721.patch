@@ -1,0 +1,13 @@
+
+sphinx/ext/viewcode.py
+
+ 182⋮ 182│     env = app.builder.env
+ 183⋮ 183│     if not hasattr(env, '_viewcode_modules'):
+ 184⋮ 184│         return
+    ⋮ 185│+    if app.builder.name == "singlehtml":
+    ⋮ 186│+        return
+    ⋮ 187│+    if app.builder.name.startswith("epub") and not env.config.viewcode_enable_epub:
+    ⋮ 188│+        return
+ 185⋮ 189│     highlighter = app.builder.highlighter  # type: ignore
+ 186⋮ 190│     urito = app.builder.get_relative_uri
+ 187⋮ 191│ 

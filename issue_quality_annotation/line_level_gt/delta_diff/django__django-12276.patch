@@ -1,0 +1,22 @@
+
+django/forms/widgets.py
+
+ 387⋮ 387│     def value_omitted_from_data(self, data, files, name):
+ 388⋮ 388│         return name not in files
+ 389⋮ 389│ 
+    ⋮ 390│+    def use_required_attribute(self, initial):
+    ⋮ 391│+        return super().use_required_attribute(initial) and not initial
+    ⋮ 392│+
+ 390⋮ 393│ 
+ 391⋮ 394│ FILE_INPUT_CONTRADICTION = object()
+ 392⋮ 395│ 
+
+ 451⋮ 454│             return False
+ 452⋮ 455│         return upload
+ 453⋮ 456│ 
+ 454⋮    │-    def use_required_attribute(self, initial):
+ 455⋮    │-        return super().use_required_attribute(initial) and not initial
+ 456⋮    │-
+ 457⋮ 457│     def value_omitted_from_data(self, data, files, name):
+ 458⋮ 458│         return (
+ 459⋮ 459│             super().value_omitted_from_data(data, files, name) and

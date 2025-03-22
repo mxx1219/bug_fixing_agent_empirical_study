@@ -1,0 +1,13 @@
+
+lib/matplotlib/axes/_base.py
+
+1315⋮1315│         self._get_patches_for_fill = _process_plot_var_args(self, 'fill')
+1316⋮1316│ 
+1317⋮1317│         self._gridOn = mpl.rcParams['axes.grid']
+1318⋮    │-        self._children = []
+    ⋮1318│+        old_children, self._children = self._children, []
+    ⋮1319│+        for chld in old_children:
+    ⋮1320│+            chld.axes = chld.figure = None
+1319⋮1321│         self._mouseover_set = _OrderedSet()
+1320⋮1322│         self.child_axes = []
+1321⋮1323│         self._current_image = None  # strictly for pyplot via _sci, _gci

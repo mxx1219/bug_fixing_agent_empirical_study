@@ -1,0 +1,40 @@
+
+django/forms/models.py
+
+ 253⋮ 253│         self.help_texts = getattr(options, "help_texts", None)
+ 254⋮ 254│         self.error_messages = getattr(options, "error_messages", None)
+ 255⋮ 255│         self.field_classes = getattr(options, "field_classes", None)
+    ⋮ 256│+        self.formfield_callback = getattr(options, "formfield_callback", None)
+ 256⋮ 257│ 
+ 257⋮ 258│ 
+ 258⋮ 259│ class ModelFormMetaclass(DeclarativeFieldsMetaclass):
+ 259⋮ 260│     def __new__(mcs, name, bases, attrs):
+ 260⋮    │-        base_formfield_callback = None
+ 261⋮    │-        for b in bases:
+ 262⋮    │-            if hasattr(b, "Meta") and hasattr(b.Meta, "formfield_callback"):
+ 263⋮    │-                base_formfield_callback = b.Meta.formfield_callback
+ 264⋮    │-                break
+ 265⋮    │-
+ 266⋮    │-        formfield_callback = attrs.pop("formfield_callback", base_formfield_callback)
+ 267⋮    │-
+ 268⋮ 261│         new_class = super().__new__(mcs, name, bases, attrs)
+ 269⋮ 262│ 
+ 270⋮ 263│         if bases == (BaseModelForm,):
+
+ 308⋮ 301│                 opts.fields,
+ 309⋮ 302│                 opts.exclude,
+ 310⋮ 303│                 opts.widgets,
+ 311⋮    │-                formfield_callback,
+    ⋮ 304│+                opts.formfield_callback,
+ 312⋮ 305│                 opts.localized_fields,
+ 313⋮ 306│                 opts.labels,
+ 314⋮ 307│                 opts.help_texts,
+
+ 636⋮ 629│     class_name = model.__name__ + "Form"
+ 637⋮ 630│ 
+ 638⋮ 631│     # Class attributes for the new form class.
+ 639⋮    │-    form_class_attrs = {"Meta": Meta, "formfield_callback": formfield_callback}
+    ⋮ 632│+    form_class_attrs = {"Meta": Meta}
+ 640⋮ 633│ 
+ 641⋮ 634│     if getattr(Meta, "fields", None) is None and getattr(Meta, "exclude", None) is None:
+ 642⋮ 635│         raise ImproperlyConfigured(

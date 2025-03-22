@@ -1,0 +1,21 @@
+
+sphinx/domains/python.py
+
+ 272⋮ 272│         result = super().make_xref(rolename, domain, target,  # type: ignore
+ 273⋮ 273│                                    innernode, contnode, env)
+ 274⋮ 274│         result['refspecific'] = True
+    ⋮ 275│+        result['py:module'] = env.ref_context.get('py:module')
+    ⋮ 276│+        result['py:class'] = env.ref_context.get('py:class')
+ 275⋮ 277│         if target.startswith(('.', '~')):
+ 276⋮ 278│             prefix, result['reftarget'] = target[0], target[1:]
+ 277⋮ 279│             if prefix == '.':
+
+sphinx/util/docfields.py
+
+ 295⋮ 295│                         self.directive.domain,
+ 296⋮ 296│                         target,
+ 297⋮ 297│                         contnode=content[0],
+    ⋮ 298│+                        env=self.directive.state.document.settings.env
+ 298⋮ 299│                     )
+ 299⋮ 300│                     if _is_single_paragraph(field_body):
+ 300⋮ 301│                         paragraph = cast(nodes.paragraph, field_body[0])

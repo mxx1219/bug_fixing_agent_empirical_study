@@ -1,0 +1,35 @@
+
+sphinx/domains/python.py
+
+ 123⋮ 123│             if node.value is Ellipsis:
+ 124⋮ 124│                 return [addnodes.desc_sig_punctuation('', "...")]
+ 125⋮ 125│             else:
+ 126⋮    │-                return [nodes.Text(node.value)]
+    ⋮ 126│+                return [nodes.Text(repr(node.value))]
+ 127⋮ 127│         elif isinstance(node, ast.Expr):
+ 128⋮ 128│             return unparse(node.value)
+ 129⋮ 129│         elif isinstance(node, ast.Index):
+
+ 149⋮ 149│             result.append(addnodes.desc_sig_punctuation('', '['))
+ 150⋮ 150│             result.extend(unparse(node.slice))
+ 151⋮ 151│             result.append(addnodes.desc_sig_punctuation('', ']'))
+    ⋮ 152│+
+    ⋮ 153│+            # Wrap the Text nodes inside brackets by literal node if the subscript is a Literal
+    ⋮ 154│+            if result[0] in ('Literal', 'typing.Literal'):
+    ⋮ 155│+                for i, subnode in enumerate(result[1:], start=1):
+    ⋮ 156│+                    if isinstance(subnode, nodes.Text):
+    ⋮ 157│+                        result[i] = nodes.literal('', '', subnode)
+ 152⋮ 158│             return result
+ 153⋮ 159│         elif isinstance(node, ast.Tuple):
+ 154⋮ 160│             if node.elts:
+
+ 179⋮ 185│         tree = ast_parse(annotation)
+ 180⋮ 186│         result = unparse(tree)
+ 181⋮ 187│         for i, node in enumerate(result):
+ 182⋮    │-            if isinstance(node, nodes.Text) and node.strip():
+    ⋮ 188│+            if isinstance(node, nodes.literal):
+    ⋮ 189│+                result[i] = node[0]
+    ⋮ 190│+            elif isinstance(node, nodes.Text) and node.strip():
+ 183⋮ 191│                 result[i] = type_to_xref(str(node), env)
+ 184⋮ 192│         return result
+ 185⋮ 193│     except SyntaxError:

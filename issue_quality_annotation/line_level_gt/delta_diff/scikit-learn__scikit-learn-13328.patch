@@ -1,0 +1,12 @@
+
+sklearn/linear_model/huber.py
+
+ 251⋮ 251│         self : object
+ 252⋮ 252│         """
+ 253⋮ 253│         X, y = check_X_y(
+ 254⋮    │-            X, y, copy=False, accept_sparse=['csr'], y_numeric=True)
+    ⋮ 254│+            X, y, copy=False, accept_sparse=['csr'], y_numeric=True,
+    ⋮ 255│+            dtype=[np.float64, np.float32])
+ 255⋮ 256│         if sample_weight is not None:
+ 256⋮ 257│             sample_weight = np.array(sample_weight)
+ 257⋮ 258│             check_consistent_length(y, sample_weight)

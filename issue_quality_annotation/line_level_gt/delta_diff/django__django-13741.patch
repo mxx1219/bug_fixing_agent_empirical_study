@@ -1,0 +1,33 @@
+
+django/contrib/auth/forms.py
+
+ 56 ⋮ 56 │ 
+ 57 ⋮ 57 │     def __init__(self, *args, **kwargs):
+ 58 ⋮ 58 │         kwargs.setdefault("required", False)
+    ⋮ 59 │+        kwargs.setdefault('disabled', True)
+ 59 ⋮ 60 │         super().__init__(*args, **kwargs)
+ 60 ⋮ 61 │ 
+ 61 ⋮    │-    def bound_data(self, data, initial):
+ 62 ⋮    │-        # Always return initial because the widget doesn't
+ 63 ⋮    │-        # render an input field.
+ 64 ⋮    │-        return initial
+ 65 ⋮    │-
+ 66 ⋮    │-    def has_changed(self, initial, data):
+ 67 ⋮    │-        return False
+ 68 ⋮    │-
+ 69 ⋮ 62 │ 
+ 70 ⋮ 63 │ class UsernameField(forms.CharField):
+ 71 ⋮ 64 │     def to_python(self, value):
+
+ 163⋮ 156│         if user_permissions:
+ 164⋮ 157│             user_permissions.queryset = user_permissions.queryset.select_related('content_type')
+ 165⋮ 158│ 
+ 166⋮    │-    def clean_password(self):
+ 167⋮    │-        # Regardless of what the user provides, return the initial value.
+ 168⋮    │-        # This is done here, rather than on the field, because the
+ 169⋮    │-        # field does not have access to the initial value
+ 170⋮    │-        return self.initial.get('password')
+ 171⋮    │-
+ 172⋮ 159│ 
+ 173⋮ 160│ class AuthenticationForm(forms.Form):
+ 174⋮ 161│     """

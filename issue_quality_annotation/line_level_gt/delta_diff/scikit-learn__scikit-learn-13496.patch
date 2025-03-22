@@ -1,0 +1,33 @@
+
+sklearn/ensemble/iforest.py
+
+ 120⋮ 120│     verbose : int, optional (default=0)
+ 121⋮ 121│         Controls the verbosity of the tree building process.
+ 122⋮ 122│ 
+    ⋮ 123│+    warm_start : bool, optional (default=False)
+    ⋮ 124│+        When set to ``True``, reuse the solution of the previous call to fit
+    ⋮ 125│+        and add more estimators to the ensemble, otherwise, just fit a whole
+    ⋮ 126│+        new forest. See :term:`the Glossary <warm_start>`.
+    ⋮ 127│+
+    ⋮ 128│+        .. versionadded:: 0.21
+ 123⋮ 129│ 
+ 124⋮ 130│     Attributes
+ 125⋮ 131│     ----------
+
+ 173⋮ 179│                  n_jobs=None,
+ 174⋮ 180│                  behaviour='old',
+ 175⋮ 181│                  random_state=None,
+ 176⋮    │-                 verbose=0):
+    ⋮ 182│+                 verbose=0,
+    ⋮ 183│+                 warm_start=False):
+ 177⋮ 184│         super().__init__(
+ 178⋮ 185│             base_estimator=ExtraTreeRegressor(
+ 179⋮ 186│                 max_features=1,
+
+ 185⋮ 192│             n_estimators=n_estimators,
+ 186⋮ 193│             max_samples=max_samples,
+ 187⋮ 194│             max_features=max_features,
+    ⋮ 195│+            warm_start=warm_start,
+ 188⋮ 196│             n_jobs=n_jobs,
+ 189⋮ 197│             random_state=random_state,
+ 190⋮ 198│             verbose=verbose)

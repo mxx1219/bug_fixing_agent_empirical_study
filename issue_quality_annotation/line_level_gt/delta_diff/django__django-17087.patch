@@ -1,0 +1,11 @@
+
+django/db/migrations/serializer.py
+
+ 168⋮ 168│         ):
+ 169⋮ 169│             klass = self.value.__self__
+ 170⋮ 170│             module = klass.__module__
+ 171⋮    │-            return "%s.%s.%s" % (module, klass.__name__, self.value.__name__), {
+    ⋮ 171│+            return "%s.%s.%s" % (module, klass.__qualname__, self.value.__name__), {
+ 172⋮ 172│                 "import %s" % module
+ 173⋮ 173│             }
+ 174⋮ 174│         # Further error checking

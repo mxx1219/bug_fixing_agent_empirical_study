@@ -1,0 +1,112 @@
+
+astropy/units/quantity.py
+
+ 633⋮ 633│ 
+ 634⋮ 634│         Returns
+ 635⋮ 635│         -------
+ 636⋮    │-        result : `~astropy.units.Quantity`
+    ⋮ 636│+        result : `~astropy.units.Quantity` or `NotImplemented`
+ 637⋮ 637│             Results of the ufunc, with the unit set properly.
+ 638⋮ 638│         """
+ 639⋮ 639│         # Determine required conversion functions -- to bring the unit of the
+ 640⋮ 640│         # input to that expected (e.g., radian for np.sin), or to get
+ 641⋮ 641│         # consistent units between two inputs (e.g., in np.add) --
+ 642⋮ 642│         # and the unit of the result (or tuple of units for nout > 1).
+ 643⋮    │-        converters, unit = converters_and_unit(function, method, *inputs)
+    ⋮ 643│+        try:
+    ⋮ 644│+            converters, unit = converters_and_unit(function, method, *inputs)
+    ⋮ 645│+
+    ⋮ 646│+            out = kwargs.get("out", None)
+    ⋮ 647│+            # Avoid loop back by turning any Quantity output into array views.
+    ⋮ 648│+            if out is not None:
+    ⋮ 649│+                # If pre-allocated output is used, check it is suitable.
+    ⋮ 650│+                # This also returns array view, to ensure we don't loop back.
+    ⋮ 651│+                if function.nout == 1:
+    ⋮ 652│+                    out = out[0]
+    ⋮ 653│+                out_array = check_output(out, unit, inputs, function=function)
+    ⋮ 654│+                # Ensure output argument remains a tuple.
+    ⋮ 655│+                kwargs["out"] = (out_array,) if function.nout == 1 else out_array
+    ⋮ 656│+
+    ⋮ 657│+            if method == "reduce" and "initial" in kwargs and unit is not None:
+    ⋮ 658│+                # Special-case for initial argument for reductions like
+    ⋮ 659│+                # np.add.reduce.  This should be converted to the output unit as
+    ⋮ 660│+                # well, which is typically the same as the input unit (but can
+    ⋮ 661│+                # in principle be different: unitless for np.equal, radian
+    ⋮ 662│+                # for np.arctan2, though those are not necessarily useful!)
+    ⋮ 663│+                kwargs["initial"] = self._to_own_unit(
+    ⋮ 664│+                    kwargs["initial"], check_precision=False, unit=unit
+    ⋮ 665│+                )
+ 644⋮ 666│ 
+ 645⋮    │-        out = kwargs.get("out", None)
+ 646⋮    │-        # Avoid loop back by turning any Quantity output into array views.
+ 647⋮    │-        if out is not None:
+ 648⋮    │-            # If pre-allocated output is used, check it is suitable.
+ 649⋮    │-            # This also returns array view, to ensure we don't loop back.
+ 650⋮    │-            if function.nout == 1:
+ 651⋮    │-                out = out[0]
+ 652⋮    │-            out_array = check_output(out, unit, inputs, function=function)
+ 653⋮    │-            # Ensure output argument remains a tuple.
+ 654⋮    │-            kwargs["out"] = (out_array,) if function.nout == 1 else out_array
+ 655⋮    │-
+ 656⋮    │-        if method == "reduce" and "initial" in kwargs and unit is not None:
+ 657⋮    │-            # Special-case for initial argument for reductions like
+ 658⋮    │-            # np.add.reduce.  This should be converted to the output unit as
+ 659⋮    │-            # well, which is typically the same as the input unit (but can
+ 660⋮    │-            # in principle be different: unitless for np.equal, radian
+ 661⋮    │-            # for np.arctan2, though those are not necessarily useful!)
+ 662⋮    │-            kwargs["initial"] = self._to_own_unit(
+ 663⋮    │-                kwargs["initial"], check_precision=False, unit=unit
+    ⋮ 667│+            # Same for inputs, but here also convert if necessary.
+    ⋮ 668│+            arrays = []
+    ⋮ 669│+            for input_, converter in zip(inputs, converters):
+    ⋮ 670│+                input_ = getattr(input_, "value", input_)
+    ⋮ 671│+                arrays.append(converter(input_) if converter else input_)
+    ⋮ 672│+
+    ⋮ 673│+            # Call our superclass's __array_ufunc__
+    ⋮ 674│+            result = super().__array_ufunc__(function, method, *arrays, **kwargs)
+    ⋮ 675│+            # If unit is None, a plain array is expected (e.g., comparisons), which
+    ⋮ 676│+            # means we're done.
+    ⋮ 677│+            # We're also done if the result was None (for method 'at') or
+    ⋮ 678│+            # NotImplemented, which can happen if other inputs/outputs override
+    ⋮ 679│+            # __array_ufunc__; hopefully, they can then deal with us.
+    ⋮ 680│+            if unit is None or result is None or result is NotImplemented:
+    ⋮ 681│+                return result
+    ⋮ 682│+
+    ⋮ 683│+            return self._result_as_quantity(result, unit, out)
+    ⋮ 684│+
+    ⋮ 685│+        except (TypeError, ValueError) as e:
+    ⋮ 686│+            out_normalized = kwargs.get("out", tuple())
+    ⋮ 687│+            inputs_and_outputs = inputs + out_normalized
+    ⋮ 688│+            ignored_ufunc = (
+    ⋮ 689│+                None,
+    ⋮ 690│+                np.ndarray.__array_ufunc__,
+    ⋮ 691│+                type(self).__array_ufunc__,
+ 664⋮ 692│             )
+ 665⋮    │-
+ 666⋮    │-        # Same for inputs, but here also convert if necessary.
+ 667⋮    │-        arrays = []
+ 668⋮    │-        for input_, converter in zip(inputs, converters):
+ 669⋮    │-            input_ = getattr(input_, "value", input_)
+ 670⋮    │-            arrays.append(converter(input_) if converter else input_)
+ 671⋮    │-
+ 672⋮    │-        # Call our superclass's __array_ufunc__
+ 673⋮    │-        result = super().__array_ufunc__(function, method, *arrays, **kwargs)
+ 674⋮    │-        # If unit is None, a plain array is expected (e.g., comparisons), which
+ 675⋮    │-        # means we're done.
+ 676⋮    │-        # We're also done if the result was None (for method 'at') or
+ 677⋮    │-        # NotImplemented, which can happen if other inputs/outputs override
+ 678⋮    │-        # __array_ufunc__; hopefully, they can then deal with us.
+ 679⋮    │-        if unit is None or result is None or result is NotImplemented:
+ 680⋮    │-            return result
+ 681⋮    │-
+ 682⋮    │-        return self._result_as_quantity(result, unit, out)
+    ⋮ 693│+            if not all(
+    ⋮ 694│+                getattr(type(io), "__array_ufunc__", None) in ignored_ufunc
+    ⋮ 695│+                for io in inputs_and_outputs
+    ⋮ 696│+            ):
+    ⋮ 697│+                return NotImplemented
+    ⋮ 698│+            else:
+    ⋮ 699│+                raise e
+ 683⋮ 700│ 
+ 684⋮ 701│     def _result_as_quantity(self, result, unit, out):
+ 685⋮ 702│         """Turn result into a quantity with the given unit.

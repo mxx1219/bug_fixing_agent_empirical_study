@@ -1,0 +1,29 @@
+
+django/core/management/commands/makemigrations.py
+
+ 70 ⋮ 70 │             "--check",
+ 71 ⋮ 71 │             action="store_true",
+ 72 ⋮ 72 │             dest="check_changes",
+ 73 ⋮    │-            help="Exit with a non-zero status if model changes are missing migrations.",
+    ⋮ 73 │+            help=(
+    ⋮ 74 │+                "Exit with a non-zero status if model changes are missing migrations "
+    ⋮ 75 │+                "and don't actually write them."
+    ⋮ 76 │+            ),
+ 74 ⋮ 77 │         )
+ 75 ⋮ 78 │         parser.add_argument(
+ 76 ⋮ 79 │             "--scriptable",
+
+ 248⋮ 251│                 else:
+ 249⋮ 252│                     self.log("No changes detected")
+ 250⋮ 253│         else:
+    ⋮ 254│+            if check_changes:
+    ⋮ 255│+                sys.exit(1)
+ 251⋮ 256│             if self.update:
+ 252⋮ 257│                 self.write_to_last_migration_files(changes)
+ 253⋮ 258│             else:
+ 254⋮ 259│                 self.write_migration_files(changes)
+ 255⋮    │-            if check_changes:
+ 256⋮    │-                sys.exit(1)
+ 257⋮ 260│ 
+ 258⋮ 261│     def write_to_last_migration_files(self, changes):
+ 259⋮ 262│         loader = MigrationLoader(connections[DEFAULT_DB_ALIAS])

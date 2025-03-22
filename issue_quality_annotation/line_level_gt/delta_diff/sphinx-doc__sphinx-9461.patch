@@ -1,0 +1,114 @@
+
+sphinx/domains/python.py
+
+ 852⋮ 852│     option_spec = PyObject.option_spec.copy()
+ 853⋮ 853│     option_spec.update({
+ 854⋮ 854│         'abstractmethod': directives.flag,
+    ⋮ 855│+        'classmethod': directives.flag,
+ 855⋮ 856│         'type': directives.unchanged,
+ 856⋮ 857│     })
+ 857⋮ 858│ 
+
+ 865⋮ 866│         return fullname, prefix
+ 866⋮ 867│ 
+ 867⋮ 868│     def get_signature_prefix(self, sig: str) -> str:
+ 868⋮    │-        prefix = ['property']
+    ⋮ 869│+        prefix = []
+ 869⋮ 870│         if 'abstractmethod' in self.options:
+ 870⋮    │-            prefix.insert(0, 'abstract')
+    ⋮ 871│+            prefix.append('abstract')
+    ⋮ 872│+        if 'classmethod' in self.options:
+    ⋮ 873│+            prefix.append('class')
+ 871⋮ 874│ 
+    ⋮ 875│+        prefix.append('property')
+ 872⋮ 876│         return ' '.join(prefix) + ' '
+ 873⋮ 877│ 
+ 874⋮ 878│     def get_index_text(self, modname: str, name_cls: Tuple[str, str]) -> str:
+
+sphinx/ext/autodoc/__init__.py
+
+ 718⋮ 718│                 isattr = False
+ 719⋮ 719│ 
+ 720⋮ 720│             doc = getdoc(member, self.get_attr, self.config.autodoc_inherit_docstrings,
+ 721⋮    │-                         self.parent, self.object_name)
+    ⋮ 721│+                         self.object, membername)
+ 722⋮ 722│             if not isinstance(doc, str):
+ 723⋮ 723│                 # Ignore non-string __doc__
+ 724⋮ 724│                 doc = None
+
+2661⋮2661│     @classmethod
+2662⋮2662│     def can_document_member(cls, member: Any, membername: str, isattr: bool, parent: Any
+2663⋮2663│                             ) -> bool:
+2664⋮    │-        return inspect.isproperty(member) and isinstance(parent, ClassDocumenter)
+    ⋮2664│+        if isinstance(parent, ClassDocumenter):
+    ⋮2665│+            if inspect.isproperty(member):
+    ⋮2666│+                return True
+    ⋮2667│+            else:
+    ⋮2668│+                __dict__ = safe_getattr(parent.object, '__dict__', {})
+    ⋮2669│+                obj = __dict__.get(membername)
+    ⋮2670│+                return isinstance(obj, classmethod) and inspect.isproperty(obj.__func__)
+    ⋮2671│+        else:
+    ⋮2672│+            return False
+    ⋮2673│+
+    ⋮2674│+    def import_object(self, raiseerror: bool = False) -> bool:
+    ⋮2675│+        """Check the exisitence of uninitialized instance attribute when failed to import
+    ⋮2676│+        the attribute."""
+    ⋮2677│+        ret = super().import_object(raiseerror)
+    ⋮2678│+        if ret and not inspect.isproperty(self.object):
+    ⋮2679│+            __dict__ = safe_getattr(self.parent, '__dict__', {})
+    ⋮2680│+            obj = __dict__.get(self.objpath[-1])
+    ⋮2681│+            if isinstance(obj, classmethod) and inspect.isproperty(obj.__func__):
+    ⋮2682│+                self.object = obj.__func__
+    ⋮2683│+                self.isclassmethod = True
+    ⋮2684│+                return True
+    ⋮2685│+            else:
+    ⋮2686│+                return False
+    ⋮2687│+
+    ⋮2688│+        self.isclassmethod = False
+    ⋮2689│+        return ret
+2665⋮2690│ 
+2666⋮2691│     def document_members(self, all_members: bool = False) -> None:
+2667⋮2692│         pass
+
+2675⋮2700│         sourcename = self.get_sourcename()
+2676⋮2701│         if inspect.isabstractmethod(self.object):
+2677⋮2702│             self.add_line('   :abstractmethod:', sourcename)
+    ⋮2703│+        if self.isclassmethod:
+    ⋮2704│+            self.add_line('   :classmethod:', sourcename)
+2678⋮2705│ 
+2679⋮2706│         if safe_getattr(self.object, 'fget', None) and self.config.autodoc_typehints != 'none':
+2680⋮2707│             try:
+
+sphinx/util/inspect.py
+
+ 245⋮ 245│     return isinstance(obj, (partial, partialmethod))
+ 246⋮ 246│ 
+ 247⋮ 247│ 
+ 248⋮    │-def isclassmethod(obj: Any) -> bool:
+    ⋮ 248│+def isclassmethod(obj: Any, cls: Any = None, name: str = None) -> bool:
+ 249⋮ 249│     """Check if the object is classmethod."""
+ 250⋮ 250│     if isinstance(obj, classmethod):
+ 251⋮ 251│         return True
+ 252⋮ 252│     elif inspect.ismethod(obj) and obj.__self__ is not None and isclass(obj.__self__):
+ 253⋮ 253│         return True
+    ⋮ 254│+    elif cls and name:
+    ⋮ 255│+        for basecls in getmro(cls):
+    ⋮ 256│+            meth = basecls.__dict__.get(name)
+    ⋮ 257│+            if meth:
+    ⋮ 258│+                return isclassmethod(meth)
+ 254⋮ 259│ 
+ 255⋮ 260│     return False
+ 256⋮ 261│ 
+
+ 837⋮ 842│     * inherited docstring
+ 838⋮ 843│     * inherited decorated methods
+ 839⋮ 844│     """
+    ⋮ 845│+    if cls and name and isclassmethod(obj, cls, name):
+    ⋮ 846│+        for basecls in getmro(cls):
+    ⋮ 847│+            meth = basecls.__dict__.get(name)
+    ⋮ 848│+            if meth:
+    ⋮ 849│+                return getdoc(meth.__func__)
+    ⋮ 850│+
+ 840⋮ 851│     doc = attrgetter(obj, '__doc__', None)
+ 841⋮ 852│     if ispartial(obj) and doc == obj.__class__.__doc__:
+ 842⋮ 853│         return getdoc(obj.func)

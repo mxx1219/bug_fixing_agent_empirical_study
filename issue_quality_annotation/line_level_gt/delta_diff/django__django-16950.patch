@@ -1,0 +1,17 @@
+
+django/forms/models.py
+
+1177⋮1177│                 to_field = self.instance._meta.get_field(kwargs["to_field"])
+1178⋮1178│             else:
+1179⋮1179│                 to_field = self.instance._meta.pk
+1180⋮    │-            if to_field.has_default():
+    ⋮1180│+
+    ⋮1181│+            if to_field.has_default() and (
+    ⋮1182│+                # Don't ignore a parent's auto-generated key if it's not the
+    ⋮1183│+                # parent model's pk and form data is provided.
+    ⋮1184│+                to_field.attname == self.fk.remote_field.model._meta.pk.name
+    ⋮1185│+                or not form.data
+    ⋮1186│+            ):
+1181⋮1187│                 setattr(self.instance, to_field.attname, None)
+1182⋮1188│ 
+1183⋮1189│         form.fields[name] = InlineForeignKeyField(self.instance, **kwargs)

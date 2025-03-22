@@ -1,0 +1,11 @@
+
+xarray/core/dataarray.py
+
+ 196⋮ 196│             # expand the indexer so we can handle Ellipsis
+ 197⋮ 197│             labels = indexing.expanded_indexer(key, self.data_array.ndim)
+ 198⋮ 198│             key = dict(zip(self.data_array.dims, labels))
+ 199⋮    │-        return self.data_array.sel(**key)
+    ⋮ 199│+        return self.data_array.sel(key)
+ 200⋮ 200│ 
+ 201⋮ 201│     def __setitem__(self, key, value) -> None:
+ 202⋮ 202│         if not utils.is_dict_like(key):

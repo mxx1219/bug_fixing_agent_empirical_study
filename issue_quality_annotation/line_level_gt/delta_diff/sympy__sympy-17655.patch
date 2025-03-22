@@ -1,0 +1,13 @@
+
+sympy/geometry/point.py
+
+ 278⋮ 278│         coords = [simplify(x*factor) for x in self.args]
+ 279⋮ 279│         return Point(coords, evaluate=False)
+ 280⋮ 280│ 
+    ⋮ 281│+    def __rmul__(self, factor):
+    ⋮ 282│+        """Multiply a factor by point's coordinates."""
+    ⋮ 283│+        return self.__mul__(factor)
+    ⋮ 284│+
+ 281⋮ 285│     def __neg__(self):
+ 282⋮ 286│         """Negate the point."""
+ 283⋮ 287│         coords = [-x for x in self.args]

@@ -1,0 +1,46 @@
+[
+    {
+        "type": "functions",
+        "line_range": "10-62"
+    },
+    {
+        "type": "functions",
+        "line_range": "65-96"
+    },
+    {
+        "type": "functions",
+        "line_range": "99-134"
+    },
+    {
+        "type": "functions",
+        "line_range": "137-139,151-152"
+    },
+    {
+        "type": "functions",
+        "line_range": "140-150"
+    },
+    {
+        "type": "functions",
+        "line_range": "155-165"
+    },
+    {
+        "type": "functions",
+        "line_range": "241-279"
+    },
+    {
+        "type": "methods",
+        "line_range": "178-208"
+    },
+    {
+        "type": "methods",
+        "line_range": "210-238"
+    },
+    {
+        "type": "classes",
+        "line_range": "168-177,209"
+    },
+    {
+        "type": "imports",
+        "line_range": "1-7"
+    }
+]

@@ -1,0 +1,42 @@
+
+sphinx/util/inspect.py
+
+ 518⋮ 518│ 
+ 519⋮ 519│     # parameters
+ 520⋮ 520│     args = definition.args
+    ⋮ 521│+    defaults = list(args.defaults)
+ 521⋮ 522│     params = []
+    ⋮ 523│+    if hasattr(args, "posonlyargs"):
+    ⋮ 524│+        posonlyargs = len(args.posonlyargs)  # type: ignore
+    ⋮ 525│+        positionals = posonlyargs + len(args.args)
+    ⋮ 526│+    else:
+    ⋮ 527│+        posonlyargs = 0
+    ⋮ 528│+        positionals = len(args.args)
+    ⋮ 529│+
+    ⋮ 530│+    for _ in range(len(defaults), positionals):
+    ⋮ 531│+        defaults.insert(0, Parameter.empty)
+ 522⋮ 532│ 
+ 523⋮ 533│     if hasattr(args, "posonlyargs"):
+ 524⋮    │-        for arg in args.posonlyargs:  # type: ignore
+    ⋮ 534│+        for i, arg in enumerate(args.posonlyargs):  # type: ignore
+    ⋮ 535│+            if defaults[i] is Parameter.empty:
+    ⋮ 536│+                default = Parameter.empty
+    ⋮ 537│+            else:
+    ⋮ 538│+                default = ast_unparse(defaults[i])
+    ⋮ 539│+
+ 525⋮ 540│             annotation = ast_unparse(arg.annotation) or Parameter.empty
+ 526⋮ 541│             params.append(Parameter(arg.arg, Parameter.POSITIONAL_ONLY,
+ 527⋮    │-                                    annotation=annotation))
+    ⋮ 542│+                                    default=default, annotation=annotation))
+ 528⋮ 543│ 
+ 529⋮ 544│     for i, arg in enumerate(args.args):
+ 530⋮    │-        if len(args.args) - i <= len(args.defaults):
+ 531⋮    │-            default = ast_unparse(args.defaults[-len(args.args) + i])
+ 532⋮    │-        else:
+    ⋮ 545│+        if defaults[i + posonlyargs] is Parameter.empty:
+ 533⋮ 546│             default = Parameter.empty
+    ⋮ 547│+        else:
+    ⋮ 548│+            default = ast_unparse(defaults[i + posonlyargs])
+ 534⋮ 549│ 
+ 535⋮ 550│         annotation = ast_unparse(arg.annotation) or Parameter.empty
+ 536⋮ 551│         params.append(Parameter(arg.arg, Parameter.POSITIONAL_OR_KEYWORD,

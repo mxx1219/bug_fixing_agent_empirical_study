@@ -1,0 +1,36 @@
+
+sympy/physics/quantum/dagger.py
+
+  1 ⋮  1 │ """Hermitian conjugation."""
+  2 ⋮  2 │ 
+  3 ⋮    │-from __future__ import print_function, division
+  4 ⋮    │-
+  5 ⋮    │-from sympy.core import Expr
+    ⋮  3 │+from sympy.core import Expr, Mul
+  6 ⋮  4 │ from sympy.functions.elementary.complexes import adjoint
+  7 ⋮  5 │ 
+  8 ⋮  6 │ __all__ = [
+
+ 85 ⋮ 83 │             return obj
+ 86 ⋮ 84 │         return Expr.__new__(cls, arg)
+ 87 ⋮ 85 │ 
+    ⋮ 86 │+    def __mul__(self, other):
+    ⋮ 87 │+        from sympy.physics.quantum import IdentityOperator
+    ⋮ 88 │+        if isinstance(other, IdentityOperator):
+    ⋮ 89 │+            return self
+    ⋮ 90 │+
+    ⋮ 91 │+        return Mul(self, other)
+    ⋮ 92 │+
+ 88 ⋮ 93 │ adjoint.__name__ = "Dagger"
+ 89 ⋮ 94 │ adjoint._sympyrepr = lambda a, b: "Dagger(%s)" % b._print(a.args[0])
+
+sympy/physics/quantum/operator.py
+
+ 307⋮ 307│ 
+ 308⋮ 308│     def __mul__(self, other):
+ 309⋮ 309│ 
+ 310⋮    │-        if isinstance(other, Operator):
+    ⋮ 310│+        if isinstance(other, (Operator, Dagger)):
+ 311⋮ 311│             return other
+ 312⋮ 312│ 
+ 313⋮ 313│         return Mul(self, other)

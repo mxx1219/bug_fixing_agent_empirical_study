@@ -1,0 +1,13 @@
+
+sympy/core/sympify.py
+
+ 513⋮ 513│             while kern in s:
+ 514⋮ 514│                 kern += choice(string.ascii_letters + string.digits)
+ 515⋮ 515│             s = s.replace(' ', kern)
+ 516⋮    │-        hit = kern in s
+    ⋮ 516│+            hit = kern in s
+    ⋮ 517│+        else:
+    ⋮ 518│+            hit = False
+ 517⋮ 519│ 
+ 518⋮ 520│     for i in range(2):
+ 519⋮ 521│         try:

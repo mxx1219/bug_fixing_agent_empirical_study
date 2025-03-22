@@ -1,0 +1,59 @@
+
+sphinx/directives/other.py
+
+  8 ⋮  8 │ from docutils.parsers.rst.directives.admonitions import BaseAdmonition
+  9 ⋮  9 │ from docutils.parsers.rst.directives.misc import Class
+ 10 ⋮ 10 │ from docutils.parsers.rst.directives.misc import Include as BaseInclude
+    ⋮ 11 │+from docutils.statemachine import StateMachine
+ 11 ⋮ 12 │ 
+ 12 ⋮ 13 │ from sphinx import addnodes
+ 13 ⋮ 14 │ from sphinx.domains.changeset import VersionChange  # noqa: F401  # for compatibility
+
+ 17 ⋮ 18 │ from sphinx.util.docutils import SphinxDirective
+ 18 ⋮ 19 │ from sphinx.util.matching import Matcher, patfilter
+ 19 ⋮ 20 │ from sphinx.util.nodes import explicit_title_re
+    ⋮ 21 │+from sphinx.util.osutil import os_path
+ 20 ⋮ 22 │ 
+ 21 ⋮ 23 │ if TYPE_CHECKING:
+ 22 ⋮ 24 │     from docutils.nodes import Element, Node
+
+ 369⋮ 371│     """
+ 370⋮ 372│ 
+ 371⋮ 373│     def run(self) -> list[Node]:
+    ⋮ 374│+
+    ⋮ 375│+        # To properly emit "source-read" events from included RST text,
+    ⋮ 376│+        # we must patch the ``StateMachine.insert_input()`` method.
+    ⋮ 377│+        # In the future, docutils will hopefully offer a way for Sphinx
+    ⋮ 378│+        # to provide the RST parser to use
+    ⋮ 379│+        # when parsing RST text that comes in via Include directive.
+    ⋮ 380│+        def _insert_input(include_lines, path):
+    ⋮ 381│+            # First, we need to combine the lines back into text so that
+    ⋮ 382│+            # we can send it with the source-read event.
+    ⋮ 383│+            # In docutils 0.18 and later, there are two lines at the end
+    ⋮ 384│+            # that act as markers.
+    ⋮ 385│+            # We must preserve them and leave them out of the source-read event:
+    ⋮ 386│+            text = "\n".join(include_lines[:-2])
+    ⋮ 387│+
+    ⋮ 388│+            # The docname to pass into the source-read event
+    ⋮ 389│+            docname = self.env.path2doc(os_path(path))
+    ⋮ 390│+            # Emit the "source-read" event
+    ⋮ 391│+            arg = [text]
+    ⋮ 392│+            self.env.app.events.emit("source-read", docname, arg)
+    ⋮ 393│+            text = arg[0]
+    ⋮ 394│+
+    ⋮ 395│+            # Split back into lines and reattach the two marker lines
+    ⋮ 396│+            include_lines = text.splitlines() + include_lines[-2:]
+    ⋮ 397│+
+    ⋮ 398│+            # Call the parent implementation.
+    ⋮ 399│+            # Note that this snake does not eat its tail because we patch
+    ⋮ 400│+            # the *Instance* method and this call is to the *Class* method.
+    ⋮ 401│+            return StateMachine.insert_input(self.state_machine, include_lines, path)
+    ⋮ 402│+
+    ⋮ 403│+        # Only enable this patch if there are listeners for 'source-read'.
+    ⋮ 404│+        if self.env.app.events.listeners.get('source-read'):
+    ⋮ 405│+            # See https://github.com/python/mypy/issues/2427 for details on the mypy issue
+    ⋮ 406│+            self.state_machine.insert_input = _insert_input  # type: ignore[method-assign]
+    ⋮ 407│+
+ 372⋮ 408│         if self.arguments[0].startswith('<') and \
+ 373⋮ 409│            self.arguments[0].endswith('>'):
+ 374⋮ 410│             # docutils "standard" includes, do not do path processing

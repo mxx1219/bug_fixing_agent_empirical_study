@@ -1,0 +1,33 @@
+
+sphinx/pycode/ast.py
+
+ 166⋮ 166│         return "{" + ", ".join(self.visit(e) for e in node.elts) + "}"
+ 167⋮ 167│ 
+ 168⋮ 168│     def visit_Subscript(self, node: ast.Subscript) -> str:
+ 169⋮    │-        return "%s[%s]" % (self.visit(node.value), self.visit(node.slice))
+    ⋮ 169│+        def is_simple_tuple(value: ast.AST) -> bool:
+    ⋮ 170│+            return (
+    ⋮ 171│+                isinstance(value, ast.Tuple) and
+    ⋮ 172│+                bool(value.elts) and
+    ⋮ 173│+                not any(isinstance(elt, ast.Starred) for elt in value.elts)
+    ⋮ 174│+            )
+    ⋮ 175│+
+    ⋮ 176│+        if is_simple_tuple(node.slice):
+    ⋮ 177│+            elts = ", ".join(self.visit(e) for e in node.slice.elts)  # type: ignore
+    ⋮ 178│+            return "%s[%s]" % (self.visit(node.value), elts)
+    ⋮ 179│+        elif isinstance(node.slice, ast.Index) and is_simple_tuple(node.slice.value):
+    ⋮ 180│+            elts = ", ".join(self.visit(e) for e in node.slice.value.elts)  # type: ignore
+    ⋮ 181│+            return "%s[%s]" % (self.visit(node.value), elts)
+    ⋮ 182│+        else:
+    ⋮ 183│+            return "%s[%s]" % (self.visit(node.value), self.visit(node.slice))
+ 170⋮ 184│ 
+ 171⋮ 185│     def visit_UnaryOp(self, node: ast.UnaryOp) -> str:
+ 172⋮ 186│         return "%s %s" % (self.visit(node.op), self.visit(node.operand))
+ 173⋮ 187│ 
+ 174⋮ 188│     def visit_Tuple(self, node: ast.Tuple) -> str:
+ 175⋮ 189│         if node.elts:
+ 176⋮    │-            return ", ".join(self.visit(e) for e in node.elts)
+    ⋮ 190│+            return "(" + ", ".join(self.visit(e) for e in node.elts) + ")"
+ 177⋮ 191│         else:
+ 178⋮ 192│             return "()"
+ 179⋮ 193│ 

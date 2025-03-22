@@ -1,0 +1,14 @@
+
+sympy/utilities/lambdify.py
+
+ 956⋮ 956│         return doprint(arg)
+ 957⋮ 957│     elif iterable(arg):
+ 958⋮ 958│         if isinstance(arg, list):
+ 959⋮    │-            left, right = "[]"
+    ⋮ 959│+            left, right = "[", "]"
+ 960⋮ 960│         elif isinstance(arg, tuple):
+ 961⋮    │-            left, right = "()"
+    ⋮ 961│+            left, right = "(", ",)"
+ 962⋮ 962│         else:
+ 963⋮ 963│             raise NotImplementedError("unhandled type: %s, %s" % (type(arg), arg))
+ 964⋮ 964│         return left +', '.join(_recursive_to_string(doprint, e) for e in arg) + right

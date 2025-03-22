@@ -1,0 +1,27 @@
+
+sphinx/ext/autodoc/mock.py
+
+ 26 ⋮ 26 │     """Used by autodoc_mock_imports."""
+ 27 ⋮ 27 │ 
+ 28 ⋮ 28 │     __display_name__ = '_MockObject'
+    ⋮ 29 │+    __name__ = ''
+ 29 ⋮ 30 │     __sphinx_mock__ = True
+ 30 ⋮ 31 │     __sphinx_decorator_args__: Tuple[Any, ...] = ()
+ 31 ⋮ 32 │ 
+
+ 40 ⋮ 41 │         return super().__new__(cls)
+ 41 ⋮ 42 │ 
+ 42 ⋮ 43 │     def __init__(self, *args: Any, **kwargs: Any) -> None:
+ 43 ⋮    │-        self.__qualname__ = ''
+    ⋮ 44 │+        self.__qualname__ = self.__name__
+ 44 ⋮ 45 │ 
+ 45 ⋮ 46 │     def __len__(self) -> int:
+ 46 ⋮ 47 │         return 0
+
+ 73 ⋮ 74 │                    attributes: Any = None, decorator_args: Tuple = ()) -> Any:
+ 74 ⋮ 75 │     attrs = {'__module__': module,
+ 75 ⋮ 76 │              '__display_name__': module + '.' + name,
+    ⋮ 77 │+             '__name__': name,
+ 76 ⋮ 78 │              '__sphinx_decorator_args__': decorator_args}
+ 77 ⋮ 79 │     attrs.update(attributes or {})
+ 78 ⋮ 80 │ 

@@ -1,0 +1,33 @@
+
+django/contrib/admin/views/autocomplete.py
+
+ 11 ⋮ 11 │ 
+ 12 ⋮ 12 │     def get(self, request, *args, **kwargs):
+ 13 ⋮ 13 │         """
+ 14 ⋮    │-        Return a JsonResponse with search results of the form:
+    ⋮ 14 │+        Return a JsonResponse with search results as defined in
+    ⋮ 15 │+        serialize_result(), by default:
+ 15 ⋮ 16 │         {
+ 16 ⋮ 17 │             results: [{id: "123" text: "foo"}],
+ 17 ⋮ 18 │             pagination: {more: true}
+
+ 26 ⋮ 27 │         context = self.get_context_data()
+ 27 ⋮ 28 │         return JsonResponse({
+ 28 ⋮ 29 │             'results': [
+ 29 ⋮    │-                {'id': str(getattr(obj, to_field_name)), 'text': str(obj)}
+    ⋮ 30 │+                self.serialize_result(obj, to_field_name)
+ 30 ⋮ 31 │                 for obj in context['object_list']
+ 31 ⋮ 32 │             ],
+ 32 ⋮ 33 │             'pagination': {'more': context['page_obj'].has_next()},
+ 33 ⋮ 34 │         })
+ 34 ⋮ 35 │ 
+    ⋮ 36 │+    def serialize_result(self, obj, to_field_name):
+    ⋮ 37 │+        """
+    ⋮ 38 │+        Convert the provided model object to a dictionary that is added to the
+    ⋮ 39 │+        results list.
+    ⋮ 40 │+        """
+    ⋮ 41 │+        return {'id': str(getattr(obj, to_field_name)), 'text': str(obj)}
+    ⋮ 42 │+
+ 35 ⋮ 43 │     def get_paginator(self, *args, **kwargs):
+ 36 ⋮ 44 │         """Use the ModelAdmin's paginator."""
+ 37 ⋮ 45 │         return self.model_admin.get_paginator(self.request, *args, **kwargs)

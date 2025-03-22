@@ -1,0 +1,18 @@
+
+sklearn/ensemble/_hist_gradient_boosting/gradient_boosting.py
+
+ 426⋮ 426│ 
+ 427⋮ 427│         Scores are computed on validation data or on training data.
+ 428⋮ 428│         """
+    ⋮ 429│+        if is_classifier(self):
+    ⋮ 430│+            y_small_train = self.classes_[y_small_train.astype(int)]
+ 429⋮ 431│         self.train_score_.append(
+ 430⋮ 432│             self.scorer_(self, X_binned_small_train, y_small_train)
+ 431⋮ 433│         )
+ 432⋮ 434│ 
+ 433⋮ 435│         if self._use_validation_data:
+    ⋮ 436│+            if is_classifier(self):
+    ⋮ 437│+                y_val = self.classes_[y_val.astype(int)]
+ 434⋮ 438│             self.validation_score_.append(
+ 435⋮ 439│                 self.scorer_(self, X_binned_val, y_val)
+ 436⋮ 440│             )

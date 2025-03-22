@@ -1,0 +1,26 @@
+
+astropy/units/core.py
+
+ 728⋮ 728│         try:
+ 729⋮ 729│             other = Unit(other, parse_strict='silent')
+ 730⋮ 730│         except (ValueError, UnitsError, TypeError):
+ 731⋮    │-            return False
+    ⋮ 731│+            return NotImplemented
+ 732⋮ 732│ 
+ 733⋮ 733│         # Other is Unit-like, but the test below requires it is a UnitBase
+ 734⋮ 734│         # instance; if it is not, give up (so that other can try).
+
+1710⋮1710│         _unrecognized_operator
+1711⋮1711│ 
+1712⋮1712│     def __eq__(self, other):
+1713⋮    │-        other = Unit(other, parse_strict='silent')
+1714⋮    │-        return isinstance(other, UnrecognizedUnit) and self.name == other.name
+    ⋮1713│+        try:
+    ⋮1714│+            other = Unit(other, parse_strict='silent')
+    ⋮1715│+        except (ValueError, UnitsError, TypeError):
+    ⋮1716│+            return NotImplemented
+    ⋮1717│+
+    ⋮1718│+        return isinstance(other, type(self)) and self.name == other.name
+1715⋮1719│ 
+1716⋮1720│     def __ne__(self, other):
+1717⋮1721│         return not (self == other)

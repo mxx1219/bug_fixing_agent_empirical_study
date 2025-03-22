@@ -1,0 +1,30 @@
+
+seaborn/_core/scales.py
+
+ 378⋮ 378│             axis.set_view_interval(vmin, vmax)
+ 379⋮ 379│             locs = axis.major.locator()
+ 380⋮ 380│             locs = locs[(vmin <= locs) & (locs <= vmax)]
+    ⋮ 381│+            # Avoid having an offset / scientific notation in a legend
+    ⋮ 382│+            # as we don't represent that anywhere so it ends up incorrect.
+    ⋮ 383│+            # This could become an option (e.g. Continuous.label(offset=True))
+    ⋮ 384│+            # in which case we would need to figure out how to show it.
+    ⋮ 385│+            if hasattr(axis.major.formatter, "set_useOffset"):
+    ⋮ 386│+                axis.major.formatter.set_useOffset(False)
+    ⋮ 387│+            if hasattr(axis.major.formatter, "set_scientific"):
+    ⋮ 388│+                axis.major.formatter.set_scientific(False)
+ 381⋮ 389│             labels = axis.major.formatter.format_ticks(locs)
+ 382⋮ 390│             new._legend = list(locs), list(labels)
+ 383⋮ 391│ 
+
+seaborn/utils.py
+
+ 699⋮ 699│         formatter = mpl.ticker.LogFormatter()
+ 700⋮ 700│     else:
+ 701⋮ 701│         formatter = mpl.ticker.ScalarFormatter()
+    ⋮ 702│+        # Avoid having an offset/scientific notation which we don't currently
+    ⋮ 703│+        # have any way of representing in the legend
+    ⋮ 704│+        formatter.set_useOffset(False)
+    ⋮ 705│+        formatter.set_scientific(False)
+ 702⋮ 706│     formatter.axis = dummy_axis()
+ 703⋮ 707│ 
+ 704⋮ 708│     # TODO: The following two lines should be replaced

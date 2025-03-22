@@ -1,0 +1,26 @@
+
+django/core/management/base.py
+
+  6 ⋮  6 │ import os
+  7 ⋮  7 │ import sys
+  8 ⋮  8 │ from argparse import ArgumentParser, HelpFormatter
+    ⋮  9 │+from functools import partial
+  9 ⋮ 10 │ from io import TextIOBase
+ 10 ⋮ 11 │ 
+ 11 ⋮ 12 │ import django
+
+ 71 ⋮ 72 │         else:
+ 72 ⋮ 73 │             raise CommandError("Error: %s" % message)
+ 73 ⋮ 74 │ 
+    ⋮ 75 │+    def add_subparsers(self, **kwargs):
+    ⋮ 76 │+        parser_class = kwargs.get("parser_class", type(self))
+    ⋮ 77 │+        if issubclass(parser_class, CommandParser):
+    ⋮ 78 │+            kwargs["parser_class"] = partial(
+    ⋮ 79 │+                parser_class,
+    ⋮ 80 │+                called_from_command_line=self.called_from_command_line,
+    ⋮ 81 │+            )
+    ⋮ 82 │+        return super().add_subparsers(**kwargs)
+    ⋮ 83 │+
+ 74 ⋮ 84 │ 
+ 75 ⋮ 85 │ def handle_default_options(options):
+ 76 ⋮ 86 │     """

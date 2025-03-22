@@ -1,0 +1,15 @@
+
+django/contrib/admin/helpers.py
+
+ 209⋮ 209│             remote_field.model._meta.model_name,
+ 210⋮ 210│         )
+ 211⋮ 211│         try:
+ 212⋮    │-            url = reverse(url_name, args=[quote(remote_obj.pk)])
+    ⋮ 212│+            url = reverse(
+    ⋮ 213│+                url_name,
+    ⋮ 214│+                args=[quote(remote_obj.pk)],
+    ⋮ 215│+                current_app=self.model_admin.admin_site.name,
+    ⋮ 216│+            )
+ 213⋮ 217│             return format_html('<a href="{}">{}</a>', url, remote_obj)
+ 214⋮ 218│         except NoReverseMatch:
+ 215⋮ 219│             return str(remote_obj)

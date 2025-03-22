@@ -1,0 +1,11 @@
+
+sympy/functions/elementary/hyperbolic.py
+
+ 587⋮ 587│                 x, m = _peeloff_ipi(arg)
+ 588⋮ 588│                 if m:
+ 589⋮ 589│                     cothm = coth(m)
+ 590⋮    │-                    if cotm is S.ComplexInfinity:
+    ⋮ 590│+                    if cothm is S.ComplexInfinity:
+ 591⋮ 591│                         return coth(x)
+ 592⋮ 592│                     else: # cothm == 0
+ 593⋮ 593│                         return tanh(x)

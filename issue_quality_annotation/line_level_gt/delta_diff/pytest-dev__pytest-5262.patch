@@ -1,0 +1,13 @@
+
+src/_pytest/capture.py
+
+ 447⋮ 447│         """Ensure that file.name is a string."""
+ 448⋮ 448│         return repr(self.buffer)
+ 449⋮ 449│ 
+    ⋮ 450│+    @property
+    ⋮ 451│+    def mode(self):
+    ⋮ 452│+        return self.buffer.mode.replace("b", "")
+    ⋮ 453│+
+ 450⋮ 454│     def __getattr__(self, name):
+ 451⋮ 455│         return getattr(object.__getattribute__(self, "buffer"), name)
+ 452⋮ 456│ 

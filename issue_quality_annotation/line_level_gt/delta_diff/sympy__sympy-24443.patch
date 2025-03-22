@@ -1,0 +1,67 @@
+
+sympy/combinatorics/homomorphisms.py
+
+ 308⋮ 308│     return GroupHomomorphism(domain, codomain, images)
+ 309⋮ 309│ 
+ 310⋮ 310│ def _check_homomorphism(domain, codomain, images):
+ 311⋮    │-    if hasattr(domain, 'relators'):
+ 312⋮    │-        rels = domain.relators
+ 313⋮    │-    else:
+ 314⋮    │-        gens = domain.presentation().generators
+ 315⋮    │-        rels = domain.presentation().relators
+    ⋮ 311│+    """
+    ⋮ 312│+    Check that a given mapping of generators to images defines a homomorphism.
+    ⋮ 313│+
+    ⋮ 314│+    Parameters
+    ⋮ 315│+    ==========
+    ⋮ 316│+    domain : PermutationGroup, FpGroup, FreeGroup
+    ⋮ 317│+    codomain : PermutationGroup, FpGroup, FreeGroup
+    ⋮ 318│+    images : dict
+    ⋮ 319│+        The set of keys must be equal to domain.generators.
+    ⋮ 320│+        The values must be elements of the codomain.
+    ⋮ 321│+
+    ⋮ 322│+    """
+    ⋮ 323│+    pres = domain if hasattr(domain, 'relators') else domain.presentation()
+    ⋮ 324│+    rels = pres.relators
+    ⋮ 325│+    gens = pres.generators
+    ⋮ 326│+    symbols = [g.ext_rep[0] for g in gens]
+    ⋮ 327│+    symbols_to_domain_generators = dict(zip(symbols, domain.generators))
+ 316⋮ 328│     identity = codomain.identity
+ 317⋮ 329│ 
+ 318⋮ 330│     def _image(r):
+ 319⋮    │-        if r.is_identity:
+ 320⋮    │-            return identity
+ 321⋮    │-        else:
+ 322⋮    │-            w = identity
+ 323⋮    │-            r_arr = r.array_form
+ 324⋮    │-            i = 0
+ 325⋮    │-            j = 0
+ 326⋮    │-            # i is the index for r and j is for
+ 327⋮    │-            # r_arr. r_arr[j] is the tuple (sym, p)
+ 328⋮    │-            # where sym is the generator symbol
+ 329⋮    │-            # and p is the power to which it is
+ 330⋮    │-            # raised while r[i] is a generator
+ 331⋮    │-            # (not just its symbol) or the inverse of
+ 332⋮    │-            # a generator - hence the need for
+ 333⋮    │-            # both indices
+ 334⋮    │-            while i < len(r):
+ 335⋮    │-                power = r_arr[j][1]
+ 336⋮    │-                if isinstance(domain, PermutationGroup) and r[i] in gens:
+ 337⋮    │-                    s = domain.generators[gens.index(r[i])]
+ 338⋮    │-                else:
+ 339⋮    │-                    s = r[i]
+ 340⋮    │-                if s in images:
+ 341⋮    │-                    w = w*images[s]**power
+ 342⋮    │-                elif s**-1 in images:
+ 343⋮    │-                    w = w*images[s**-1]**power
+ 344⋮    │-                i += abs(power)
+ 345⋮    │-                j += 1
+ 346⋮    │-            return w
+    ⋮ 331│+        w = identity
+    ⋮ 332│+        for symbol, power in r.array_form:
+    ⋮ 333│+            g = symbols_to_domain_generators[symbol]
+    ⋮ 334│+            w *= images[g]**power
+    ⋮ 335│+        return w
+ 347⋮ 336│ 
+ 348⋮ 337│     for r in rels:
+ 349⋮ 338│         if isinstance(codomain, FpGroup):

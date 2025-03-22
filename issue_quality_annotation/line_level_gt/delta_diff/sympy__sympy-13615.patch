@@ -1,0 +1,21 @@
+
+sympy/sets/sets.py
+
+ 217⋮ 217│             return S.EmptySet
+ 218⋮ 218│ 
+ 219⋮ 219│         elif isinstance(other, FiniteSet):
+ 220⋮    │-            return FiniteSet(*[el for el in other if self.contains(el) != True])
+    ⋮ 220│+            from sympy.utilities.iterables import sift
+    ⋮ 221│+
+    ⋮ 222│+            def ternary_sift(el):
+    ⋮ 223│+                contains = self.contains(el)
+    ⋮ 224│+                return contains if contains in [True, False] else None
+    ⋮ 225│+
+    ⋮ 226│+            sifted = sift(other, ternary_sift)
+    ⋮ 227│+            # ignore those that are contained in self
+    ⋮ 228│+            return Union(FiniteSet(*(sifted[False])),
+    ⋮ 229│+                Complement(FiniteSet(*(sifted[None])), self, evaluate=False)
+    ⋮ 230│+                if sifted[None] else S.EmptySet)
+ 221⋮ 231│ 
+ 222⋮ 232│     def symmetric_difference(self, other):
+ 223⋮ 233│         """

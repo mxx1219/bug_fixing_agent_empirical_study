@@ -1,0 +1,106 @@
+[
+    {
+        "type": "functions",
+        "line_range": "59-70"
+    },
+    {
+        "type": "functions",
+        "line_range": "80-150"
+    },
+    {
+        "type": "functions",
+        "line_range": "153-157"
+    },
+    {
+        "type": "functions",
+        "line_range": "163-236"
+    },
+    {
+        "type": "functions",
+        "line_range": "239-255,259,263-286"
+    },
+    {
+        "type": "functions",
+        "line_range": "256-258"
+    },
+    {
+        "type": "functions",
+        "line_range": "260-262"
+    },
+    {
+        "type": "functions",
+        "line_range": "289-301"
+    },
+    {
+        "type": "functions",
+        "line_range": "304-329"
+    },
+    {
+        "type": "functions",
+        "line_range": "332-367"
+    },
+    {
+        "type": "functions",
+        "line_range": "370-400"
+    },
+    {
+        "type": "functions",
+        "line_range": "403-433"
+    },
+    {
+        "type": "functions",
+        "line_range": "436-459"
+    },
+    {
+        "type": "functions",
+        "line_range": "462-469"
+    },
+    {
+        "type": "functions",
+        "line_range": "472-477"
+    },
+    {
+        "type": "functions",
+        "line_range": "480-492"
+    },
+    {
+        "type": "functions",
+        "line_range": "495-526"
+    },
+    {
+        "type": "functions",
+        "line_range": "537-625"
+    },
+    {
+        "type": "functions",
+        "line_range": "628-865"
+    },
+    {
+        "type": "functions",
+        "line_range": "868-905"
+    },
+    {
+        "type": "functions",
+        "line_range": "908-938"
+    },
+    {
+        "type": "classes",
+        "line_range": "73-74"
+    },
+    {
+        "type": "classes",
+        "line_range": "529-534"
+    },
+    {
+        "type": "imports",
+        "line_range": "1-24"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "26-56"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "160"
+    }
+]

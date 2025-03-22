@@ -1,0 +1,12 @@
+
+django/db/models/functions/math.py
+
+ 154⋮ 154│     def as_sqlite(self, compiler, connection, **extra_context):
+ 155⋮ 155│         return super().as_sql(compiler, connection, function='RAND', **extra_context)
+ 156⋮ 156│ 
+    ⋮ 157│+    def get_group_by_cols(self, alias=None):
+    ⋮ 158│+        return []
+    ⋮ 159│+
+ 157⋮ 160│ 
+ 158⋮ 161│ class Round(Transform):
+ 159⋮ 162│     function = 'ROUND'

@@ -1,0 +1,18 @@
+
+django/db/models/sql/query.py
+
+1077⋮1077│         elif isinstance(value, (list, tuple)):
+1078⋮1078│             # The items of the iterable may be expressions and therefore need
+1079⋮1079│             # to be resolved independently.
+1080⋮    │-            return type(value)(
+    ⋮1080│+            values = (
+1081⋮1081│                 self.resolve_lookup_value(sub_value, can_reuse, allow_joins)
+1082⋮1082│                 for sub_value in value
+1083⋮1083│             )
+    ⋮1084│+            type_ = type(value)
+    ⋮1085│+            if hasattr(type_, '_make'):  # namedtuple
+    ⋮1086│+                return type_(*values)
+    ⋮1087│+            return type_(values)
+1084⋮1088│         return value
+1085⋮1089│ 
+1086⋮1090│     def solve_lookup_type(self, lookup):

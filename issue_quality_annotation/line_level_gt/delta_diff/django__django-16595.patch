@@ -1,0 +1,15 @@
+
+django/db/migrations/operations/fields.py
+
+ 247⋮ 247│         return "alter_%s_%s" % (self.model_name_lower, self.name_lower)
+ 248⋮ 248│ 
+ 249⋮ 249│     def reduce(self, operation, app_label):
+ 250⋮    │-        if isinstance(operation, RemoveField) and self.is_same_field_operation(
+ 251⋮    │-            operation
+ 252⋮    │-        ):
+    ⋮ 250│+        if isinstance(
+    ⋮ 251│+            operation, (AlterField, RemoveField)
+    ⋮ 252│+        ) and self.is_same_field_operation(operation):
+ 253⋮ 253│             return [operation]
+ 254⋮ 254│         elif (
+ 255⋮ 255│             isinstance(operation, RenameField)

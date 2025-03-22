@@ -1,0 +1,11 @@
+
+sympy/geometry/point.py
+
+ 152⋮ 152│                         'warn' or 'ignore'.'''))
+ 153⋮ 153│         if any(coords[dim:]):
+ 154⋮ 154│             raise ValueError('Nonzero coordinates cannot be removed.')
+ 155⋮    │-        if any(a.is_number and im(a) for a in coords):
+    ⋮ 155│+        if any(a.is_number and im(a).is_zero is False for a in coords):
+ 156⋮ 156│             raise ValueError('Imaginary coordinates are not permitted.')
+ 157⋮ 157│         if not all(isinstance(a, Expr) for a in coords):
+ 158⋮ 158│             raise TypeError('Coordinates must be valid SymPy expressions.')

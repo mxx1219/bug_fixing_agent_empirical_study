@@ -1,0 +1,24 @@
+
+xarray/core/combine.py
+
+ 501⋮ 501│                                    fill_value=fill_value)
+ 502⋮ 502│ 
+ 503⋮ 503│         # Check the overall coordinates are monotonically increasing
+ 504⋮    │-        for dim in concatenated.dims:
+ 505⋮    │-            if dim in concatenated:
+ 506⋮    │-                indexes = concatenated.indexes.get(dim)
+ 507⋮    │-                if not (indexes.is_monotonic_increasing
+ 508⋮    │-                        or indexes.is_monotonic_decreasing):
+ 509⋮    │-                    raise ValueError("Resulting object does not have monotonic"
+ 510⋮    │-                                     " global indexes along dimension {}"
+ 511⋮    │-                                     .format(dim))
+    ⋮ 504│+        for dim in concat_dims:
+    ⋮ 505│+            indexes = concatenated.indexes.get(dim)
+    ⋮ 506│+            if not (indexes.is_monotonic_increasing
+    ⋮ 507│+                    or indexes.is_monotonic_decreasing):
+    ⋮ 508│+                raise ValueError("Resulting object does not have monotonic"
+    ⋮ 509│+                                 " global indexes along dimension {}"
+    ⋮ 510│+                                 .format(dim))
+ 512⋮ 511│         concatenated_grouped_by_data_vars.append(concatenated)
+ 513⋮ 512│ 
+ 514⋮ 513│     return merge(concatenated_grouped_by_data_vars, compat=compat,

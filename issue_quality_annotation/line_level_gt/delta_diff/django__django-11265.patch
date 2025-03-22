@@ -1,0 +1,27 @@
+
+django/db/models/sql/query.py
+
+1666⋮1666│             filter_expr = (filter_lhs, OuterRef(filter_rhs.name))
+1667⋮1667│         # Generate the inner query.
+1668⋮1668│         query = Query(self.model)
+    ⋮1669│+        query._filtered_relations = self._filtered_relations
+1669⋮1670│         query.add_filter(filter_expr)
+1670⋮1671│         query.clear_ordering(True)
+1671⋮1672│         # Try to have as simple as possible subquery -> trim leading joins from
+
+2140⋮2141│             join_field.foreign_related_fields[0].name)
+2141⋮2142│         trimmed_prefix = LOOKUP_SEP.join(trimmed_prefix)
+2142⋮2143│         # Lets still see if we can trim the first join from the inner query
+2143⋮    │-        # (that is, self). We can't do this for LEFT JOINs because we would
+2144⋮    │-        # miss those rows that have nothing on the outer side.
+2145⋮    │-        if self.alias_map[lookup_tables[trimmed_paths + 1]].join_type != LOUTER:
+    ⋮2144│+        # (that is, self). We can't do this for:
+    ⋮2145│+        # - LEFT JOINs because we would miss those rows that have nothing on
+    ⋮2146│+        #   the outer side,
+    ⋮2147│+        # - INNER JOINs from filtered relations because we would miss their
+    ⋮2148│+        #   filters.
+    ⋮2149│+        first_join = self.alias_map[lookup_tables[trimmed_paths + 1]]
+    ⋮2150│+        if first_join.join_type != LOUTER and not first_join.filtered_relation:
+2146⋮2151│             select_fields = [r[0] for r in join_field.related_fields]
+2147⋮2152│             select_alias = lookup_tables[trimmed_paths + 1]
+2148⋮2153│             self.unref_alias(lookup_tables[trimmed_paths])

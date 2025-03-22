@@ -1,0 +1,13 @@
+
+django/contrib/admin/options.py
+
+ 269⋮ 269│                         "class": get_ul_class(self.radio_fields[db_field.name]),
+ 270⋮ 270│                     }
+ 271⋮ 271│                 )
+ 272⋮    │-                kwargs["empty_label"] = _("None") if db_field.blank else None
+    ⋮ 272│+                kwargs["empty_label"] = (
+    ⋮ 273│+                    kwargs.get("empty_label", _("None")) if db_field.blank else None
+    ⋮ 274│+                )
+ 273⋮ 275│ 
+ 274⋮ 276│         if "queryset" not in kwargs:
+ 275⋮ 277│             queryset = self.get_field_queryset(db, db_field, request)

@@ -1,0 +1,11 @@
+
+sphinx/ext/autodoc/typehints.py
+
+ 27 ⋮ 27 │         if callable(obj):
+ 28 ⋮ 28 │             annotations = app.env.temp_data.setdefault('annotations', {})
+ 29 ⋮ 29 │             annotation = annotations.setdefault(name, OrderedDict())
+ 30 ⋮    │-            sig = inspect.signature(obj)
+    ⋮ 30 │+            sig = inspect.signature(obj, type_aliases=app.config.autodoc_type_aliases)
+ 31 ⋮ 31 │             for param in sig.parameters.values():
+ 32 ⋮ 32 │                 if param.annotation is not param.empty:
+ 33 ⋮ 33 │                     annotation[param.name] = typing.stringify(param.annotation)

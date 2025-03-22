@@ -1,0 +1,28 @@
+
+django/db/models/sql/where.py
+
+  6 ⋮  6 │ 
+  7 ⋮  7 │ from django.core.exceptions import EmptyResultSet, FullResultSet
+  8 ⋮  8 │ from django.db.models.expressions import Case, When
+    ⋮  9 │+from django.db.models.functions import Mod
+  9 ⋮ 10 │ from django.db.models.lookups import Exact
+ 10 ⋮ 11 │ from django.utils import tree
+ 11 ⋮ 12 │ from django.utils.functional import cached_property
+
+ 129⋮ 130│             # Convert if the database doesn't support XOR:
+ 130⋮ 131│             #   a XOR b XOR c XOR ...
+ 131⋮ 132│             # to:
+ 132⋮    │-            #   (a OR b OR c OR ...) AND (a + b + c + ...) == 1
+    ⋮ 133│+            #   (a OR b OR c OR ...) AND MOD(a + b + c + ..., 2) == 1
+    ⋮ 134│+            # The result of an n-ary XOR is true when an odd number of operands
+    ⋮ 135│+            # are true.
+ 133⋮ 136│             lhs = self.__class__(self.children, OR)
+ 134⋮ 137│             rhs_sum = reduce(
+ 135⋮ 138│                 operator.add,
+ 136⋮ 139│                 (Case(When(c, then=1), default=0) for c in self.children),
+ 137⋮ 140│             )
+    ⋮ 141│+            if len(self.children) > 2:
+    ⋮ 142│+                rhs_sum = Mod(rhs_sum, 2)
+ 138⋮ 143│             rhs = Exact(1, rhs_sum)
+ 139⋮ 144│             return self.__class__([lhs, rhs], AND, self.negated).as_sql(
+ 140⋮ 145│                 compiler, connection

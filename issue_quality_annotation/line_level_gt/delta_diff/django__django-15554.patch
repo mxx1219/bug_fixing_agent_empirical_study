@@ -1,0 +1,116 @@
+
+django/db/models/sql/query.py
+
+1011⋮1011│         """
+1012⋮1012│         return len([1 for count in self.alias_refcount.values() if count])
+1013⋮1013│ 
+1014⋮    │-    def join(self, join, reuse=None):
+    ⋮1014│+    def join(self, join, reuse=None, reuse_with_filtered_relation=False):
+1015⋮1015│         """
+1016⋮1016│         Return an alias for the 'join', either reusing an existing alias for
+1017⋮1017│         that join or creating a new one. 'join' is either a base_table_class or
+
+1020⋮1020│         The 'reuse' parameter can be either None which means all joins are
+1021⋮1021│         reusable, or it can be a set containing the aliases that can be reused.
+1022⋮1022│ 
+    ⋮1023│+        The 'reuse_with_filtered_relation' parameter is used when computing
+    ⋮1024│+        FilteredRelation instances.
+    ⋮1025│+
+1023⋮1026│         A join is always created as LOUTER if the lhs alias is LOUTER to make
+1024⋮1027│         sure chains like t1 LOUTER t2 INNER t3 aren't generated. All new
+1025⋮1028│         joins are created as LOUTER if the join is nullable.
+1026⋮1029│         """
+1027⋮    │-        reuse_aliases = [
+1028⋮    │-            a
+1029⋮    │-            for a, j in self.alias_map.items()
+1030⋮    │-            if (reuse is None or a in reuse) and j.equals(join)
+1031⋮    │-        ]
+    ⋮1030│+        if reuse_with_filtered_relation and reuse:
+    ⋮1031│+            reuse_aliases = [
+    ⋮1032│+                a for a, j in self.alias_map.items() if a in reuse and j.equals(join)
+    ⋮1033│+            ]
+    ⋮1034│+        else:
+    ⋮1035│+            reuse_aliases = [
+    ⋮1036│+                a
+    ⋮1037│+                for a, j in self.alias_map.items()
+    ⋮1038│+                if (reuse is None or a in reuse) and j == join
+    ⋮1039│+            ]
+1032⋮1040│         if reuse_aliases:
+1033⋮1041│             if join.table_alias in reuse_aliases:
+1034⋮1042│                 reuse_alias = join.table_alias
+
+1323⋮1331│         can_reuse=None,
+1324⋮1332│         allow_joins=True,
+1325⋮1333│         split_subq=True,
+    ⋮1334│+        reuse_with_filtered_relation=False,
+1326⋮1335│         check_filterable=True,
+1327⋮1336│     ):
+1328⋮1337│         """
+
+1346⋮1355│ 
+1347⋮1356│         The 'can_reuse' is a set of reusable joins for multijoins.
+1348⋮1357│ 
+    ⋮1358│+        If 'reuse_with_filtered_relation' is True, then only joins in can_reuse
+    ⋮1359│+        will be reused.
+    ⋮1360│+
+1349⋮1361│         The method will create a filter clause that can be added to the current
+1350⋮1362│         query. However, if the filter isn't added to the query then the caller
+1351⋮1363│         is responsible for unreffing the joins used.
+
+1404⋮1416│                 alias,
+1405⋮1417│                 can_reuse=can_reuse,
+1406⋮1418│                 allow_many=allow_many,
+    ⋮1419│+                reuse_with_filtered_relation=reuse_with_filtered_relation,
+1407⋮1420│             )
+1408⋮1421│ 
+1409⋮1422│             # Prevent iterator from being consumed by check_related_objects()
+
+1565⋮1578│                     current_negated=current_negated,
+1566⋮1579│                     allow_joins=True,
+1567⋮1580│                     split_subq=False,
+    ⋮1581│+                    reuse_with_filtered_relation=True,
+1568⋮1582│                 )
+1569⋮1583│             target_clause.add(child_clause, connector)
+1570⋮1584│         return target_clause
+
+1716⋮1730│                 break
+1717⋮1731│         return path, final_field, targets, names[pos + 1 :]
+1718⋮1732│ 
+1719⋮    │-    def setup_joins(self, names, opts, alias, can_reuse=None, allow_many=True):
+    ⋮1733│+    def setup_joins(
+    ⋮1734│+        self,
+    ⋮1735│+        names,
+    ⋮1736│+        opts,
+    ⋮1737│+        alias,
+    ⋮1738│+        can_reuse=None,
+    ⋮1739│+        allow_many=True,
+    ⋮1740│+        reuse_with_filtered_relation=False,
+    ⋮1741│+    ):
+1720⋮1742│         """
+1721⋮1743│         Compute the necessary table joins for the passage through the fields
+1722⋮1744│         given in 'names'. 'opts' is the Options class for the current model
+
+1728⋮1750│         that can be reused. Note that non-reverse foreign keys are always
+1729⋮1751│         reusable when using setup_joins().
+1730⋮1752│ 
+    ⋮1753│+        The 'reuse_with_filtered_relation' can be used to force 'can_reuse'
+    ⋮1754│+        parameter and force the relation on the given connections.
+    ⋮1755│+
+1731⋮1756│         If 'allow_many' is False, then any reverse foreign key seen will
+1732⋮1757│         generate a MultiJoin exception.
+1733⋮1758│ 
+
+1818⋮1843│                 nullable,
+1819⋮1844│                 filtered_relation=filtered_relation,
+1820⋮1845│             )
+1821⋮    │-            reuse = can_reuse if join.m2m else None
+1822⋮    │-            alias = self.join(connection, reuse=reuse)
+    ⋮1846│+            reuse = can_reuse if join.m2m or reuse_with_filtered_relation else None
+    ⋮1847│+            alias = self.join(
+    ⋮1848│+                connection,
+    ⋮1849│+                reuse=reuse,
+    ⋮1850│+                reuse_with_filtered_relation=reuse_with_filtered_relation,
+    ⋮1851│+            )
+1823⋮1852│             joins.append(alias)
+1824⋮1853│             if filtered_relation:
+1825⋮1854│                 filtered_relation.path = joins[:]

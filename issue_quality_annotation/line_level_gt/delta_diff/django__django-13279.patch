@@ -1,0 +1,25 @@
+
+django/contrib/sessions/backends/base.py
+
+ 108⋮ 108│ 
+ 109⋮ 109│     def encode(self, session_dict):
+ 110⋮ 110│         "Return the given session dictionary serialized and encoded as a string."
+    ⋮ 111│+        # RemovedInDjango40Warning: DEFAULT_HASHING_ALGORITHM will be removed.
+    ⋮ 112│+        if settings.DEFAULT_HASHING_ALGORITHM == 'sha1':
+    ⋮ 113│+            return self._legacy_encode(session_dict)
+ 111⋮ 114│         return signing.dumps(
+ 112⋮ 115│             session_dict, salt=self.key_salt, serializer=self.serializer,
+ 113⋮ 116│             compress=True,
+
+ 121⋮ 124│         except Exception:
+ 122⋮ 125│             return self._legacy_decode(session_data)
+ 123⋮ 126│ 
+    ⋮ 127│+    def _legacy_encode(self, session_dict):
+    ⋮ 128│+        # RemovedInDjango40Warning.
+    ⋮ 129│+        serialized = self.serializer().dumps(session_dict)
+    ⋮ 130│+        hash = self._hash(serialized)
+    ⋮ 131│+        return base64.b64encode(hash.encode() + b':' + serialized).decode('ascii')
+    ⋮ 132│+
+ 124⋮ 133│     def _legacy_decode(self, session_data):
+ 125⋮ 134│         # RemovedInDjango40Warning: pre-Django 3.1 format will be invalid.
+ 126⋮ 135│         encoded_data = base64.b64decode(session_data.encode('ascii'))

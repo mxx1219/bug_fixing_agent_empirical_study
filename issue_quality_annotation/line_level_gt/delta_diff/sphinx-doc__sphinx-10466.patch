@@ -1,0 +1,12 @@
+
+sphinx/builders/gettext.py
+
+ 57 ⋮ 57 │ 
+ 58 ⋮ 58 │     def __iter__(self) -> Generator[Message, None, None]:
+ 59 ⋮ 59 │         for message in self.messages:
+ 60 ⋮    │-            positions = [(source, line) for source, line, uuid in self.metadata[message]]
+    ⋮ 60 │+            positions = sorted(set((source, line) for source, line, uuid
+    ⋮ 61 │+                                   in self.metadata[message]))
+ 61 ⋮ 62 │             uuids = [uuid for source, line, uuid in self.metadata[message]]
+ 62 ⋮ 63 │             yield Message(message, positions, uuids)
+ 63 ⋮ 64 │ 

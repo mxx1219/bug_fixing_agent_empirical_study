@@ -1,0 +1,19 @@
+
+sympy/polys/rings.py
+
+ 616⋮ 616│             return new_ring.from_dict(self, self.ring.domain)
+ 617⋮ 617│ 
+ 618⋮ 618│     def as_expr(self, *symbols):
+ 619⋮    │-        if symbols and len(symbols) != self.ring.ngens:
+ 620⋮    │-            raise ValueError("not enough symbols, expected %s got %s" % (self.ring.ngens, len(symbols)))
+ 621⋮    │-        else:
+    ⋮ 619│+        if not symbols:
+ 622⋮ 620│             symbols = self.ring.symbols
+    ⋮ 621│+        elif len(symbols) != self.ring.ngens:
+    ⋮ 622│+            raise ValueError(
+    ⋮ 623│+                "Wrong number of symbols, expected %s got %s" %
+    ⋮ 624│+                (self.ring.ngens, len(symbols))
+    ⋮ 625│+            )
+ 623⋮ 626│ 
+ 624⋮ 627│         return expr_from_dict(self.as_expr_dict(), *symbols)
+ 625⋮ 628│ 

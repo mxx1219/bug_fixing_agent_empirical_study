@@ -1,0 +1,13 @@
+
+django/contrib/admin/sites.py
+
+ 453⋮ 453│                 pass
+ 454⋮ 454│             else:
+ 455⋮ 455│                 if getattr(match.func, "should_append_slash", True):
+ 456⋮    │-                    return HttpResponsePermanentRedirect("%s/" % request.path)
+    ⋮ 456│+                    return HttpResponsePermanentRedirect(
+    ⋮ 457│+                        request.get_full_path(force_append_slash=True)
+    ⋮ 458│+                    )
+ 457⋮ 459│         raise Http404
+ 458⋮ 460│ 
+ 459⋮ 461│     def _build_app_dict(self, request, label=None):

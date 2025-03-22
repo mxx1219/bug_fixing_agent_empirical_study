@@ -1,0 +1,15 @@
+
+pylint/__init__.py
+
+ 96 ⋮ 96 │       if pylint is installed in an editable configuration (as the last item).
+ 97 ⋮ 97 │       https://github.com/PyCQA/pylint/issues/4161
+ 98 ⋮ 98 │     """
+ 99 ⋮    │-    sys.path.pop(0)
+ 100⋮    │-    env_pythonpath = os.environ.get("PYTHONPATH", "")
+ 101⋮ 99 │     cwd = os.getcwd()
+    ⋮ 100│+    if sys.path[0] in ("", ".", cwd):
+    ⋮ 101│+        sys.path.pop(0)
+    ⋮ 102│+    env_pythonpath = os.environ.get("PYTHONPATH", "")
+ 102⋮ 103│     if env_pythonpath.startswith(":") and env_pythonpath not in (f":{cwd}", ":."):
+ 103⋮ 104│         sys.path.pop(0)
+ 104⋮ 105│     elif env_pythonpath.endswith(":") and env_pythonpath not in (f"{cwd}:", ".:"):

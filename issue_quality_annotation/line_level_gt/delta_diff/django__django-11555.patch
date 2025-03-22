@@ -1,0 +1,12 @@
+
+django/db/models/sql/compiler.py
+
+ 722⋮ 722│ 
+ 723⋮ 723│             results = []
+ 724⋮ 724│             for item in opts.ordering:
+    ⋮ 725│+                if isinstance(item, OrderBy):
+    ⋮ 726│+                    results.append((item, False))
+    ⋮ 727│+                    continue
+ 725⋮ 728│                 results.extend(self.find_ordering_name(item, opts, alias,
+ 726⋮ 729│                                                        order, already_seen))
+ 727⋮ 730│             return results

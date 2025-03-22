@@ -1,0 +1,13 @@
+
+django/db/models/fields/__init__.py
+
+2325⋮2325│     def get_internal_type(self):
+2326⋮2326│         return "UUIDField"
+2327⋮2327│ 
+    ⋮2328│+    def get_prep_value(self, value):
+    ⋮2329│+        value = super().get_prep_value(value)
+    ⋮2330│+        return self.to_python(value)
+    ⋮2331│+
+2328⋮2332│     def get_db_prep_value(self, value, connection, prepared=False):
+2329⋮2333│         if value is None:
+2330⋮2334│             return None

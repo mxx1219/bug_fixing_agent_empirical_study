@@ -1,0 +1,18 @@
+
+django/core/cache/backends/db.py
+
+ 267⋮ 267│                 cursor.execute(
+ 268⋮ 268│                     connection.ops.cache_key_culling_sql() % table,
+ 269⋮ 269│                     [cull_num])
+ 270⋮    │-                cursor.execute("DELETE FROM %s "
+ 271⋮    │-                               "WHERE cache_key < %%s" % table,
+ 272⋮    │-                               [cursor.fetchone()[0]])
+    ⋮ 270│+                last_cache_key = cursor.fetchone()
+    ⋮ 271│+                if last_cache_key:
+    ⋮ 272│+                    cursor.execute(
+    ⋮ 273│+                        'DELETE FROM %s WHERE cache_key < %%s' % table,
+    ⋮ 274│+                        [last_cache_key[0]],
+    ⋮ 275│+                    )
+ 273⋮ 276│ 
+ 274⋮ 277│     def clear(self):
+ 275⋮ 278│         db = router.db_for_write(self.cache_model_class)

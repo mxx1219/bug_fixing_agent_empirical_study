@@ -1,0 +1,110 @@
+
+xarray/core/indexing.py
+
+  3 ⋮  3 │ from collections import defaultdict
+  4 ⋮  4 │ from contextlib import suppress
+  5 ⋮  5 │ from datetime import timedelta
+  6 ⋮    │-from typing import Sequence
+    ⋮  6 │+from typing import Any, Tuple, Sequence, Union
+  7 ⋮  7 │ 
+  8 ⋮  8 │ import numpy as np
+  9 ⋮  9 │ import pandas as pd
+ 10 ⋮ 10 │ 
+ 11 ⋮ 11 │ from . import duck_array_ops, nputils, utils
+    ⋮ 12 │+from .npcompat import DTypeLike
+ 12 ⋮ 13 │ from .pycompat import dask_array_type, integer_types
+ 13 ⋮ 14 │ from .utils import is_dict_like
+ 14 ⋮ 15 │ 
+
+1227⋮1228│ 
+1228⋮1229│ 
+1229⋮1230│ class PandasIndexAdapter(ExplicitlyIndexedNDArrayMixin):
+1230⋮    │-    """Wrap a pandas.Index to preserve dtypes and handle explicit indexing."""
+    ⋮1231│+    """Wrap a pandas.Index to preserve dtypes and handle explicit indexing.
+    ⋮1232│+    """
+1231⋮1233│ 
+1232⋮    │-    def __init__(self, array, dtype=None):
+    ⋮1234│+    def __init__(self, array: Any, dtype: DTypeLike = None):
+1233⋮1235│         self.array = utils.safe_cast_to_index(array)
+1234⋮1236│         if dtype is None:
+1235⋮1237│             if isinstance(array, pd.PeriodIndex):
+
+1241⋮1243│                 dtype = np.dtype('O')
+1242⋮1244│             else:
+1243⋮1245│                 dtype = array.dtype
+    ⋮1246│+        else:
+    ⋮1247│+            dtype = np.dtype(dtype)
+1244⋮1248│         self._dtype = dtype
+1245⋮1249│ 
+1246⋮1250│     @property
+1247⋮    │-    def dtype(self):
+    ⋮1251│+    def dtype(self) -> np.dtype:
+1248⋮1252│         return self._dtype
+1249⋮1253│ 
+1250⋮    │-    def __array__(self, dtype=None):
+    ⋮1254│+    def __array__(self, dtype: DTypeLike = None) -> np.ndarray:
+1251⋮1255│         if dtype is None:
+1252⋮1256│             dtype = self.dtype
+1253⋮1257│         array = self.array
+
+1258⋮1262│         return np.asarray(array.values, dtype=dtype)
+1259⋮1263│ 
+1260⋮1264│     @property
+1261⋮    │-    def shape(self):
+    ⋮1265│+    def shape(self) -> Tuple[int]:
+1262⋮1266│         # .shape is broken on pandas prior to v0.15.2
+1263⋮1267│         return (len(self.array),)
+1264⋮1268│ 
+1265⋮    │-    def __getitem__(self, indexer):
+    ⋮1269│+    def __getitem__(
+    ⋮1270│+            self, indexer
+    ⋮1271│+    ) -> Union[
+    ⋮1272│+        NumpyIndexingAdapter,
+    ⋮1273│+        np.ndarray,
+    ⋮1274│+        np.datetime64,
+    ⋮1275│+        np.timedelta64,
+    ⋮1276│+    ]:
+1266⋮1277│         key = indexer.tuple
+1267⋮1278│         if isinstance(key, tuple) and len(key) == 1:
+1268⋮1279│             # unpack key so it can index a pandas.Index object (pandas.Index
+
+1299⋮1310│ 
+1300⋮1311│         return result
+1301⋮1312│ 
+1302⋮    │-    def transpose(self, order):
+    ⋮1313│+    def transpose(self, order) -> pd.Index:
+1303⋮1314│         return self.array  # self.array should be always one-dimensional
+1304⋮1315│ 
+1305⋮    │-    def __repr__(self):
+    ⋮1316│+    def __repr__(self) -> str:
+1306⋮1317│         return ('%s(array=%r, dtype=%r)'
+1307⋮1318│                 % (type(self).__name__, self.array, self.dtype))
+    ⋮1319│+
+    ⋮1320│+    def copy(self, deep: bool = True) -> 'PandasIndexAdapter':
+    ⋮1321│+        # Not the same as just writing `self.array.copy(deep=deep)`, as
+    ⋮1322│+        # shallow copies of the underlying numpy.ndarrays become deep ones
+    ⋮1323│+        # upon pickling
+    ⋮1324│+        # >>> len(pickle.dumps((self.array, self.array)))
+    ⋮1325│+        # 4000281
+    ⋮1326│+        # >>> len(pickle.dumps((self.array, self.array.copy(deep=False))))
+    ⋮1327│+        # 8000341
+    ⋮1328│+        array = self.array.copy(deep=True) if deep else self.array
+    ⋮1329│+        return PandasIndexAdapter(array, self._dtype)
+
+xarray/core/variable.py
+
+1942⋮1942│             data copied from original.
+1943⋮1943│         """
+1944⋮1944│         if data is None:
+1945⋮    │-            if deep:
+1946⋮    │-                # self._data should be a `PandasIndexAdapter` instance at this
+1947⋮    │-                # point, which doesn't have a copy method, so make a deep copy
+1948⋮    │-                # of the underlying `pandas.MultiIndex` and create a new
+1949⋮    │-                # `PandasIndexAdapter` instance with it.
+1950⋮    │-                data = PandasIndexAdapter(self._data.array.copy(deep=True))
+1951⋮    │-            else:
+1952⋮    │-                data = self._data
+    ⋮1945│+            data = self._data.copy(deep=deep)
+1953⋮1946│         else:
+1954⋮1947│             data = as_compatible_data(data)
+1955⋮1948│             if self.shape != data.shape:

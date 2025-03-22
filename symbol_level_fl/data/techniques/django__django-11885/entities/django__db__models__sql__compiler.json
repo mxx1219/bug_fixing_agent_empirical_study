@@ -1,0 +1,206 @@
+[
+    {
+        "type": "functions",
+        "line_range": "1509-1518"
+    },
+    {
+        "type": "methods",
+        "line_range": "20-34"
+    },
+    {
+        "type": "methods",
+        "line_range": "36-40"
+    },
+    {
+        "type": "methods",
+        "line_range": "42-54"
+    },
+    {
+        "type": "methods",
+        "line_range": "56-132"
+    },
+    {
+        "type": "methods",
+        "line_range": "134-182"
+    },
+    {
+        "type": "methods",
+        "line_range": "184-235,242-254"
+    },
+    {
+        "type": "methods",
+        "line_range": "236-241"
+    },
+    {
+        "type": "methods",
+        "line_range": "256-378"
+    },
+    {
+        "type": "methods",
+        "line_range": "380-388"
+    },
+    {
+        "type": "methods",
+        "line_range": "390-405"
+    },
+    {
+        "type": "methods",
+        "line_range": "407-413"
+    },
+    {
+        "type": "methods",
+        "line_range": "415-468"
+    },
+    {
+        "type": "methods",
+        "line_range": "470-620"
+    },
+    {
+        "type": "methods",
+        "line_range": "622-664"
+    },
+    {
+        "type": "methods",
+        "line_range": "666-688"
+    },
+    {
+        "type": "methods",
+        "line_range": "690-724"
+    },
+    {
+        "type": "methods",
+        "line_range": "726-737"
+    },
+    {
+        "type": "methods",
+        "line_range": "739-771"
+    },
+    {
+        "type": "methods",
+        "line_range": "773-780,788-806,809-903,908,911-946"
+    },
+    {
+        "type": "methods",
+        "line_range": "781-787"
+    },
+    {
+        "type": "methods",
+        "line_range": "807-808"
+    },
+    {
+        "type": "methods",
+        "line_range": "904-907"
+    },
+    {
+        "type": "methods",
+        "line_range": "909-910"
+    },
+    {
+        "type": "methods",
+        "line_range": "948-952,971-1005"
+    },
+    {
+        "type": "methods",
+        "line_range": "953-970"
+    },
+    {
+        "type": "methods",
+        "line_range": "1007-1015"
+    },
+    {
+        "type": "methods",
+        "line_range": "1017-1025"
+    },
+    {
+        "type": "methods",
+        "line_range": "1027-1036"
+    },
+    {
+        "type": "methods",
+        "line_range": "1038-1050"
+    },
+    {
+        "type": "methods",
+        "line_range": "1052-1060"
+    },
+    {
+        "type": "methods",
+        "line_range": "1062-1127"
+    },
+    {
+        "type": "methods",
+        "line_range": "1129-1140"
+    },
+    {
+        "type": "methods",
+        "line_range": "1142-1150"
+    },
+    {
+        "type": "methods",
+        "line_range": "1157-1187"
+    },
+    {
+        "type": "methods",
+        "line_range": "1189-1216"
+    },
+    {
+        "type": "methods",
+        "line_range": "1218-1225"
+    },
+    {
+        "type": "methods",
+        "line_range": "1227-1260"
+    },
+    {
+        "type": "methods",
+        "line_range": "1262-1321"
+    },
+    {
+        "type": "methods",
+        "line_range": "1323-1341"
+    },
+    {
+        "type": "methods",
+        "line_range": "1345-1357"
+    },
+    {
+        "type": "methods",
+        "line_range": "1361-1422"
+    },
+    {
+        "type": "methods",
+        "line_range": "1424-1443"
+    },
+    {
+        "type": "methods",
+        "line_range": "1445-1485"
+    },
+    {
+        "type": "methods",
+        "line_range": "1489-1506"
+    },
+    {
+        "type": "classes",
+        "line_range": "19,35,41,55,133,183,255,379,389,406,414,469,621,665,689,725,738,772,947,1006,1016,1026,1037,1051,1061,1128,1141"
+    },
+    {
+        "type": "classes",
+        "line_range": "1153-1156,1188,1217,1226,1261,1322"
+    },
+    {
+        "type": "classes",
+        "line_range": "1344"
+    },
+    {
+        "type": "classes",
+        "line_range": "1360,1423,1444"
+    },
+    {
+        "type": "classes",
+        "line_range": "1488"
+    },
+    {
+        "type": "imports",
+        "line_range": "1-16"
+    }
+]

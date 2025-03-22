@@ -1,0 +1,19 @@
+
+django/db/models/sql/query.py
+
+ 305⋮ 305│             obj.annotation_select_mask = None
+ 306⋮ 306│         else:
+ 307⋮ 307│             obj.annotation_select_mask = self.annotation_select_mask.copy()
+    ⋮ 308│+        obj.combined_queries = tuple(query.clone() for query in self.combined_queries)
+ 308⋮ 309│         # _annotation_select_cache cannot be copied, as doing so breaks the
+ 309⋮ 310│         # (necessary) state in which both annotations and
+ 310⋮ 311│         # _annotation_select_cache point to the same underlying objects.
+
+1777⋮1778│ 
+1778⋮1779│     def set_empty(self):
+1779⋮1780│         self.where.add(NothingNode(), AND)
+    ⋮1781│+        for query in self.combined_queries:
+    ⋮1782│+            query.set_empty()
+1780⋮1783│ 
+1781⋮1784│     def is_empty(self):
+1782⋮1785│         return any(isinstance(c, NothingNode) for c in self.where.children)

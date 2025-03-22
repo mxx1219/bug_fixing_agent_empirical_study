@@ -1,0 +1,21 @@
+
+sympy/core/relational.py
+
+ 389⋮ 389│     def _eval_as_set(self):
+ 390⋮ 390│         # self is univariate and periodicity(self, x) in (0, None)
+ 391⋮ 391│         from sympy.solvers.inequalities import solve_univariate_inequality
+    ⋮ 392│+        from sympy.sets.conditionset import ConditionSet
+ 392⋮ 393│         syms = self.free_symbols
+ 393⋮ 394│         assert len(syms) == 1
+ 394⋮ 395│         x = syms.pop()
+ 395⋮    │-        return solve_univariate_inequality(self, x, relational=False)
+    ⋮ 396│+        try:
+    ⋮ 397│+            xset = solve_univariate_inequality(self, x, relational=False)
+    ⋮ 398│+        except NotImplementedError:
+    ⋮ 399│+            # solve_univariate_inequality raises NotImplementedError for
+    ⋮ 400│+            # unsolvable equations/inequalities.
+    ⋮ 401│+            xset = ConditionSet(x, self, S.Reals)
+    ⋮ 402│+        return xset
+ 396⋮ 403│ 
+ 397⋮ 404│     @property
+ 398⋮ 405│     def binary_symbols(self):

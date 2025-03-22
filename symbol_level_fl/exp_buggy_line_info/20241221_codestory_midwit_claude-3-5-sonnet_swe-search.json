@@ -1,0 +1,3526 @@
+{
+    "astropy__astropy-12907": {
+        "astropy/modeling/separable.py": [
+            237,
+            242,
+            245
+        ]
+    },
+    "astropy__astropy-13033": {
+        "astropy/timeseries/core.py": [
+            69,
+            70,
+            72,
+            78,
+            79,
+            80,
+            81
+        ]
+    },
+    "astropy__astropy-13236": {
+        "astropy/table/table.py": [
+            1244
+        ]
+    },
+    "astropy__astropy-13398": {
+        "astropy/coordinates/builtin_frames/__init__.py": [
+            52
+        ]
+    },
+    "astropy__astropy-13453": {
+        "astropy/io/ascii/html.py": [
+            433,
+            434,
+            440
+        ]
+    },
+    "astropy__astropy-13579": {
+        "astropy/wcs/wcsapi/wrappers/sliced_wcs.py": [
+            254
+        ]
+    },
+    "astropy__astropy-13977": {
+        "astropy/units/quantity.py": [
+            669
+        ]
+    },
+    "astropy__astropy-14096": {
+        "astropy/coordinates/sky_coordinate.py": [
+            869
+        ]
+    },
+    "astropy__astropy-14182": {
+        "astropy/io/ascii/rst.py": [
+            35,
+            60,
+            61,
+            65
+        ]
+    },
+    "astropy__astropy-14309": {
+        "astropy/io/fits/connect.py": [
+            72
+        ]
+    },
+    "astropy__astropy-14365": {
+        "astropy/io/ascii/qdp.py": [
+            71
+        ]
+    },
+    "astropy__astropy-14369": {
+        "astropy/io/ascii/cds.py": [
+            133
+        ],
+        "astropy/units/format/cds.py": [
+            187,
+            190
+        ]
+    },
+    "astropy__astropy-14508": {
+        "astropy/io/fits/card.py": [
+            1300
+        ]
+    },
+    "astropy__astropy-14539": {
+        "astropy/io/fits/diff.py": [
+            1452,
+            1457,
+            1458,
+            1459
+        ]
+    },
+    "astropy__astropy-14598": {
+        "astropy/io/fits/card.py": [
+            771
+        ]
+    },
+    "astropy__astropy-14995": {
+        "astropy/nddata/mixins/ndarithmetic.py": [
+            485,
+            516,
+            517,
+            518,
+            520,
+            521,
+            522,
+            526
+        ]
+    },
+    "astropy__astropy-7166": {
+        "astropy/utils/misc.py": [
+            531
+        ]
+    },
+    "astropy__astropy-7336": {
+        "astropy/units/decorators.py": [
+            223
+        ]
+    },
+    "astropy__astropy-7606": {
+        "astropy/units/core.py": [
+            1712
+        ]
+    },
+    "astropy__astropy-7671": {
+        "astropy/utils/introspection.py": [
+            9,
+            143,
+            145
+        ]
+    },
+    "astropy__astropy-8707": {
+        "astropy/io/fits/card.py": [
+            548,
+            550
+        ],
+        "astropy/io/fits/header.py": [
+            330,
+            332,
+            333,
+            337,
+            338,
+            340
+        ]
+    },
+    "django__django-10097": {
+        "django/core/validators.py": [
+            74,
+            97,
+            134,
+            136
+        ]
+    },
+    "django__django-10554": {
+        "django/db/models/sql/compiler.py": [
+            355,
+            359
+        ]
+    },
+    "django__django-10880": {
+        "django/db/models/aggregates.py": [
+            71
+        ]
+    },
+    "django__django-10914": {
+        "django/conf/global_settings.py": [
+            307
+        ]
+    },
+    "django__django-10973": {
+        "django/db/backends/postgresql/client.py": [
+            5,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            37,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            61,
+            65,
+            66,
+            67,
+            68
+        ]
+    },
+    "django__django-10999": {
+        "django/utils/dateparse.py": [
+            32
+        ]
+    },
+    "django__django-11066": {
+        "django/contrib/contenttypes/management/__init__.py": [
+            27
+        ]
+    },
+    "django__django-11087": {
+        "django/db/models/deletion.py": [
+            204,
+            205,
+            206,
+            207,
+            208,
+            231,
+            235,
+            237
+        ],
+        "django/db/models/sql/compiler.py": [
+            1329
+        ]
+    },
+    "django__django-11095": {
+        "django/contrib/admin/options.py": [
+            538,
+            585
+        ]
+    },
+    "django__django-11099": {
+        "django/contrib/auth/validators.py": [
+            10,
+            20
+        ]
+    },
+    "django__django-11119": {
+        "django/template/engine.py": [
+            163
+        ]
+    },
+    "django__django-11133": {
+        "django/http/response.py": [
+            223
+        ]
+    },
+    "django__django-11138": {
+        "django/db/backends/mysql/operations.py": [
+            73
+        ]
+    },
+    "django__django-11141": {
+        "django/db/migrations/loader.py": [
+            87,
+            88,
+            89,
+            90,
+            91
+        ]
+    },
+    "django__django-11149": {
+        "django/contrib/admin/options.py": [
+            2016,
+            2040,
+            2116,
+            2117,
+            2118,
+            2119,
+            2120,
+            2125,
+            2126,
+            2127,
+            2128,
+            2129,
+            2134,
+            2135,
+            2136,
+            2137,
+            2138
+        ]
+    },
+    "django__django-11163": {
+        "django/forms/models.py": [
+            86
+        ]
+    },
+    "django__django-11179": {
+        "django/db/models/deletion.py": [
+            278
+        ]
+    },
+    "django__django-11206": {
+        "django/utils/numberformat.py": [
+            29,
+            32
+        ]
+    },
+    "django__django-11211": {
+        "django/contrib/contenttypes/fields.py": [
+            205,
+            206
+        ]
+    },
+    "django__django-11239": {
+        "django/db/backends/postgresql/client.py": [
+            12
+        ]
+    },
+    "django__django-11265": {
+        "django/db/models/sql/query.py": [
+            1645
+        ]
+    },
+    "django__django-11276": {
+        "django/utils/html.py": [
+            4,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            37,
+            46
+        ]
+    },
+    "django__django-11292": {
+        "django/core/management/base.py": [
+            249
+        ]
+    },
+    "django__django-11333": {
+        "django/urls/base.py": [
+            10,
+            95
+        ],
+        "django/urls/resolvers.py": [
+            66,
+            67
+        ]
+    },
+    "django__django-11400": {
+        "django/contrib/admin/filters.py": [
+            196,
+            197,
+            198,
+            422
+        ]
+    },
+    "django__django-11433": {
+        "django/forms/models.py": [
+            49,
+            50,
+            52
+        ]
+    },
+    "django__django-11451": {
+        "django/contrib/auth/backends.py": [
+            39
+        ]
+    },
+    "django__django-11477": {
+        "django/urls/base.py": [
+            175
+        ]
+    },
+    "django__django-11490": {
+        "django/db/models/sql/compiler.py": [
+            428
+        ]
+    },
+    "django__django-11532": {
+        "django/core/mail/message.py": [
+            260
+        ],
+        "django/core/mail/utils.py": [
+            16
+        ]
+    },
+    "django__django-11551": {
+        "django/contrib/admin/checks.py": [
+            723,
+            727,
+            728,
+            729,
+            732,
+            734,
+            737,
+            738,
+            739,
+            740,
+            741,
+            742,
+            743,
+            744,
+            745,
+            746,
+            747,
+            748,
+            749
+        ]
+    },
+    "django__django-11555": {
+        "django/db/models/sql/query.py": [
+            2212,
+            2221
+        ]
+    },
+    "django__django-11603": {
+        "django/db/models/aggregates.py": [
+            99,
+            142
+        ]
+    },
+    "django__django-11728": {
+        "django/contrib/admindocs/utils.py": [
+            166,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175
+        ]
+    },
+    "django__django-11734": {
+        "django/db/models/expressions.py": [
+            555,
+            570
+        ]
+    },
+    "django__django-11740": {
+        "django/db/migrations/autodetector.py": [
+            966,
+            967,
+            968,
+            969,
+            970,
+            971,
+            972,
+            974
+        ]
+    },
+    "django__django-11749": {
+        "django/core/management/__init__.py": [
+            76
+        ]
+    },
+    "django__django-11790": {
+        "django/contrib/auth/forms.py": [
+            65,
+            66,
+            69,
+            194
+        ]
+    },
+    "django__django-11815": {
+        "django/db/migrations/serializer.py": [
+            123,
+            124,
+            125
+        ]
+    },
+    "django__django-11820": {
+        "django/db/models/base.py": [
+            1710
+        ]
+    },
+    "django__django-11848": {
+        "django/utils/http.py": [
+            179,
+            180,
+            181,
+            182
+        ]
+    },
+    "django__django-11880": {},
+    "django__django-11951": {
+        "django/db/models/query.py": [
+            1212
+        ]
+    },
+    "django__django-11964": {
+        "django/db/models/enums.py": [
+            68,
+            71
+        ]
+    },
+    "django__django-11999": {
+        "django/db/models/fields/__init__.py": [
+            766,
+            767
+        ]
+    },
+    "django__django-12039": {
+        "django/db/backends/ddl_references.py": [
+            87,
+            115,
+            117
+        ]
+    },
+    "django__django-12050": {
+        "django/db/models/sql/query.py": [
+            1076
+        ]
+    },
+    "django__django-12125": {
+        "django/db/migrations/serializer.py": [
+            93
+        ],
+        "django/db/models/fields/__init__.py": [
+            414
+        ]
+    },
+    "django__django-12143": {
+        "django/contrib/admin/options.py": [
+            1634
+        ]
+    },
+    "django__django-12155": {
+        "django/contrib/admindocs/utils.py": [
+            37,
+            38
+        ]
+    },
+    "django__django-12193": {
+        "django/forms/widgets.py": [
+            525,
+            526
+        ]
+    },
+    "django__django-12209": {
+        "django/db/models/base.py": [
+            850,
+            855
+        ]
+    },
+    "django__django-12262": {
+        "django/template/library.py": [
+            261,
+            264,
+            265,
+            266,
+            267,
+            268,
+            269
+        ]
+    },
+    "django__django-12273": {
+        "django/db/models/base.py": [
+            807,
+            808,
+            809,
+            810
+        ]
+    },
+    "django__django-12276": {
+        "django/forms/widgets.py": [
+            374,
+            454,
+            455,
+            456
+        ]
+    },
+    "django__django-12304": {
+        "django/db/models/enums.py": [
+            11,
+            72,
+            74,
+            77
+        ]
+    },
+    "django__django-12308": {
+        "django/contrib/admin/utils.py": [
+            401,
+            402
+        ]
+    },
+    "django__django-12325": {
+        "django/db/models/options.py": [
+            243,
+            244,
+            245,
+            246,
+            247,
+            248,
+            249,
+            250,
+            251,
+            252,
+            253,
+            254,
+            256
+        ]
+    },
+    "django__django-12419": {
+        "django/conf/global_settings.py": [
+            640
+        ]
+    },
+    "django__django-12663": {
+        "django/db/models/lookups.py": [
+            14,
+            74
+        ]
+    },
+    "django__django-12713": {
+        "django/contrib/admin/options.py": [
+            252,
+            253,
+            254,
+            255,
+            256,
+            257,
+            258,
+            259,
+            260,
+            261
+        ]
+    },
+    "django__django-12741": {
+        "django/core/management/commands/flush.py": [
+            63
+        ],
+        "django/db/backends/base/operations.py": [
+            403,
+            405
+        ],
+        "tests/backends/base/test_operations.py": [
+            175
+        ],
+        "tests/backends/tests.py": [
+            165,
+            166
+        ]
+    },
+    "django__django-12754": {
+        "django/db/migrations/autodetector.py": [
+            345,
+            374,
+            528
+        ]
+    },
+    "django__django-12774": {
+        "django/db/models/query.py": [
+            18,
+            692,
+            693
+        ]
+    },
+    "django__django-12858": {
+        "django/db/models/base.py": [
+            1738,
+            1743,
+            1750
+        ]
+    },
+    "django__django-12965": {
+        "django/db/models/sql/compiler.py": [
+            1421,
+            1426
+        ]
+    },
+    "django__django-13012": {},
+    "django__django-13023": {
+        "django/db/models/fields/__init__.py": [
+            1504
+        ]
+    },
+    "django__django-13028": {
+        "django/db/models/sql/query.py": [
+            1127
+        ]
+    },
+    "django__django-13033": {
+        "django/db/models/sql/compiler.py": [
+            728,
+            729,
+            730
+        ]
+    },
+    "django__django-13089": {
+        "django/core/cache/backends/db.py": [
+            270,
+            271,
+            272
+        ]
+    },
+    "django__django-13109": {
+        "django/db/models/fields/related.py": [
+            917
+        ]
+    },
+    "django__django-13112": {
+        "django/apps/registry.py": [
+            154,
+            156
+        ],
+        "django/db/models/fields/related.py": [
+            55,
+            56
+        ]
+    },
+    "django__django-13121": {
+        "django/db/backends/base/operations.py": [
+            582
+        ],
+        "django/db/backends/mysql/operations.py": [
+            313,
+            314,
+            315,
+            316
+        ],
+        "django/db/backends/sqlite3/operations.py": [
+            41,
+            42,
+            43
+        ]
+    },
+    "django__django-13128": {
+        "django/db/models/expressions.py": [
+            287,
+            301,
+            302,
+            303,
+            304,
+            305,
+            306,
+            307,
+            308,
+            309,
+            310,
+            312
+        ]
+    },
+    "django__django-13158": {
+        "django/db/models/query.py": [
+            919
+        ]
+    },
+    "django__django-13195": {
+        "django/http/response.py": [
+            213,
+            217
+        ]
+    },
+    "django__django-13212": {
+        "django/core/validators.py": [
+            51,
+            103,
+            107,
+            118,
+            135,
+            142,
+            211,
+            216,
+            228
+        ]
+    },
+    "django__django-13279": {
+        "django/core/signing.py": [
+            121,
+            122,
+            123,
+            124,
+            127,
+            135,
+            171
+        ]
+    },
+    "django__django-13297": {
+        "django/db/backends/base/operations.py": [
+            14,
+            472
+        ],
+        "django/db/backends/sqlite3/base.py": [
+            402,
+            412,
+            416
+        ],
+        "django/db/backends/sqlite3/operations.py": [
+            17,
+            134,
+            140
+        ],
+        "django/shortcuts.py": [
+            57,
+            76
+        ],
+        "django/urls/resolvers.py": [
+            163
+        ]
+    },
+    "django__django-13315": {
+        "django/forms/models.py": [
+            103
+        ]
+    },
+    "django__django-13343": {
+        "django/db/models/fields/files.py": [
+            230,
+            231,
+            232,
+            282
+        ]
+    },
+    "django__django-13344": {
+        "django/core/handlers/asgi.py": [
+            136
+        ],
+        "django/core/handlers/base.py": [
+            20,
+            54,
+            58,
+            99,
+            113,
+            138,
+            222,
+            230,
+            246,
+            257,
+            270,
+            271,
+            272
+        ]
+    },
+    "django__django-13346": {
+        "django/db/models/fields/json.py": [
+            478,
+            483
+        ]
+    },
+    "django__django-13363": {
+        "django/db/models/functions/datetime.py": [
+            295,
+            308
+        ]
+    },
+    "django__django-13401": {
+        "django/db/models/fields/__init__.py": [
+            519,
+            525,
+            529
+        ]
+    },
+    "django__django-13406": {
+        "django/db/models/query.py": [
+            204,
+            212
+        ],
+        "django/db/models/sql/query.py": [
+            144
+        ]
+    },
+    "django__django-13410": {
+        "django/core/files/locks.py": [
+            110,
+            111,
+            114,
+            115
+        ]
+    },
+    "django__django-13417": {
+        "django/db/models/query.py": [
+            1218
+        ]
+    },
+    "django__django-13449": {
+        "django/db/models/functions/window.py": [
+            28
+        ]
+    },
+    "django__django-13512": {
+        "django/db/models/fields/json.py": [
+            84
+        ],
+        "django/forms/fields.py": [
+            1261
+        ]
+    },
+    "django__django-13513": {
+        "django/views/debug.py": [
+            400
+        ]
+    },
+    "django__django-13516": {
+        "django/core/management/base.py": [
+            120
+        ]
+    },
+    "django__django-13551": {
+        "django/contrib/auth/tokens.py": [
+            97
+        ]
+    },
+    "django__django-13568": {
+        "django/contrib/auth/checks.py": [
+            6,
+            55
+        ]
+    },
+    "django__django-13569": {
+        "django/db/models/sql/compiler.py": [
+            132
+        ]
+    },
+    "django__django-13590": {
+        "django/db/models/sql/query.py": [
+            1080,
+            1083
+        ]
+    },
+    "django__django-13658": {
+        "django/core/management/__init__.py": [
+            347
+        ]
+    },
+    "django__django-13670": {
+        "django/utils/dateformat.py": [
+            328,
+            329
+        ]
+    },
+    "django__django-13741": {
+        "django/contrib/auth/forms.py": [
+            57
+        ]
+    },
+    "django__django-13786": {
+        "django/db/migrations/operations/models.py": [
+            139,
+            144
+        ]
+    },
+    "django__django-13794": {
+        "django/template/defaultfilters.py": [
+            680
+        ]
+    },
+    "django__django-13807": {
+        "django/db/backends/sqlite3/base.py": [
+            330,
+            336
+        ]
+    },
+    "django__django-13809": {
+        "django/core/management/commands/runserver.py": [
+            37,
+            117,
+            118,
+            119,
+            120,
+            121
+        ]
+    },
+    "django__django-13810": {
+        "django/core/handlers/base.py": [
+            53,
+            54,
+            58,
+            59
+        ]
+    },
+    "django__django-13820": {
+        "django/db/migrations/loader.py": [
+            93
+        ]
+    },
+    "django__django-13821": {
+        "django/db/backends/sqlite3/base.py": [
+            67,
+            68
+        ]
+    },
+    "django__django-13837": {
+        "django/utils/autoreload.py": [
+            213,
+            219,
+            220,
+            224,
+            225,
+            226,
+            227
+        ]
+    },
+    "django__django-13925": {
+        "django/db/models/base.py": [
+            1299
+        ]
+    },
+    "django__django-13933": {
+        "django/forms/models.py": [
+            1191,
+            1287
+        ]
+    },
+    "django__django-13964": {
+        "django/db/models/fields/related_descriptors.py": [
+            255
+        ]
+    },
+    "django__django-14007": {
+        "django/db/models/base.py": [
+            874
+        ],
+        "django/db/models/query.py": [
+            507,
+            520
+        ]
+    },
+    "django__django-14011": {
+        "django/test/testcases.py": [
+            1464,
+            1479
+        ]
+    },
+    "django__django-14017": {
+        "django/db/models/query_utils.py": [
+            28,
+            43,
+            52,
+            53,
+            58
+        ]
+    },
+    "django__django-14034": {
+        "django/forms/fields.py": [
+            1028,
+            1038,
+            1039,
+            1040,
+            1041,
+            1042,
+            1043,
+            1044,
+            1045,
+            1046,
+            1047,
+            1048
+        ]
+    },
+    "django__django-14053": {
+        "django/contrib/staticfiles/storage.py": [
+            203,
+            229,
+            230,
+            232,
+            239
+        ]
+    },
+    "django__django-14089": {
+        "django/utils/datastructures.py": [
+            5
+        ]
+    },
+    "django__django-14122": {
+        "django/db/models/sql/compiler.py": [
+            129,
+            130,
+            131
+        ]
+    },
+    "django__django-14140": {
+        "django/db/models/query_utils.py": [
+            90
+        ]
+    },
+    "django__django-14155": {
+        "django/urls/resolvers.py": [
+            34,
+            48,
+            50,
+            53,
+            62,
+            63
+        ]
+    },
+    "django__django-14170": {
+        "django/db/models/lookups.py": [
+            551,
+            552
+        ]
+    },
+    "django__django-14238": {
+        "django/db/models/fields/__init__.py": [
+            2527
+        ]
+    },
+    "django__django-14311": {
+        "django/utils/autoreload.py": [
+            226,
+            227
+        ]
+    },
+    "django__django-14315": {
+        "django/db/backends/postgresql/client.py": [
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53
+        ]
+    },
+    "django__django-14349": {
+        "django/core/validators.py": [
+            101
+        ]
+    },
+    "django__django-14351": {
+        "django/db/models/fields/related_lookups.py": [
+            89,
+            90
+        ]
+    },
+    "django__django-14373": {
+        "django/utils/dateformat.py": [
+            316,
+            317
+        ]
+    },
+    "django__django-14376": {
+        "django/db/backends/mysql/base.py": [
+            203,
+            205
+        ],
+        "django/db/backends/mysql/client.py": [
+            11
+        ]
+    },
+    "django__django-14404": {
+        "django/contrib/admin/sites.py": [
+            423,
+            425
+        ]
+    },
+    "django__django-14434": {
+        "django/db/backends/base/schema.py": [
+            1254
+        ]
+    },
+    "django__django-14493": {
+        "django/contrib/staticfiles/storage.py": [
+            224
+        ]
+    },
+    "django__django-14500": {
+        "django/db/migrations/executor.py": [
+            266,
+            276
+        ]
+    },
+    "django__django-14534": {
+        "django/forms/boundfield.py": [
+            280
+        ]
+    },
+    "django__django-14539": {
+        "django/utils/html.py": [
+            281,
+            282,
+            286,
+            287
+        ]
+    },
+    "django__django-14559": {
+        "django/db/models/query.py": [
+            527,
+            544,
+            568
+        ]
+    },
+    "django__django-14580": {
+        "django/db/migrations/serializer.py": [
+            276,
+            282
+        ],
+        "django/db/migrations/writer.py": [
+            129,
+            166,
+            167
+        ]
+    },
+    "django__django-14608": {
+        "django/forms/formsets.py": [
+            66,
+            290,
+            336,
+            353,
+            383
+        ]
+    },
+    "django__django-14631": {
+        "django/forms/boundfield.py": [
+            15
+        ],
+        "django/forms/forms.py": [
+            52,
+            390,
+            394,
+            397,
+            439,
+            440,
+            441,
+            442,
+            443,
+            444,
+            445,
+            446,
+            447,
+            448,
+            449,
+            450,
+            451,
+            452,
+            453,
+            454,
+            455,
+            456,
+            457,
+            458,
+            459
+        ]
+    },
+    "django__django-14672": {
+        "django/db/models/fields/reverse_related.py": [
+            313
+        ]
+    },
+    "django__django-14725": {
+        "django/forms/models.py": [
+            566,
+            683,
+            814,
+            872,
+            878,
+            879
+        ]
+    },
+    "django__django-14752": {
+        "django/contrib/admin/views/autocomplete.py": [
+            7,
+            29,
+            30
+        ]
+    },
+    "django__django-14765": {
+        "django/db/migrations/state.py": [
+            95
+        ]
+    },
+    "django__django-14771": {
+        "django/utils/autoreload.py": [
+            213
+        ]
+    },
+    "django__django-14787": {
+        "django/utils/decorators.py": [
+            35
+        ]
+    },
+    "django__django-14792": {
+        "django/db/backends/postgresql/operations.py": [
+            46
+        ]
+    },
+    "django__django-14855": {
+        "django/contrib/admin/helpers.py": [
+            212
+        ]
+    },
+    "django__django-14915": {
+        "django/forms/models.py": [
+            1161
+        ]
+    },
+    "django__django-14999": {
+        "django/db/migrations/operations/models.py": [
+            319,
+            370
+        ]
+    },
+    "django__django-15022": {
+        "django/contrib/admin/options.py": [
+            1031,
+            1034,
+            1041
+        ]
+    },
+    "django__django-15037": {
+        "django/core/management/commands/inspectdb.py": [
+            72,
+            118
+        ]
+    },
+    "django__django-15098": {
+        "django/urls/resolvers.py": [
+            316,
+            321,
+            323,
+            325,
+            326
+        ],
+        "django/utils/translation/trans_real.py": [
+            42,
+            46,
+            464,
+            476,
+            479,
+            481,
+            485,
+            486,
+            490,
+            501
+        ]
+    },
+    "django__django-15103": {
+        "django/template/defaultfilters.py": [
+            86,
+            89
+        ],
+        "django/utils/html.py": [
+            64,
+            73,
+            74
+        ]
+    },
+    "django__django-15104": {
+        "django/db/migrations/autodetector.py": [
+            99
+        ]
+    },
+    "django__django-15127": {
+        "django/contrib/messages/storage/base.py": [
+            41
+        ]
+    },
+    "django__django-15128": {
+        "django/db/models/sql/query.py": [
+            764,
+            843,
+            849
+        ]
+    },
+    "django__django-15161": {
+        "django/db/models/expressions.py": [
+            642,
+            654,
+            882,
+            936,
+            956,
+            988,
+            1055,
+            1136,
+            1193,
+            1228,
+            1310
+        ]
+    },
+    "django__django-15252": {
+        "django/db/migrations/recorder.py": [
+            9,
+            59,
+            72,
+            84,
+            89,
+            94
+        ]
+    },
+    "django__django-15268": {
+        "django/db/migrations/operations/models.py": [
+            34,
+            412,
+            470
+        ],
+        "django/db/migrations/optimizer.py": [
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68
+        ]
+    },
+    "django__django-15277": {
+        "django/db/models/fields/__init__.py": [
+            1013
+        ]
+    },
+    "django__django-15278": {
+        "django/db/backends/sqlite3/schema.py": [
+            329,
+            330
+        ]
+    },
+    "django__django-15315": {
+        "django/db/models/fields/__init__.py": [
+            545,
+            546,
+            547,
+            548,
+            549
+        ]
+    },
+    "django__django-15368": {
+        "django/db/models/query.py": [
+            673
+        ]
+    },
+    "django__django-15375": {
+        "django/db/models/aggregates.py": [
+            67,
+            68
+        ],
+        "django/db/models/sql/compiler.py": [
+            1674
+        ]
+    },
+    "django__django-15380": {
+        "django/db/migrations/autodetector.py": [
+            826,
+            827
+        ]
+    },
+    "django__django-15382": {
+        "django/db/models/expressions.py": [
+            1214,
+            1215,
+            1216,
+            1217,
+            1218,
+            1219,
+            1220
+        ],
+        "django/db/models/sql/compiler.py": [
+            563,
+            564
+        ],
+        "django/db/models/sql/where.py": [
+            83,
+            265
+        ]
+    },
+    "django__django-15467": {
+        "django/contrib/admin/options.py": [
+            272
+        ]
+    },
+    "django__django-15499": {
+        "django/db/migrations/operations/models.py": [
+            136
+        ]
+    },
+    "django__django-15503": {
+        "django/db/models/fields/json.py": [
+            132,
+            137,
+            138,
+            230,
+            231,
+            232
+        ]
+    },
+    "django__django-15525": {
+        "django/core/serializers/base.py": [
+            339,
+            340,
+            344
+        ]
+    },
+    "django__django-15561": {
+        "django/db/backends/base/schema.py": [
+            1372,
+            1379
+        ]
+    },
+    "django__django-15563": {
+        "django/db/models/sql/subqueries.py": [
+            87,
+            99,
+            116,
+            122,
+            135,
+            137
+        ]
+    },
+    "django__django-15569": {
+        "django/db/models/query_utils.py": [
+            212
+        ]
+    },
+    "django__django-15572": {
+        "django/template/autoreload.py": [
+            20,
+            28,
+            51
+        ]
+    },
+    "django__django-15629": {
+        "django/db/backends/base/schema.py": [
+            1186,
+            1187,
+            1188,
+            1189,
+            1190,
+            1191,
+            1192,
+            1193,
+            1194,
+            1195,
+            1196
+        ],
+        "django/db/backends/mysql/schema.py": [
+            168
+        ]
+    },
+    "django__django-15695": {
+        "django/db/migrations/operations/models.py": [
+            947,
+            966,
+            969,
+            970,
+            973,
+            974,
+            975,
+            976,
+            977,
+            979,
+            981,
+            982,
+            983,
+            984,
+            985
+        ]
+    },
+    "django__django-15731": {
+        "django/db/models/manager.py": [
+            83,
+            87,
+            88,
+            89
+        ]
+    },
+    "django__django-15732": {
+        "django/db/backends/base/schema.py": [
+            559,
+            571,
+            580
+        ]
+    },
+    "django__django-15741": {
+        "django/utils/formats.py": [
+            100
+        ]
+    },
+    "django__django-15814": {
+        "django/db/models/sql/query.py": [
+            751
+        ]
+    },
+    "django__django-15851": {
+        "django/db/backends/postgresql/client.py": [
+            10,
+            37
+        ]
+    },
+    "django__django-15863": {
+        "django/template/defaultfilters.py": [
+            153,
+            154,
+            155,
+            156,
+            158,
+            159,
+            160
+        ]
+    },
+    "django__django-15916": {
+        "django/forms/models.py": [
+            266
+        ]
+    },
+    "django__django-15930": {
+        "django/db/models/expressions.py": [
+            1288,
+            1301,
+            1302,
+            1303,
+            1307
+        ]
+    },
+    "django__django-15957": {
+        "django/db/models/query.py": [
+            430,
+            1441,
+            1844,
+            2148,
+            2149,
+            2150,
+            2153,
+            2154,
+            2155,
+            2156,
+            2157
+        ]
+    },
+    "django__django-15973": {
+        "django/db/backends/base/schema.py": [
+            453,
+            454,
+            460,
+            461
+        ]
+    },
+    "django__django-15987": {
+        "django/core/management/commands/loaddata.py": [
+            364
+        ]
+    },
+    "django__django-16032": {
+        "django/db/models/lookups.py": [
+            423,
+            424,
+            425
+        ]
+    },
+    "django__django-16082": {
+        "django/db/models/expressions.py": [
+            531
+        ]
+    },
+    "django__django-16100": {
+        "django/contrib/admin/options.py": [
+            2013,
+            2014,
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022,
+            2023,
+            2024,
+            2025,
+            2026,
+            2027,
+            2028,
+            2029,
+            2030,
+            2031,
+            2032
+        ]
+    },
+    "django__django-16116": {
+        "django/core/management/commands/makemigrations.py": [
+            250,
+            255,
+            256
+        ]
+    },
+    "django__django-16136": {
+        "django/views/generic/base.py": [
+            151
+        ]
+    },
+    "django__django-16139": {
+        "django/contrib/auth/forms.py": [
+            166
+        ]
+    },
+    "django__django-16145": {
+        "django/core/management/commands/runserver.py": [
+            102
+        ]
+    },
+    "django__django-16255": {
+        "django/contrib/sitemaps/__init__.py": [
+            171
+        ]
+    },
+    "django__django-16256": {
+        "django/db/models/fields/related_descriptors.py": [
+            638,
+            949
+        ]
+    },
+    "django__django-16315": {
+        "django/db/backends/postgresql/operations.py": [
+            355,
+            357,
+            358,
+            359,
+            360,
+            361,
+            362,
+            363
+        ]
+    },
+    "django__django-16333": {
+        "django/contrib/auth/forms.py": [
+            142
+        ]
+    },
+    "django__django-16429": {
+        "django/utils/timesince.py": [
+            93
+        ]
+    },
+    "django__django-16454": {
+        "django/core/management/base.py": [
+            46
+        ]
+    },
+    "django__django-16485": {
+        "django/template/defaultfilters.py": [
+            186
+        ]
+    },
+    "django__django-16493": {
+        "django/db/models/fields/files.py": [
+            298
+        ]
+    },
+    "django__django-16502": {
+        "django/core/servers/basehttp.py": [
+            113,
+            116
+        ]
+    },
+    "django__django-16527": {
+        "django/contrib/admin/templatetags/admin_modify.py": [
+            94
+        ]
+    },
+    "django__django-16560": {
+        "django/db/models/constraints.py": [
+            19,
+            20,
+            24,
+            25,
+            45,
+            68,
+            85,
+            91,
+            115,
+            120,
+            134,
+            157,
+            216,
+            296,
+            315,
+            388,
+            403,
+            405
+        ]
+    },
+    "django__django-16569": {
+        "django/forms/formsets.py": [
+            493
+        ]
+    },
+    "django__django-16595": {
+        "django/db/migrations/operations/fields.py": [
+            249
+        ]
+    },
+    "django__django-16612": {
+        "django/contrib/admin/sites.py": [
+            456
+        ]
+    },
+    "django__django-16631": {
+        "django/contrib/auth/base_user.py": [
+            139,
+            143
+        ],
+        "django/utils/crypto.py": [
+            18,
+            30,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44
+        ]
+    },
+    "django__django-16642": {
+        "django/http/response.py": [
+            607,
+            611
+        ]
+    },
+    "django__django-16661": {
+        "django/contrib/admin/options.py": [
+            457,
+            468,
+            469
+        ]
+    },
+    "django__django-16662": {
+        "django/db/migrations/writer.py": [
+            176,
+            177,
+            178
+        ]
+    },
+    "django__django-16667": {
+        "django/forms/widgets.py": [
+            1159,
+            1160
+        ]
+    },
+    "django__django-16801": {
+        "django/db/models/fields/files.py": [
+            444
+        ]
+    },
+    "django__django-16819": {
+        "django/db/migrations/operations/models.py": [
+            811,
+            865
+        ]
+    },
+    "django__django-16877": {
+        "django/template/defaultfilters.py": [
+            492
+        ]
+    },
+    "django__django-16899": {
+        "django/contrib/admin/checks.py": [
+            774,
+            775,
+            776
+        ]
+    },
+    "django__django-16901": {
+        "django/db/models/sql/where.py": [
+            132,
+            138
+        ]
+    },
+    "django__django-16938": {
+        "django/core/serializers/python.py": [
+            82
+        ]
+    },
+    "django__django-17029": {
+        "django/apps/registry.py": [
+            370
+        ]
+    },
+    "django__django-17087": {
+        "django/db/migrations/serializer.py": [
+            171
+        ]
+    },
+    "django__django-7530": {
+        "django/core/management/commands/makemigrations.py": [
+            108
+        ]
+    },
+    "django__django-9296": {
+        "django/core/paginator.py": [
+            27
+        ]
+    },
+    "matplotlib__matplotlib-13989": {
+        "lib/matplotlib/axes/_axes.py": [
+            6689
+        ]
+    },
+    "matplotlib__matplotlib-14623": {
+        "lib/matplotlib/scale.py": [
+            422,
+            426,
+            427,
+            428,
+            429
+        ]
+    },
+    "matplotlib__matplotlib-20488": {
+        "lib/matplotlib/colors.py": [
+            1543
+        ]
+    },
+    "matplotlib__matplotlib-20676": {
+        "lib/matplotlib/widgets.py": [
+            2131,
+            2142,
+            2143,
+            2145,
+            2146,
+            2147,
+            2148
+        ]
+    },
+    "matplotlib__matplotlib-20826": {
+        "lib/matplotlib/axes/_base.py": [
+            1182,
+            1204,
+            1212
+        ]
+    },
+    "matplotlib__matplotlib-20859": {
+        "lib/matplotlib/legend.py": [
+            363,
+            437,
+            441
+        ]
+    },
+    "matplotlib__matplotlib-22719": {
+        "lib/matplotlib/category.py": [
+            28
+        ]
+    },
+    "matplotlib__matplotlib-22865": {
+        "lib/matplotlib/colorbar.py": [
+            654,
+            655
+        ]
+    },
+    "matplotlib__matplotlib-22871": {
+        "lib/matplotlib/dates.py": [
+            800,
+            801
+        ]
+    },
+    "matplotlib__matplotlib-23299": {
+        "lib/matplotlib/__init__.py": [
+            1178
+        ]
+    },
+    "matplotlib__matplotlib-23314": {
+        "lib/mpl_toolkits/mplot3d/axes3d.py": [
+            45
+        ]
+    },
+    "matplotlib__matplotlib-23412": {
+        "lib/matplotlib/patches.py": [
+            589,
+            590,
+            591,
+            592
+        ]
+    },
+    "matplotlib__matplotlib-23476": {
+        "lib/matplotlib/figure.py": [
+            3035
+        ]
+    },
+    "matplotlib__matplotlib-24026": {
+        "lib/matplotlib/stackplot.py": [
+            73
+        ]
+    },
+    "matplotlib__matplotlib-24149": {
+        "lib/matplotlib/cbook/__init__.py": [
+            1709,
+            1749
+        ]
+    },
+    "matplotlib__matplotlib-24570": {
+        "lib/matplotlib/offsetbox.py": [
+            169,
+            172
+        ]
+    },
+    "matplotlib__matplotlib-24627": {
+        "lib/matplotlib/axes/_base.py": [
+            1271
+        ]
+    },
+    "matplotlib__matplotlib-24637": {
+        "lib/matplotlib/offsetbox.py": [
+            1204,
+            1449
+        ]
+    },
+    "matplotlib__matplotlib-24870": {
+        "lib/matplotlib/contour.py": [
+            1443,
+            1450,
+            1453
+        ]
+    },
+    "matplotlib__matplotlib-24970": {
+        "lib/matplotlib/colors.py": [
+            730,
+            731,
+            732
+        ]
+    },
+    "matplotlib__matplotlib-25122": {
+        "lib/matplotlib/mlab.py": [
+            427,
+            430
+        ]
+    },
+    "matplotlib__matplotlib-25287": {
+        "lib/matplotlib/axis.py": [
+            972,
+            2258,
+            2518
+        ]
+    },
+    "matplotlib__matplotlib-25311": {
+        "lib/matplotlib/legend.py": [
+            53
+        ]
+    },
+    "matplotlib__matplotlib-25332": {
+        "lib/matplotlib/cbook.py": [
+            754
+        ]
+    },
+    "matplotlib__matplotlib-25479": {
+        "lib/matplotlib/cm.py": [
+            148
+        ]
+    },
+    "matplotlib__matplotlib-25775": {
+        "lib/matplotlib/text.py": [
+            95,
+            104,
+            716
+        ]
+    },
+    "matplotlib__matplotlib-25960": {
+        "lib/matplotlib/figure.py": [
+            1584,
+            1585,
+            1586,
+            1587,
+            2279,
+            2280,
+            2281,
+            2282
+        ]
+    },
+    "matplotlib__matplotlib-26113": {
+        "lib/matplotlib/axes/_axes.py": [
+            5017
+        ]
+    },
+    "matplotlib__matplotlib-26291": {
+        "lib/matplotlib/offsetbox.py": [
+            398
+        ],
+        "lib/mpl_toolkits/axes_grid1/inset_locator.py": [
+            71,
+            91,
+            281
+        ]
+    },
+    "matplotlib__matplotlib-26342": {
+        "lib/matplotlib/contour.py": [
+            706,
+            716,
+            717,
+            718,
+            719,
+            720,
+            721,
+            722,
+            723,
+            724,
+            725,
+            726,
+            727,
+            728,
+            729,
+            730,
+            731,
+            732,
+            733,
+            734,
+            735,
+            736,
+            737,
+            738,
+            739,
+            740,
+            742,
+            743,
+            744,
+            746,
+            747
+        ]
+    },
+    "matplotlib__matplotlib-26466": {
+        "lib/matplotlib/text.py": [
+            1459
+        ]
+    },
+    "mwaskom__seaborn-3069": {
+        "seaborn/_core/plot.py": [
+            28,
+            1478,
+            1479,
+            1480,
+            1481,
+            1482,
+            1483,
+            1484,
+            1485,
+            1486,
+            1487,
+            1488,
+            1489,
+            1490,
+            1491,
+            1492,
+            1632,
+            1635,
+            1637
+        ]
+    },
+    "mwaskom__seaborn-3187": {
+        "seaborn/_core/scales.py": [
+            381
+        ]
+    },
+    "pallets__flask-5014": {
+        "src/flask/blueprints.py": [
+            184
+        ]
+    },
+    "psf__requests-1142": {
+        "requests/models.py": [
+            389
+        ]
+    },
+    "psf__requests-1724": {
+        "requests/models.py": [
+            310
+        ]
+    },
+    "psf__requests-1766": {
+        "requests/auth.py": [
+            147
+        ]
+    },
+    "psf__requests-1921": {
+        "requests/sessions.py": [
+            81,
+            207,
+            208
+        ]
+    },
+    "psf__requests-2317": {
+        "requests/sessions.py": [
+            428
+        ]
+    },
+    "psf__requests-2931": {
+        "requests/models.py": [
+            84
+        ]
+    },
+    "psf__requests-5414": {
+        "requests/models.py": [
+            351,
+            383,
+            385,
+            386
+        ]
+    },
+    "psf__requests-6028": {
+        "requests/utils.py": [
+            994
+        ]
+    },
+    "pydata__xarray-2905": {
+        "xarray/core/variable.py": [
+            220,
+            221
+        ]
+    },
+    "pydata__xarray-3095": {
+        "xarray/core/variable.py": [
+            812,
+            1950
+        ]
+    },
+    "pydata__xarray-3151": {
+        "xarray/core/combine.py": [
+            504
+        ]
+    },
+    "pydata__xarray-3305": {
+        "xarray/core/dataarray.py": [
+            2878
+        ]
+    },
+    "pydata__xarray-3677": {
+        "xarray/core/merge.py": [
+            387
+        ]
+    },
+    "pydata__xarray-3993": {
+        "xarray/core/dataarray.py": [
+            3484,
+            3489,
+            3494,
+            3526,
+            3531
+        ]
+    },
+    "pydata__xarray-4075": {
+        "xarray/core/weighted.py": [
+            110
+        ]
+    },
+    "pydata__xarray-4094": {
+        "xarray/core/dataarray.py": [
+            1901,
+            1964,
+            1965,
+            1966,
+            1967
+        ]
+    },
+    "pydata__xarray-4356": {
+        "xarray/core/nanops.py": [
+            29,
+            30,
+            31,
+            32,
+            33,
+            35
+        ]
+    },
+    "pydata__xarray-4629": {
+        "xarray/core/merge.py": [
+            504
+        ]
+    },
+    "pydata__xarray-4695": {
+        "xarray/core/indexing.py": [
+            191,
+            243
+        ]
+    },
+    "pydata__xarray-4966": {
+        "xarray/coding/variables.py": [
+            311,
+            312,
+            313,
+            314,
+            315,
+            316,
+            317,
+            318
+        ]
+    },
+    "pydata__xarray-6461": {
+        "xarray/core/computation.py": [
+            1832
+        ]
+    },
+    "pydata__xarray-6721": {
+        "xarray/core/common.py": [
+            2026,
+            2028,
+            2029,
+            2030,
+            2031,
+            2032,
+            2033
+        ]
+    },
+    "pydata__xarray-6744": {
+        "xarray/core/rolling.py": [
+            273,
+            274,
+            275,
+            278,
+            281
+        ]
+    },
+    "pydata__xarray-6938": {
+        "xarray/core/dataset.py": [
+            3775
+        ]
+    },
+    "pydata__xarray-6992": {
+        "xarray/core/dataset.py": [
+            368
+        ]
+    },
+    "pydata__xarray-7229": {
+        "xarray/core/computation.py": [
+            1861,
+            1862,
+            1863
+        ]
+    },
+    "pydata__xarray-7233": {
+        "xarray/core/rolling.py": [
+            976
+        ]
+    },
+    "pylint-dev__pylint-4551": {
+        "pylint/pyreverse/diagrams.py": [
+            79
+        ],
+        "pylint/pyreverse/inspector.py": [
+            208
+        ]
+    },
+    "pylint-dev__pylint-4661": {
+        "pylint/config/__init__.py": [
+            58,
+            59,
+            63,
+            64,
+            66,
+            113,
+            114,
+            117
+        ]
+    },
+    "pylint-dev__pylint-4970": {
+        "pylint/checkers/similar.py": [
+            391,
+            831
+        ]
+    },
+    "pylint-dev__pylint-6386": {
+        "pylint/lint/base_options.py": [
+            541,
+            542
+        ]
+    },
+    "pylint-dev__pylint-6528": {
+        "pylint/lint/pylinter.py": [
+            567,
+            568,
+            578,
+            586,
+            587,
+            588,
+            589,
+            590,
+            592
+        ]
+    },
+    "pylint-dev__pylint-6903": {
+        "pylint/lint/run.py": [
+            60
+        ]
+    },
+    "pylint-dev__pylint-7080": {
+        "pylint/lint/expand_modules.py": [
+            44,
+            45,
+            59,
+            145
+        ]
+    },
+    "pylint-dev__pylint-7277": {
+        "pylint/__init__.py": [
+            99
+        ]
+    },
+    "pylint-dev__pylint-8898": {
+        "pylint/config/argument.py": [
+            115,
+            117,
+            118
+        ]
+    },
+    "pytest-dev__pytest-10051": {
+        "src/_pytest/logging.py": [
+            345
+        ]
+    },
+    "pytest-dev__pytest-10081": {
+        "src/_pytest/unittest.py": [
+            301,
+            319
+        ]
+    },
+    "pytest-dev__pytest-10356": {
+        "src/_pytest/mark/structures.py": [
+            359,
+            360,
+            361,
+            362
+        ]
+    },
+    "pytest-dev__pytest-5262": {
+        "src/_pytest/capture.py": [
+            425,
+            435,
+            436,
+            437,
+            438
+        ]
+    },
+    "pytest-dev__pytest-5631": {
+        "src/_pytest/compat.py": [
+            71
+        ]
+    },
+    "pytest-dev__pytest-5809": {
+        "src/_pytest/pastebin.py": [
+            82
+        ]
+    },
+    "pytest-dev__pytest-5840": {
+        "src/_pytest/config/__init__.py": [
+            446
+        ],
+        "src/_pytest/pathlib.py": [
+            346
+        ]
+    },
+    "pytest-dev__pytest-6197": {
+        "src/_pytest/python.py": [
+            180,
+            181,
+            182
+        ]
+    },
+    "pytest-dev__pytest-6202": {
+        "src/_pytest/python.py": [
+            289
+        ]
+    },
+    "pytest-dev__pytest-7205": {
+        "src/_pytest/setuponly.py": [
+            1,
+            69
+        ]
+    },
+    "pytest-dev__pytest-7236": {
+        "src/_pytest/unittest.py": [
+            110,
+            115,
+            116,
+            123
+        ]
+    },
+    "pytest-dev__pytest-7324": {
+        "src/_pytest/mark/expression.py": [
+            163
+        ]
+    },
+    "pytest-dev__pytest-7432": {
+        "src/_pytest/skipping.py": [
+            273,
+            274,
+            275,
+            279,
+            294
+        ]
+    },
+    "pytest-dev__pytest-7490": {
+        "src/_pytest/skipping.py": [
+            261
+        ]
+    },
+    "pytest-dev__pytest-7521": {
+        "src/_pytest/capture.py": [
+            386
+        ]
+    },
+    "pytest-dev__pytest-7571": {
+        "src/_pytest/logging.py": [
+            347,
+            348,
+            356,
+            358,
+            435
+        ]
+    },
+    "pytest-dev__pytest-7982": {
+        "src/_pytest/pathlib.py": [
+            561
+        ]
+    },
+    "pytest-dev__pytest-8399": {
+        "src/_pytest/unittest.py": [
+            147
+        ]
+    },
+    "scikit-learn__scikit-learn-10297": {
+        "sklearn/linear_model/ridge.py": [
+            1247,
+            1336,
+            1339
+        ]
+    },
+    "scikit-learn__scikit-learn-10844": {
+        "sklearn/metrics/cluster/supervised.py": [
+            859
+        ]
+    },
+    "scikit-learn__scikit-learn-10908": {
+        "sklearn/feature_extraction/text.py": [
+            994
+        ]
+    },
+    "scikit-learn__scikit-learn-11310": {
+        "sklearn/model_selection/_search.py": [
+            6,
+            766
+        ]
+    },
+    "scikit-learn__scikit-learn-11578": {
+        "sklearn/linear_model/logistic.py": [
+            925
+        ]
+    },
+    "scikit-learn__scikit-learn-12585": {
+        "sklearn/base.py": [
+            51
+        ]
+    },
+    "scikit-learn__scikit-learn-12682": {
+        "sklearn/decomposition/dict_learning.py": [
+            864,
+            868,
+            903,
+            916,
+            994,
+            999
+        ]
+    },
+    "scikit-learn__scikit-learn-12973": {
+        "sklearn/linear_model/least_angle.py": [
+            1482,
+            1493,
+            1504,
+            1510
+        ]
+    },
+    "scikit-learn__scikit-learn-13124": {
+        "sklearn/model_selection/_split.py": [
+            623,
+            648,
+            649,
+            650,
+            651,
+            652,
+            653,
+            654,
+            655,
+            656,
+            657,
+            658,
+            660,
+            661,
+            662,
+            663,
+            664,
+            665,
+            666,
+            667,
+            668,
+            669,
+            670
+        ]
+    },
+    "scikit-learn__scikit-learn-13135": {
+        "sklearn/preprocessing/_discretization.py": [
+            165
+        ]
+    },
+    "scikit-learn__scikit-learn-13142": {
+        "sklearn/mixture/base.py": [
+            194,
+            260,
+            261,
+            262,
+            263,
+            264
+        ]
+    },
+    "scikit-learn__scikit-learn-13328": {
+        "sklearn/linear_model/huber.py": [
+            234
+        ]
+    },
+    "scikit-learn__scikit-learn-13439": {
+        "sklearn/pipeline.py": [
+            29
+        ]
+    },
+    "scikit-learn__scikit-learn-13496": {
+        "sklearn/ensemble/iforest.py": [
+            29,
+            176,
+            190
+        ]
+    },
+    "scikit-learn__scikit-learn-13779": {
+        "sklearn/ensemble/voting.py": [
+            81
+        ]
+    },
+    "scikit-learn__scikit-learn-14053": {
+        "sklearn/tree/export.py": [
+            893,
+            895,
+            930
+        ]
+    },
+    "scikit-learn__scikit-learn-14087": {
+        "sklearn/linear_model/logistic.py": [
+            2177,
+            2183,
+            2184
+        ]
+    },
+    "scikit-learn__scikit-learn-14141": {
+        "sklearn/utils/_show_versions.py": [
+            42
+        ]
+    },
+    "scikit-learn__scikit-learn-14496": {
+        "sklearn/cluster/optics_.py": [
+            440
+        ]
+    },
+    "scikit-learn__scikit-learn-14629": {
+        "sklearn/model_selection/_validation.py": [
+            857,
+            859,
+            860,
+            866,
+            870
+        ]
+    },
+    "scikit-learn__scikit-learn-14710": {
+        "sklearn/ensemble/_hist_gradient_boosting/gradient_boosting.py": [
+            423,
+            433
+        ]
+    },
+    "scikit-learn__scikit-learn-14894": {
+        "sklearn/svm/base.py": [
+            289,
+            290,
+            291,
+            292,
+            293,
+            294
+        ]
+    },
+    "scikit-learn__scikit-learn-14983": {
+        "sklearn/model_selection/_split.py": [
+            1066,
+            1215,
+            1217,
+            1268,
+            1270
+        ]
+    },
+    "scikit-learn__scikit-learn-15100": {
+        "sklearn/feature_extraction/text.py": [
+            133,
+            134,
+            135,
+            136
+        ]
+    },
+    "scikit-learn__scikit-learn-25747": {
+        "sklearn/utils/_set_output.py": [
+            58
+        ]
+    },
+    "scikit-learn__scikit-learn-9288": {
+        "sklearn/cluster/k_means_.py": [
+            178,
+            366,
+            367,
+            372,
+            381,
+            388,
+            389
+        ]
+    },
+    "sphinx-doc__sphinx-10323": {
+        "sphinx/directives/code.py": [
+            172,
+            346,
+            353
+        ]
+    },
+    "sphinx-doc__sphinx-10435": {
+        "sphinx/writers/latex.py": [
+            1713,
+            1717
+        ]
+    },
+    "sphinx-doc__sphinx-10449": {
+        "sphinx/ext/autodoc/typehints.py": [
+            31
+        ]
+    },
+    "sphinx-doc__sphinx-10466": {
+        "sphinx/builders/gettext.py": [
+            35
+        ]
+    },
+    "sphinx-doc__sphinx-10614": {
+        "sphinx/ext/inheritance_diagram.py": [
+            398,
+            416,
+            421
+        ]
+    },
+    "sphinx-doc__sphinx-10673": {
+        "sphinx/directives/other.py": [
+            104
+        ],
+        "sphinx/environment/adapters/toctree.py": [
+            119
+        ]
+    },
+    "sphinx-doc__sphinx-11445": {
+        "sphinx/util/rst.py": [
+            28
+        ]
+    },
+    "sphinx-doc__sphinx-11510": {
+        "sphinx/directives/other.py": [
+            379
+        ]
+    },
+    "sphinx-doc__sphinx-7440": {
+        "sphinx/domains/std.py": [
+            308,
+            567,
+            568
+        ]
+    },
+    "sphinx-doc__sphinx-7454": {
+        "sphinx/domains/python.py": [
+            73,
+            75
+        ]
+    },
+    "sphinx-doc__sphinx-7462": {
+        "sphinx/domains/python.py": [
+            121
+        ]
+    },
+    "sphinx-doc__sphinx-7748": {
+        "sphinx/ext/autodoc/__init__.py": [
+            1040,
+            1047,
+            1049,
+            1052,
+            1053,
+            1054,
+            1055,
+            1056,
+            1057,
+            1058,
+            1059,
+            1060,
+            1061,
+            1062,
+            1063,
+            1065,
+            1066,
+            1067,
+            1068,
+            1069,
+            1070,
+            1071,
+            1072,
+            1088,
+            1089,
+            1090
+        ]
+    },
+    "sphinx-doc__sphinx-7757": {
+        "sphinx/domains/python.py": [
+            149,
+            177,
+            179,
+            180,
+            181,
+            182
+        ]
+    },
+    "sphinx-doc__sphinx-7889": {
+        "sphinx/ext/autodoc/mock.py": [
+            71,
+            73,
+            76
+        ]
+    },
+    "sphinx-doc__sphinx-7910": {
+        "sphinx/ext/napoleon/__init__.py": [
+            433,
+            434,
+            435,
+            436,
+            437,
+            438,
+            439,
+            440,
+            441,
+            443
+        ]
+    },
+    "sphinx-doc__sphinx-7985": {
+        "sphinx/builders/linkcheck.py": [
+            211,
+            215,
+            216,
+            271,
+            272,
+            355
+        ]
+    },
+    "sphinx-doc__sphinx-8120": {
+        "sphinx/locale/__init__.py": [
+            130,
+            131,
+            137
+        ]
+    },
+    "sphinx-doc__sphinx-8265": {
+        "sphinx/domains/python.py": [
+            205
+        ],
+        "sphinx/pycode/ast.py": [
+            174,
+            175,
+            176,
+            177
+        ],
+        "sphinx/util/inspect.py": [
+            601
+        ]
+    },
+    "sphinx-doc__sphinx-8269": {
+        "sphinx/builders/linkcheck.py": [
+            165,
+            166,
+            169,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            185
+        ]
+    },
+    "sphinx-doc__sphinx-8459": {
+        "sphinx/ext/autodoc/typehints.py": [
+            30,
+            33,
+            35
+        ],
+        "sphinx/util/typing.py": [
+            278
+        ]
+    },
+    "sphinx-doc__sphinx-8551": {
+        "sphinx/domains/python.py": [
+            269
+        ]
+    },
+    "sphinx-doc__sphinx-8593": {
+        "sphinx/ext/autodoc/__init__.py": [
+            703
+        ],
+        "sphinx/util/docstrings.py": [
+            31,
+            34,
+            98
+        ]
+    },
+    "sphinx-doc__sphinx-8595": {
+        "sphinx/ext/autodoc/__init__.py": [
+            1077,
+            1078,
+            1079,
+            1081
+        ]
+    },
+    "sphinx-doc__sphinx-8638": {
+        "sphinx/domains/python.py": [
+            1146,
+            1151,
+            1157,
+            1163,
+            1165,
+            1166,
+            1167,
+            1168,
+            1169,
+            1170,
+            1171,
+            1172,
+            1173,
+            1174,
+            1175
+        ]
+    },
+    "sphinx-doc__sphinx-8721": {
+        "sphinx/ext/viewcode.py": [
+            181
+        ]
+    },
+    "sphinx-doc__sphinx-9229": {
+        "sphinx/ext/autodoc/__init__.py": [
+            1801,
+            1802,
+            1819,
+            1820,
+            1821
+        ]
+    },
+    "sphinx-doc__sphinx-9258": {
+        "sphinx/util/docfields.py": [
+            186,
+            187
+        ]
+    },
+    "sphinx-doc__sphinx-9281": {
+        "sphinx/util/inspect.py": [
+            433
+        ]
+    },
+    "sphinx-doc__sphinx-9320": {
+        "sphinx/cmd/quickstart.py": [
+            98,
+            226,
+            228
+        ]
+    },
+    "sphinx-doc__sphinx-9367": {
+        "sphinx/pycode/ast.py": [
+            215,
+            216,
+            217,
+            218
+        ]
+    },
+    "sphinx-doc__sphinx-9591": {
+        "sphinx/ext/autodoc/typehints.py": [
+            26
+        ]
+    },
+    "sphinx-doc__sphinx-9602": {
+        "sphinx/domains/python.py": [
+            85,
+            1383
+        ]
+    },
+    "sphinx-doc__sphinx-9673": {
+        "sphinx/ext/autodoc/typehints.py": [
+            152,
+            169
+        ]
+    },
+    "sphinx-doc__sphinx-9698": {
+        "sphinx/domains/python.py": [
+            799
+        ]
+    },
+    "sphinx-doc__sphinx-9711": {
+        "sphinx/extension.py": [
+            11,
+            47,
+            54
+        ]
+    },
+    "sympy__sympy-11618": {
+        "sympy/geometry/point.py": [
+            237,
+            269,
+            270
+        ]
+    },
+    "sympy__sympy-12096": {
+        "sympy/core/function.py": [
+            510
+        ]
+    },
+    "sympy__sympy-12481": {
+        "sympy/combinatorics/permutations.py": [
+            898,
+            899,
+            900,
+            901,
+            902,
+            903,
+            912,
+            913
+        ]
+    },
+    "sympy__sympy-12489": {
+        "sympy/combinatorics/permutations.py": [
+            927,
+            928,
+            947,
+            1303,
+            1522
+        ]
+    },
+    "sympy__sympy-13031": {
+        "sympy/matrices/common.py": [
+            364,
+            478,
+            479,
+            480,
+            585
+        ]
+    },
+    "sympy__sympy-13091": {
+        "sympy/core/basic.py": [
+            307,
+            316,
+            319
+        ]
+    },
+    "sympy__sympy-13480": {
+        "sympy/functions/elementary/hyperbolic.py": [
+            590
+        ]
+    },
+    "sympy__sympy-13551": {
+        "sympy/concrete/products.py": [
+            236
+        ]
+    },
+    "sympy__sympy-13615": {
+        "sympy/sets/sets.py": [
+            1717,
+            1936,
+            1937,
+            1938,
+            1939,
+            1941,
+            1942,
+            1943,
+            1944,
+            1946,
+            1951,
+            1952
+        ]
+    },
+    "sympy__sympy-13647": {
+        "sympy/matrices/common.py": [
+            89
+        ]
+    },
+    "sympy__sympy-13852": {
+        "sympy/functions/special/zeta_functions.py": [
+            291,
+            294
+        ]
+    },
+    "sympy__sympy-13877": {
+        "sympy/matrices/matrices.py": [
+            384,
+            385,
+            386,
+            387,
+            390,
+            425
+        ]
+    },
+    "sympy__sympy-13878": {
+        "sympy/stats/crv_types.py": [
+            50,
+            150,
+            666,
+            1032,
+            1097,
+            1189,
+            1374,
+            1441,
+            1497,
+            1705,
+            2223,
+            2544
+        ]
+    },
+    "sympy__sympy-14531": {
+        "sympy/printing/str.py": [
+            219,
+            221,
+            633
+        ]
+    },
+    "sympy__sympy-14711": {
+        "sympy/physics/vector/vector.py": [
+            58
+        ]
+    },
+    "sympy__sympy-14976": {
+        "sympy/printing/pycode.py": [
+            314
+        ]
+    },
+    "sympy__sympy-15017": {
+        "sympy/tensor/array/dense_ndim_array.py": [
+            152,
+            177
+        ],
+        "sympy/tensor/array/sparse_ndim_array.py": [
+            133,
+            170
+        ]
+    },
+    "sympy__sympy-15345": {
+        "sympy/printing/mathematica.py": [
+            34,
+            38
+        ]
+    },
+    "sympy__sympy-15349": {
+        "sympy/algebras/quaternion.py": [
+            532
+        ]
+    },
+    "sympy__sympy-15599": {
+        "sympy/core/mod.py": [
+            126,
+            128
+        ]
+    },
+    "sympy__sympy-15809": {
+        "sympy/functions/elementary/miscellaneous.py": [
+            343
+        ]
+    },
+    "sympy__sympy-15875": {
+        "sympy/core/add.py": [
+            537,
+            538,
+            539,
+            540,
+            541,
+            543,
+            544,
+            545,
+            550,
+            552,
+            554,
+            557,
+            559,
+            560,
+            561,
+            563,
+            565,
+            566
+        ]
+    },
+    "sympy__sympy-15976": {
+        "sympy/printing/mathml.py": [
+            745
+        ]
+    },
+    "sympy__sympy-16597": {
+        "sympy/assumptions/handlers/ntheory.py": [
+            110,
+            114,
+            127,
+            132,
+            173,
+            194
+        ],
+        "sympy/core/symbol.py": [
+            181
+        ]
+    },
+    "sympy__sympy-16766": {
+        "sympy/printing/pycode.py": [
+            350
+        ]
+    },
+    "sympy__sympy-16792": {
+        "sympy/utilities/autowrap.py": [
+            83,
+            444,
+            446
+        ],
+        "sympy/utilities/codegen.py": [
+            289
+        ]
+    },
+    "sympy__sympy-16886": {
+        "sympy/crypto/crypto.py": [
+            1523
+        ]
+    },
+    "sympy__sympy-17139": {
+        "sympy/simplify/fu.py": [
+            496
+        ]
+    },
+    "sympy__sympy-17318": {
+        "sympy/simplify/radsimp.py": [
+            1103
+        ],
+        "sympy/simplify/sqrtdenest.py": [
+            156,
+            160,
+            161,
+            162,
+            169,
+            208,
+            212,
+            214,
+            215
+        ]
+    },
+    "sympy__sympy-17630": {
+        "sympy/matrices/expressions/blockmatrix.py": [
+            167
+        ]
+    },
+    "sympy__sympy-17655": {
+        "sympy/geometry/point.py": [
+            41,
+            185,
+            216
+        ]
+    },
+    "sympy__sympy-18189": {
+        "sympy/solvers/diophantine.py": [
+            183,
+            184,
+            185,
+            344,
+            350
+        ]
+    },
+    "sympy__sympy-18211": {
+        "sympy/core/relational.py": [
+            406
+        ],
+        "sympy/logic/boolalg.py": [
+            155,
+            156,
+            157,
+            158
+        ]
+    },
+    "sympy__sympy-18763": {
+        "sympy/printing/latex.py": [
+            699
+        ]
+    },
+    "sympy__sympy-19346": {
+        "sympy/printing/repr.py": [
+            19
+        ]
+    },
+    "sympy__sympy-19637": {
+        "sympy/core/sympify.py": [
+            442,
+            516
+        ]
+    },
+    "sympy__sympy-19783": {
+        "sympy/physics/quantum/dagger.py": [
+            13
+        ],
+        "sympy/physics/quantum/operator.py": [
+            308,
+            310
+        ]
+    },
+    "sympy__sympy-19954": {
+        "sympy/combinatorics/perm_groups.py": [
+            2201,
+            2202,
+            2208
+        ]
+    },
+    "sympy__sympy-20154": {
+        "sympy/utilities/iterables.py": [
+            1741,
+            1742,
+            1743,
+            1745,
+            1746,
+            1747,
+            1748,
+            1749,
+            1750,
+            1751,
+            1753,
+            1754,
+            1805,
+            1807,
+            1845,
+            1847
+        ]
+    },
+    "sympy__sympy-20438": {
+        "sympy/sets/sets.py": [
+            692,
+            1529,
+            1618,
+            1683
+        ]
+    },
+    "sympy__sympy-20590": {
+        "sympy/core/_print_helpers.py": [
+            8
+        ]
+    },
+    "sympy__sympy-20801": {
+        "sympy/core/numbers.py": [
+            1389
+        ],
+        "sympy/logic/boolalg.py": [
+            350
+        ]
+    },
+    "sympy__sympy-20916": {
+        "sympy/printing/pretty/pretty_symbology.py": [
+            168,
+            185,
+            186,
+            520,
+            527,
+            531,
+            534,
+            540,
+            543,
+            544,
+            545,
+            546,
+            558
+        ]
+    },
+    "sympy__sympy-21596": {
+        "sympy/sets/handlers/intersection.py": [
+            279,
+            295,
+            297,
+            298,
+            299,
+            300,
+            306,
+            307,
+            308,
+            309,
+            310,
+            311,
+            312,
+            313,
+            314,
+            315,
+            316,
+            317,
+            318,
+            319,
+            320,
+            321,
+            322
+        ]
+    },
+    "sympy__sympy-21612": {},
+    "sympy__sympy-21847": {
+        "sympy/polys/monomials.py": [
+            130,
+            142
+        ]
+    },
+    "sympy__sympy-21930": {
+        "sympy/physics/secondquant.py": [
+            481
+        ]
+    },
+    "sympy__sympy-22080": {
+        "sympy/utilities/lambdify.py": [
+            815
+        ]
+    },
+    "sympy__sympy-22456": {
+        "sympy/codegen/ast.py": [
+            898
+        ]
+    },
+    "sympy__sympy-22714": {
+        "sympy/geometry/point.py": [
+            155,
+            156
+        ]
+    },
+    "sympy__sympy-22914": {
+        "sympy/printing/pycode.py": [
+            425
+        ]
+    },
+    "sympy__sympy-23262": {
+        "sympy/utilities/lambdify.py": [
+            958,
+            960,
+            964
+        ]
+    },
+    "sympy__sympy-23413": {
+        "sympy/polys/matrices/normalforms.py": [
+            246,
+            247,
+            248
+        ]
+    },
+    "sympy__sympy-23534": {
+        "sympy/core/symbol.py": [
+            794
+        ]
+    },
+    "sympy__sympy-23824": {
+        "sympy/physics/hep/gamma_matrices.py": [
+            695,
+            697
+        ]
+    },
+    "sympy__sympy-23950": {
+        "sympy/sets/contains.py": [
+            48
+        ]
+    },
+    "sympy__sympy-24066": {
+        "sympy/physics/units/unitsystem.py": [
+            11,
+            192
+        ]
+    },
+    "sympy__sympy-24213": {
+        "sympy/physics/units/unitsystem.py": [
+            178
+        ]
+    },
+    "sympy__sympy-24443": {
+        "sympy/combinatorics/homomorphisms.py": [
+            326,
+            327,
+            328,
+            329,
+            330,
+            331,
+            332,
+            333,
+            336,
+            337,
+            338,
+            339
+        ]
+    },
+    "sympy__sympy-24539": {
+        "sympy/polys/rings.py": [
+            618,
+            619,
+            620,
+            621
+        ]
+    },
+    "sympy__sympy-24562": {
+        "sympy/core/numbers.py": [
+            1589
+        ]
+    },
+    "sympy__sympy-24661": {
+        "sympy/parsing/sympy_parser.py": [
+            1102
+        ]
+    }
+}

@@ -1,0 +1,14 @@
+
+django/contrib/admin/utils.py
+
+ 398⋮ 398│         return formats.number_format(value)
+ 399⋮ 399│     elif isinstance(field, models.FileField) and value:
+ 400⋮ 400│         return format_html('<a href="{}">{}</a>', value.url, value)
+    ⋮ 401│+    elif isinstance(field, models.JSONField) and value:
+    ⋮ 402│+        try:
+    ⋮ 403│+            return field.get_prep_value(value)
+    ⋮ 404│+        except TypeError:
+    ⋮ 405│+            return display_for_value(value, empty_value_display)
+ 401⋮ 406│     else:
+ 402⋮ 407│         return display_for_value(value, empty_value_display)
+ 403⋮ 408│ 

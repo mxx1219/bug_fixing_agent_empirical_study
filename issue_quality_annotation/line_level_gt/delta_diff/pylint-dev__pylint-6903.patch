@@ -1,0 +1,16 @@
+
+pylint/lint/run.py
+
+ 58 ⋮ 58 │             cpu_shares = int(file.read().rstrip())
+ 59 ⋮ 59 │         # For AWS, gives correct value * 1024.
+ 60 ⋮ 60 │         avail_cpu = int(cpu_shares / 1024)
+    ⋮ 61 │+
+    ⋮ 62 │+    # In K8s Pods also a fraction of a single core could be available
+    ⋮ 63 │+    # As multiprocessing is not able to run only a "fraction" of process
+    ⋮ 64 │+    # assume we have 1 CPU available
+    ⋮ 65 │+    if avail_cpu == 0:
+    ⋮ 66 │+        avail_cpu = 1
+    ⋮ 67 │+
+ 61 ⋮ 68 │     return avail_cpu
+ 62 ⋮ 69 │ 
+ 63 ⋮ 70 │ 

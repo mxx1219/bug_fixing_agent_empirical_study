@@ -1,0 +1,64 @@
+
+sympy/functions/special/zeta_functions.py
+
+  1 ⋮  1 │ """ Riemann zeta and related function. """
+  2 ⋮  2 │ from __future__ import print_function, division
+  3 ⋮  3 │ 
+  4 ⋮    │-from sympy.core import Function, S, sympify, pi
+    ⋮  4 │+from sympy.core import Function, S, sympify, pi, I
+  5 ⋮  5 │ from sympy.core.function import ArgumentIndexError
+  6 ⋮  6 │ from sympy.core.compatibility import range
+  7 ⋮  7 │ from sympy.functions.combinatorial.numbers import bernoulli, factorial, harmonic
+  8 ⋮  8 │ from sympy.functions.elementary.exponential import log
+  9 ⋮    │-
+    ⋮  9 │+from sympy.functions.elementary.miscellaneous import sqrt
+ 10 ⋮ 10 │ 
+ 11 ⋮ 11 │ ###############################################################################
+ 12 ⋮ 12 │ ###################### LERCH TRANSCENDENT #####################################
+
+ 253⋮ 253│     >>> from sympy import expand_func
+ 254⋮ 254│     >>> from sympy.abc import z
+ 255⋮ 255│     >>> expand_func(polylog(1, z))
+ 256⋮    │-    -log(z*exp_polar(-I*pi) + 1)
+    ⋮ 256│+    -log(-z + 1)
+ 257⋮ 257│     >>> expand_func(polylog(0, z))
+ 258⋮ 258│     z/(-z + 1)
+ 259⋮ 259│ 
+
+ 276⋮ 276│         elif z == -1:
+ 277⋮ 277│             return -dirichlet_eta(s)
+ 278⋮ 278│         elif z == 0:
+ 279⋮    │-            return 0
+    ⋮ 279│+            return S.Zero
+    ⋮ 280│+        elif s == 2:
+    ⋮ 281│+            if z == S.Half:
+    ⋮ 282│+                return pi**2/12 - log(2)**2/2
+    ⋮ 283│+            elif z == 2:
+    ⋮ 284│+                return pi**2/4 - I*pi*log(2)
+    ⋮ 285│+            elif z == -(sqrt(5) - 1)/2:
+    ⋮ 286│+                return -pi**2/15 + log((sqrt(5)-1)/2)**2/2
+    ⋮ 287│+            elif z == -(sqrt(5) + 1)/2:
+    ⋮ 288│+                return -pi**2/10 - log((sqrt(5)+1)/2)**2
+    ⋮ 289│+            elif z == (3 - sqrt(5))/2:
+    ⋮ 290│+                return pi**2/15 - log((sqrt(5)-1)/2)**2
+    ⋮ 291│+            elif z == (sqrt(5) - 1)/2:
+    ⋮ 292│+                return pi**2/10 - log((sqrt(5)-1)/2)**2
+    ⋮ 293│+        # For s = 0 or -1 use explicit formulas to evaluate, but
+    ⋮ 294│+        # automatically expanding polylog(1, z) to -log(1-z) seems undesirable
+    ⋮ 295│+        # for summation methods based on hypergeometric functions
+    ⋮ 296│+        elif s == 0:
+    ⋮ 297│+            return z/(1 - z)
+    ⋮ 298│+        elif s == -1:
+    ⋮ 299│+            return z/(1 - z)**2
+ 280⋮ 300│ 
+ 281⋮ 301│     def fdiff(self, argindex=1):
+ 282⋮ 302│         s, z = self.args
+
+ 291⋮ 311│         from sympy import log, expand_mul, Dummy, exp_polar, I
+ 292⋮ 312│         s, z = self.args
+ 293⋮ 313│         if s == 1:
+ 294⋮    │-            return -log(1 + exp_polar(-I*pi)*z)
+    ⋮ 314│+            return -log(1 - z)
+ 295⋮ 315│         if s.is_Integer and s <= 0:
+ 296⋮ 316│             u = Dummy('u')
+ 297⋮ 317│             start = u/(1 - u)

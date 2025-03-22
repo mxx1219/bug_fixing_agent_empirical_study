@@ -1,0 +1,122 @@
+[
+    {
+        "type": "functions",
+        "line_range": "47-58"
+    },
+    {
+        "type": "functions",
+        "line_range": "61-67"
+    },
+    {
+        "type": "methods",
+        "line_range": "73-74"
+    },
+    {
+        "type": "methods",
+        "line_range": "78-82"
+    },
+    {
+        "type": "methods",
+        "line_range": "84-92"
+    },
+    {
+        "type": "methods",
+        "line_range": "94-130"
+    },
+    {
+        "type": "methods",
+        "line_range": "132-133"
+    },
+    {
+        "type": "methods",
+        "line_range": "135-136"
+    },
+    {
+        "type": "methods",
+        "line_range": "138-140"
+    },
+    {
+        "type": "methods",
+        "line_range": "142-145"
+    },
+    {
+        "type": "methods",
+        "line_range": "147-151"
+    },
+    {
+        "type": "methods",
+        "line_range": "153-154"
+    },
+    {
+        "type": "methods",
+        "line_range": "156-157"
+    },
+    {
+        "type": "methods",
+        "line_range": "159-160"
+    },
+    {
+        "type": "methods",
+        "line_range": "162-163"
+    },
+    {
+        "type": "methods",
+        "line_range": "165-166"
+    },
+    {
+        "type": "methods",
+        "line_range": "168-169"
+    },
+    {
+        "type": "methods",
+        "line_range": "171-172"
+    },
+    {
+        "type": "methods",
+        "line_range": "174-178"
+    },
+    {
+        "type": "methods",
+        "line_range": "181-185"
+    },
+    {
+        "type": "methods",
+        "line_range": "189-190"
+    },
+    {
+        "type": "methods",
+        "line_range": "192-193"
+    },
+    {
+        "type": "methods",
+        "line_range": "195-196"
+    },
+    {
+        "type": "methods",
+        "line_range": "198-199"
+    },
+    {
+        "type": "methods",
+        "line_range": "201-202"
+    },
+    {
+        "type": "methods",
+        "line_range": "204-205"
+    },
+    {
+        "type": "classes",
+        "line_range": "71-72,75-77,83,93,131,134,137,141,146,152,155,158,161,164,167,170,173,179-180,186-188,191,194,197,200,203"
+    },
+    {
+        "type": "imports",
+        "line_range": "11-12"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "1-9"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "14-44"
+    }
+]

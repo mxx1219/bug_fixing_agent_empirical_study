@@ -1,0 +1,31 @@
+
+pylint/checkers/variables.py
+
+1826⋮1826│             self._type_annotation_names.append(type_annotation.name)
+1827⋮1827│             return
+1828⋮1828│ 
+    ⋮1829│+        if isinstance(type_annotation, astroid.Attribute):
+    ⋮1830│+            self._store_type_annotation_node(type_annotation.expr)
+    ⋮1831│+            return
+    ⋮1832│+
+1829⋮1833│         if not isinstance(type_annotation, astroid.Subscript):
+1830⋮1834│             return
+1831⋮1835│ 
+
+pylint/constants.py
+
+  1 ⋮  1 │ # Licensed under the GPL: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  2 ⋮  2 │ # For details: https://github.com/PyCQA/pylint/blob/master/LICENSE
+  3 ⋮  3 │ 
+    ⋮  4 │+import platform
+  4 ⋮  5 │ import sys
+  5 ⋮  6 │ 
+  6 ⋮  7 │ import astroid
+
+ 11 ⋮ 12 │ PY39_PLUS = sys.version_info[:2] >= (3, 9)
+ 12 ⋮ 13 │ PY310_PLUS = sys.version_info[:2] >= (3, 10)
+ 13 ⋮ 14 │ 
+    ⋮ 15 │+IS_PYPY = platform.python_implementation() == "PyPy"
+ 14 ⋮ 16 │ 
+ 15 ⋮ 17 │ PY_EXTS = (".py", ".pyc", ".pyo", ".pyw", ".so", ".dll")
+ 16 ⋮ 18 │ 

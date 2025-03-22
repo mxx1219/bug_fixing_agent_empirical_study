@@ -1,0 +1,40 @@
+
+lib/matplotlib/figure.py
+
+1564⋮1564│         wspace, hspace : float, default: None
+1565⋮1565│             The amount of width/height reserved for space between subfigures,
+1566⋮1566│             expressed as a fraction of the average subfigure width/height.
+1567⋮    │-            If not given, the values will be inferred from a figure or
+1568⋮    │-            rcParams when necessary.
+    ⋮1567│+            If not given, the values will be inferred from rcParams if using
+    ⋮1568│+            constrained layout (see `~.ConstrainedLayoutEngine`), or zero if
+    ⋮1569│+            not using a layout engine.
+1569⋮1570│ 
+1570⋮1571│         width_ratios : array-like of length *ncols*, optional
+1571⋮1572│             Defines the relative widths of the columns. Each column gets a
+
+1580⋮1581│         gs = GridSpec(nrows=nrows, ncols=ncols, figure=self,
+1581⋮1582│                       wspace=wspace, hspace=hspace,
+1582⋮1583│                       width_ratios=width_ratios,
+1583⋮    │-                      height_ratios=height_ratios)
+    ⋮1584│+                      height_ratios=height_ratios,
+    ⋮1585│+                      left=0, right=1, bottom=0, top=1)
+1584⋮1586│ 
+1585⋮1587│         sfarr = np.empty((nrows, ncols), dtype=object)
+1586⋮1588│         for i in range(ncols):
+1587⋮1589│             for j in range(nrows):
+1588⋮1590│                 sfarr[j, i] = self.add_subfigure(gs[j, i], **kwargs)
+1589⋮1591│ 
+    ⋮1592│+        if self.get_layout_engine() is None and (wspace is not None or
+    ⋮1593│+                                                 hspace is not None):
+    ⋮1594│+            # Gridspec wspace and hspace is ignored on subfigure instantiation,
+    ⋮1595│+            # and no space is left.  So need to account for it here if required.
+    ⋮1596│+            bottoms, tops, lefts, rights = gs.get_grid_positions(self)
+    ⋮1597│+            for sfrow, bottom, top in zip(sfarr, bottoms, tops):
+    ⋮1598│+                for sf, left, right in zip(sfrow, lefts, rights):
+    ⋮1599│+                    bbox = Bbox.from_extents(left, bottom, right, top)
+    ⋮1600│+                    sf._redo_transform_rel_fig(bbox=bbox)
+    ⋮1601│+
+1590⋮1602│         if squeeze:
+1591⋮1603│             # Discarding unneeded dimensions that equal 1.  If we only have one
+1592⋮1604│             # subfigure, just return it instead of a 1-element array.

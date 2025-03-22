@@ -1,0 +1,26 @@
+
+sympy/polys/matrices/normalforms.py
+
+ 205⋮ 205│     if not A.domain.is_ZZ:
+ 206⋮ 206│         raise DMDomainError('Matrix must be over domain ZZ.')
+ 207⋮ 207│     # We work one row at a time, starting from the bottom row, and working our
+ 208⋮    │-    # way up. The total number of rows we will consider is min(m, n), where
+ 209⋮    │-    # A is an m x n matrix.
+    ⋮ 208│+    # way up.
+ 210⋮ 209│     m, n = A.shape
+ 211⋮    │-    rows = min(m, n)
+ 212⋮ 210│     A = A.to_dense().rep.copy()
+ 213⋮ 211│     # Our goal is to put pivot entries in the rightmost columns.
+ 214⋮ 212│     # Invariant: Before processing each row, k should be the index of the
+ 215⋮ 213│     # leftmost column in which we have so far put a pivot.
+ 216⋮ 214│     k = n
+ 217⋮    │-    for i in range(m - 1, m - 1 - rows, -1):
+    ⋮ 215│+    for i in range(m - 1, -1, -1):
+    ⋮ 216│+        if k == 0:
+    ⋮ 217│+            # This case can arise when n < m and we've already found n pivots.
+    ⋮ 218│+            # We don't need to consider any more rows, because this is already
+    ⋮ 219│+            # the maximum possible number of pivots.
+    ⋮ 220│+            break
+ 218⋮ 221│         k -= 1
+ 219⋮ 222│         # k now points to the column in which we want to put a pivot.
+ 220⋮ 223│         # We want zeros in all entries to the left of the pivot column.

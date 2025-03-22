@@ -1,0 +1,28 @@
+
+sympy/core/mod.py
+
+ 40 ⋮ 40 │         from sympy.core.mul import Mul
+ 41 ⋮ 41 │         from sympy.core.singleton import S
+ 42 ⋮ 42 │         from sympy.core.exprtools import gcd_terms
+    ⋮ 43 │+        from sympy.polys.polyerrors import PolynomialError
+ 43 ⋮ 44 │         from sympy.polys.polytools import gcd
+ 44 ⋮ 45 │ 
+ 45 ⋮ 46 │         def doit(p, q):
+
+ 166⋮ 167│         # XXX other possibilities?
+ 167⋮ 168│ 
+ 168⋮ 169│         # extract gcd; any further simplification should be done by the user
+ 169⋮    │-        G = gcd(p, q)
+ 170⋮    │-        if G != 1:
+ 171⋮    │-            p, q = [
+ 172⋮    │-                gcd_terms(i/G, clear=False, fraction=False) for i in (p, q)]
+    ⋮ 170│+        try:
+    ⋮ 171│+            G = gcd(p, q)
+    ⋮ 172│+            if G != 1:
+    ⋮ 173│+                p, q = [gcd_terms(i/G, clear=False, fraction=False)
+    ⋮ 174│+                        for i in (p, q)]
+    ⋮ 175│+        except PolynomialError:  # issue 21373
+    ⋮ 176│+            G = S.One
+ 173⋮ 177│         pwas, qwas = p, q
+ 174⋮ 178│ 
+ 175⋮ 179│         # simplify terms

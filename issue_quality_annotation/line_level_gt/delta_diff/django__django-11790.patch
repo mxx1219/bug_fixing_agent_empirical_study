@@ -1,0 +1,13 @@
+
+django/contrib/auth/forms.py
+
+ 191⋮ 191│ 
+ 192⋮ 192│         # Set the max length and label for the "username" field.
+ 193⋮ 193│         self.username_field = UserModel._meta.get_field(UserModel.USERNAME_FIELD)
+ 194⋮    │-        self.fields['username'].max_length = self.username_field.max_length or 254
+    ⋮ 194│+        username_max_length = self.username_field.max_length or 254
+    ⋮ 195│+        self.fields['username'].max_length = username_max_length
+    ⋮ 196│+        self.fields['username'].widget.attrs['maxlength'] = username_max_length
+ 195⋮ 197│         if self.fields['username'].label is None:
+ 196⋮ 198│             self.fields['username'].label = capfirst(self.username_field.verbose_name)
+ 197⋮ 199│ 

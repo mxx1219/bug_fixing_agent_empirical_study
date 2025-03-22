@@ -1,0 +1,14 @@
+
+django/db/models/sql/query.py
+
+1124⋮1124│ 
+1125⋮1125│     def check_filterable(self, expression):
+1126⋮1126│         """Raise an error if expression cannot be used in a WHERE clause."""
+1127⋮    │-        if not getattr(expression, 'filterable', True):
+    ⋮1127│+        if (
+    ⋮1128│+            hasattr(expression, 'resolve_expression') and
+    ⋮1129│+            not getattr(expression, 'filterable', True)
+    ⋮1130│+        ):
+1128⋮1131│             raise NotSupportedError(
+1129⋮1132│                 expression.__class__.__name__ + ' is disallowed in the filter '
+1130⋮1133│                 'clause.'

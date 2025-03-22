@@ -1,0 +1,11 @@
+
+django/forms/widgets.py
+
+1161⋮1161│                 # Return pseudo-ISO dates with zeros for any unselected values,
+1162⋮1162│                 # e.g. '2017-0-23'.
+1163⋮1163│                 return "%s-%s-%s" % (y or 0, m or 0, d or 0)
+    ⋮1164│+            except OverflowError:
+    ⋮1165│+                return "0-0-0"
+1164⋮1166│             return date_value.strftime(input_format)
+1165⋮1167│         return data.get(name)
+1166⋮1168│ 

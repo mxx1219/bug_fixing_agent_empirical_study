@@ -1,0 +1,10 @@
+
+django/db/models/enums.py
+
+ 31 ⋮ 31 │         # that is passed in as "self" as the value to use when looking up the
+ 32 ⋮ 32 │         # label in the choices.
+ 33 ⋮ 33 │         cls.label = property(lambda self: cls._value2label_map_.get(self.value))
+    ⋮ 34 │+        cls.do_not_call_in_templates = True
+ 34 ⋮ 35 │         return enum.unique(cls)
+ 35 ⋮ 36 │ 
+ 36 ⋮ 37 │     def __contains__(cls, member):

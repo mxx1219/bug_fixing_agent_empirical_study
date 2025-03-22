@@ -1,0 +1,25 @@
+
+django/core/management/commands/runserver.py
+
+ 129⋮ 129│         shutdown_message = options.get("shutdown_message", "")
+ 130⋮ 130│         quit_command = "CTRL-BREAK" if sys.platform == "win32" else "CONTROL-C"
+ 131⋮ 131│ 
+    ⋮ 132│+        if self._raw_ipv6:
+    ⋮ 133│+            addr = f"[{self.addr}]"
+    ⋮ 134│+        elif self.addr == "0":
+    ⋮ 135│+            addr = "0.0.0.0"
+    ⋮ 136│+        else:
+    ⋮ 137│+            addr = self.addr
+    ⋮ 138│+
+ 132⋮ 139│         if not options["skip_checks"]:
+ 133⋮ 140│             self.stdout.write("Performing system checks...\n\n")
+ 134⋮ 141│             self.check(display_num_errors=True)
+
+ 147⋮ 154│                 "version": self.get_version(),
+ 148⋮ 155│                 "settings": settings.SETTINGS_MODULE,
+ 149⋮ 156│                 "protocol": self.protocol,
+ 150⋮    │-                "addr": "[%s]" % self.addr if self._raw_ipv6 else self.addr,
+    ⋮ 157│+                "addr": addr,
+ 151⋮ 158│                 "port": self.port,
+ 152⋮ 159│                 "quit_command": quit_command,
+ 153⋮ 160│             }

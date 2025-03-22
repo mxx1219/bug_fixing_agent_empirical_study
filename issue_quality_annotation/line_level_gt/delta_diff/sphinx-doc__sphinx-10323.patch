@@ -1,0 +1,14 @@
+
+sphinx/directives/code.py
+
+ 224⋮ 224│                        self.start_filter,
+ 225⋮ 225│                        self.end_filter,
+ 226⋮ 226│                        self.lines_filter,
+    ⋮ 227│+                       self.dedent_filter,
+ 227⋮ 228│                        self.prepend_filter,
+ 228⋮    │-                       self.append_filter,
+ 229⋮    │-                       self.dedent_filter]
+    ⋮ 229│+                       self.append_filter]
+ 230⋮ 230│             lines = self.read_file(self.filename, location=location)
+ 231⋮ 231│             for func in filters:
+ 232⋮ 232│                 lines = func(lines, location=location)

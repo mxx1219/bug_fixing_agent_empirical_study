@@ -1,0 +1,10 @@
+
+django/forms/fields.py
+
+ 199⋮ 199│         result = copy.copy(self)
+ 200⋮ 200│         memo[id(self)] = result
+ 201⋮ 201│         result.widget = copy.deepcopy(self.widget, memo)
+    ⋮ 202│+        result.error_messages = self.error_messages.copy()
+ 202⋮ 203│         result.validators = self.validators[:]
+ 203⋮ 204│         return result
+ 204⋮ 205│ 

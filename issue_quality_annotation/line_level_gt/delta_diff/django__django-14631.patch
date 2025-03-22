@@ -1,0 +1,128 @@
+
+django/forms/boundfield.py
+
+  1 ⋮  1 │ import datetime
+  2 ⋮  2 │ import re
+  3 ⋮  3 │ 
+    ⋮  4 │+from django.core.exceptions import ValidationError
+  4 ⋮  5 │ from django.forms.utils import flatatt, pretty_name
+  5 ⋮  6 │ from django.forms.widgets import Textarea, TextInput
+  6 ⋮  7 │ from django.utils.functional import cached_property
+
+ 118⋮ 119│         """
+ 119⋮ 120│         Return the data for this BoundField, or None if it wasn't given.
+ 120⋮ 121│         """
+ 121⋮    │-        return self.form._field_data_value(self.field, self.html_name)
+    ⋮ 122│+        return self.form._widget_data_value(self.field.widget, self.html_name)
+ 122⋮ 123│ 
+ 123⋮ 124│     def value(self):
+ 124⋮ 125│         """
+
+ 130⋮ 131│             data = self.field.bound_data(self.data, data)
+ 131⋮ 132│         return self.field.prepare_value(data)
+ 132⋮ 133│ 
+    ⋮ 134│+    def _has_changed(self):
+    ⋮ 135│+        field = self.field
+    ⋮ 136│+        if field.show_hidden_initial:
+    ⋮ 137│+            hidden_widget = field.hidden_widget()
+    ⋮ 138│+            initial_value = self.form._widget_data_value(
+    ⋮ 139│+                hidden_widget, self.html_initial_name,
+    ⋮ 140│+            )
+    ⋮ 141│+            try:
+    ⋮ 142│+                initial_value = field.to_python(initial_value)
+    ⋮ 143│+            except ValidationError:
+    ⋮ 144│+                # Always assume data has changed if validation fails.
+    ⋮ 145│+                return True
+    ⋮ 146│+        else:
+    ⋮ 147│+            initial_value = self.initial
+    ⋮ 148│+        return field.has_changed(initial_value, self.data)
+    ⋮ 149│+
+ 133⋮ 150│     def label_tag(self, contents=None, attrs=None, label_suffix=None):
+ 134⋮ 151│         """
+ 135⋮ 152│         Wrap the given contents in a <label>, if the field has an ID attribute.
+
+django/forms/forms.py
+
+ 143⋮ 143│             'fields': ';'.join(self.fields),
+ 144⋮ 144│         }
+ 145⋮ 145│ 
+    ⋮ 146│+    def _bound_items(self):
+    ⋮ 147│+        """Yield (name, bf) pairs, where bf is a BoundField object."""
+    ⋮ 148│+        for name in self.fields:
+    ⋮ 149│+            yield name, self[name]
+    ⋮ 150│+
+ 146⋮ 151│     def __iter__(self):
+    ⋮ 152│+        """Yield the form's fields as BoundField objects."""
+ 147⋮ 153│         for name in self.fields:
+ 148⋮ 154│             yield self[name]
+ 149⋮ 155│ 
+
+ 197⋮ 203│         # widgets split data over several HTML fields.
+ 198⋮ 204│         return widget.value_from_datadict(self.data, self.files, html_name)
+ 199⋮ 205│ 
+ 200⋮    │-    def _field_data_value(self, field, html_name):
+ 201⋮    │-        return self._widget_data_value(field.widget, html_name)
+ 202⋮    │-
+ 203⋮ 206│     def _html_output(self, normal_row, error_row, row_ender, help_text_html, errors_on_separate_row):
+ 204⋮ 207│         "Output HTML. Used by as_table(), as_ul(), as_p()."
+ 205⋮ 208│         # Errors that should be displayed above all fields.
+ 206⋮ 209│         top_errors = self.non_field_errors().copy()
+ 207⋮ 210│         output, hidden_fields = [], []
+ 208⋮ 211│ 
+ 209⋮    │-        for name, field in self.fields.items():
+    ⋮ 212│+        for name, bf in self._bound_items():
+    ⋮ 213│+            field = bf.field
+ 210⋮ 214│             html_class_attr = ''
+ 211⋮    │-            bf = self[name]
+ 212⋮ 215│             bf_errors = self.error_class(bf.errors)
+ 213⋮ 216│             if bf.is_hidden:
+ 214⋮ 217│                 if bf_errors:
+
+ 387⋮ 390│         self._post_clean()
+ 388⋮ 391│ 
+ 389⋮ 392│     def _clean_fields(self):
+ 390⋮    │-        for name, field in self.fields.items():
+ 391⋮    │-            if field.disabled:
+ 392⋮    │-                value = self.get_initial_for_field(field, name)
+ 393⋮    │-            else:
+ 394⋮    │-                value = self._field_data_value(field, self.add_prefix(name))
+    ⋮ 393│+        for name, bf in self._bound_items():
+    ⋮ 394│+            field = bf.field
+    ⋮ 395│+            value = bf.initial if field.disabled else bf.data
+ 395⋮ 396│             try:
+ 396⋮ 397│                 if isinstance(field, FileField):
+ 397⋮    │-                    initial = self.get_initial_for_field(field, name)
+ 398⋮    │-                    value = field.clean(value, initial)
+    ⋮ 398│+                    value = field.clean(value, bf.initial)
+ 399⋮ 399│                 else:
+ 400⋮ 400│                     value = field.clean(value)
+ 401⋮ 401│                 self.cleaned_data[name] = value
+
+ 436⋮ 436│ 
+ 437⋮ 437│     @cached_property
+ 438⋮ 438│     def changed_data(self):
+ 439⋮    │-        data = []
+ 440⋮    │-        for name, field in self.fields.items():
+ 441⋮    │-            data_value = self._field_data_value(field, self.add_prefix(name))
+ 442⋮    │-            if not field.show_hidden_initial:
+ 443⋮    │-                # Use the BoundField's initial as this is the value passed to
+ 444⋮    │-                # the widget.
+ 445⋮    │-                initial_value = self[name].initial
+ 446⋮    │-            else:
+ 447⋮    │-                initial_prefixed_name = self.add_initial_prefix(name)
+ 448⋮    │-                hidden_widget = field.hidden_widget()
+ 449⋮    │-                try:
+ 450⋮    │-                    initial_value = field.to_python(
+ 451⋮    │-                        self._widget_data_value(hidden_widget, initial_prefixed_name)
+ 452⋮    │-                    )
+ 453⋮    │-                except ValidationError:
+ 454⋮    │-                    # Always assume data has changed if validation fails.
+ 455⋮    │-                    data.append(name)
+ 456⋮    │-                    continue
+ 457⋮    │-            if field.has_changed(initial_value, data_value):
+ 458⋮    │-                data.append(name)
+ 459⋮    │-        return data
+    ⋮ 439│+        return [name for name, bf in self._bound_items() if bf._has_changed()]
+ 460⋮ 440│ 
+ 461⋮ 441│     @property
+ 462⋮ 442│     def media(self):

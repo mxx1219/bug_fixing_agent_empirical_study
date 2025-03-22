@@ -1,0 +1,36 @@
+
+sklearn/linear_model/least_angle.py
+
+1479⋮1479│         self.eps = eps
+1480⋮1480│         self.fit_path = True
+1481⋮1481│ 
+1482⋮    │-    def fit(self, X, y, copy_X=True):
+    ⋮1482│+    def fit(self, X, y, copy_X=None):
+1483⋮1483│         """Fit the model using X, y as training data.
+1484⋮1484│ 
+1485⋮1485│         Parameters
+
+1490⋮1490│         y : array-like, shape (n_samples,)
+1491⋮1491│             target values. Will be cast to X's dtype if necessary
+1492⋮1492│ 
+1493⋮    │-        copy_X : boolean, optional, default True
+    ⋮1493│+        copy_X : boolean, optional, default None
+    ⋮1494│+            If provided, this parameter will override the choice
+    ⋮1495│+            of copy_X made at instance creation.
+1494⋮1496│             If ``True``, X will be copied; else, it may be overwritten.
+1495⋮1497│ 
+1496⋮1498│         Returns
+
+1498⋮1500│         self : object
+1499⋮1501│             returns an instance of self.
+1500⋮1502│         """
+    ⋮1503│+        if copy_X is None:
+    ⋮1504│+            copy_X = self.copy_X
+1501⋮1505│         X, y = check_X_y(X, y, y_numeric=True)
+1502⋮1506│ 
+1503⋮1507│         X, y, Xmean, ymean, Xstd = LinearModel._preprocess_data(
+1504⋮    │-            X, y, self.fit_intercept, self.normalize, self.copy_X)
+    ⋮1508│+            X, y, self.fit_intercept, self.normalize, copy_X)
+1505⋮1509│         max_iter = self.max_iter
+1506⋮1510│ 
+1507⋮1511│         Gram = self.precompute

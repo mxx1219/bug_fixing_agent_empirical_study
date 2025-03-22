@@ -1,0 +1,11 @@
+
+sympy/solvers/diophantine.py
+
+ 182⋮ 182│             if syms != var:
+ 183⋮ 183│                 dict_sym_index = dict(zip(syms, range(len(syms))))
+ 184⋮ 184│                 return {tuple([t[dict_sym_index[i]] for i in var])
+ 185⋮    │-                            for t in diophantine(eq, param)}
+    ⋮ 185│+                            for t in diophantine(eq, param, permute=permute)}
+ 186⋮ 186│         n, d = eq.as_numer_denom()
+ 187⋮ 187│         if n.is_number:
+ 188⋮ 188│             return set()

@@ -1,0 +1,18 @@
+
+lib/matplotlib/offsetbox.py
+
+1446⋮1446│             self._renderer = renderer
+1447⋮1447│         if not self.get_visible() or not self._check_xy(renderer):
+1448⋮1448│             return
+    ⋮1449│+        renderer.open_group(self.__class__.__name__, gid=self.get_gid())
+1449⋮1450│         self.update_positions(renderer)
+1450⋮1451│         if self.arrow_patch is not None:
+1451⋮1452│             if self.arrow_patch.figure is None and self.figure is not None:
+
+1453⋮1454│             self.arrow_patch.draw(renderer)
+1454⋮1455│         self.patch.draw(renderer)
+1455⋮1456│         self.offsetbox.draw(renderer)
+    ⋮1457│+        renderer.close_group(self.__class__.__name__)
+1456⋮1458│         self.stale = False
+1457⋮1459│ 
+1458⋮1460│ 

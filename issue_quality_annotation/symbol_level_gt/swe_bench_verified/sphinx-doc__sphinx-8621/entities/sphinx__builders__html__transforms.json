@@ -1,0 +1,22 @@
+[
+    {
+        "type": "functions",
+        "line_range": "62-69"
+    },
+    {
+        "type": "methods",
+        "line_range": "42-59"
+    },
+    {
+        "type": "classes",
+        "line_range": "21-41"
+    },
+    {
+        "type": "imports",
+        "line_range": "11-18"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "1-9"
+    }
+]

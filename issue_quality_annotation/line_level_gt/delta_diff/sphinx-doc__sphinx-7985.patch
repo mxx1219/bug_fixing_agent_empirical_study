@@ -1,0 +1,35 @@
+
+sphinx/builders/linkcheck.py
+
+ 35 ⋮ 35 │ 
+ 36 ⋮ 36 │ logger = logging.getLogger(__name__)
+ 37 ⋮ 37 │ 
+    ⋮ 38 │+uri_re = re.compile('[a-z]+://')
+    ⋮ 39 │+
+ 38 ⋮ 40 │ 
+ 39 ⋮ 41 │ DEFAULT_REQUEST_HEADERS = {
+ 40 ⋮ 42 │     'Accept': 'text/html,application/xhtml+xml;q=0.9,*/*;q=0.8',
+
+ 210⋮ 212│ 
+ 211⋮ 213│         def check() -> Tuple[str, str, int]:
+ 212⋮ 214│             # check for various conditions without bothering the network
+ 213⋮    │-            if len(uri) == 0 or uri.startswith(('#', 'mailto:', 'ftp:')):
+    ⋮ 215│+            if len(uri) == 0 or uri.startswith(('#', 'mailto:')):
+ 214⋮ 216│                 return 'unchecked', '', 0
+ 215⋮ 217│             elif not uri.startswith(('http:', 'https:')):
+ 216⋮    │-                return 'local', '', 0
+    ⋮ 218│+                if uri_re.match(uri):
+    ⋮ 219│+                    # non supported URI schemes (ex. ftp)
+    ⋮ 220│+                    return 'unchecked', '', 0
+    ⋮ 221│+                else:
+    ⋮ 222│+                    if path.exists(path.join(self.srcdir, uri)):
+    ⋮ 223│+                        return 'working', '', 0
+    ⋮ 224│+                    else:
+    ⋮ 225│+                        for rex in self.to_ignore:
+    ⋮ 226│+                            if rex.match(uri):
+    ⋮ 227│+                                return 'ignored', '', 0
+    ⋮ 228│+                        else:
+    ⋮ 229│+                            return 'broken', '', 0
+ 217⋮ 230│             elif uri in self.good:
+ 218⋮ 231│                 return 'working', 'old', 0
+ 219⋮ 232│             elif uri in self.broken:

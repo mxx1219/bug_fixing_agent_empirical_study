@@ -1,0 +1,10 @@
+
+pylint/lint/expand_modules.py
+
+ 52 ⋮ 52 │     ignore_list_re: list[Pattern[str]],
+ 53 ⋮ 53 │     ignore_list_paths_re: list[Pattern[str]],
+ 54 ⋮ 54 │ ) -> bool:
+    ⋮ 55 │+    element = os.path.normpath(element)
+ 55 ⋮ 56 │     basename = os.path.basename(element)
+ 56 ⋮ 57 │     return (
+ 57 ⋮ 58 │         basename in ignore_list

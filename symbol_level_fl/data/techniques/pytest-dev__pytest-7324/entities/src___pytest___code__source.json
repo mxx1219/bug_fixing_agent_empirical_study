@@ -1,0 +1,122 @@
+[
+    {
+        "type": "functions",
+        "line_range": "235-243"
+    },
+    {
+        "type": "functions",
+        "line_range": "246-254"
+    },
+    {
+        "type": "functions",
+        "line_range": "257-277"
+    },
+    {
+        "type": "functions",
+        "line_range": "285-292"
+    },
+    {
+        "type": "functions",
+        "line_range": "295-307"
+    },
+    {
+        "type": "functions",
+        "line_range": "310-317"
+    },
+    {
+        "type": "functions",
+        "line_range": "320-321"
+    },
+    {
+        "type": "functions",
+        "line_range": "324-343"
+    },
+    {
+        "type": "functions",
+        "line_range": "346-390"
+    },
+    {
+        "type": "methods",
+        "line_range": "34-50"
+    },
+    {
+        "type": "methods",
+        "line_range": "52-58"
+    },
+    {
+        "type": "methods",
+        "line_range": "63-65"
+    },
+    {
+        "type": "methods",
+        "line_range": "67-69"
+    },
+    {
+        "type": "methods",
+        "line_range": "71-79"
+    },
+    {
+        "type": "methods",
+        "line_range": "81-82"
+    },
+    {
+        "type": "methods",
+        "line_range": "84-85"
+    },
+    {
+        "type": "methods",
+        "line_range": "87-98"
+    },
+    {
+        "type": "methods",
+        "line_range": "100-111"
+    },
+    {
+        "type": "methods",
+        "line_range": "113-119"
+    },
+    {
+        "type": "methods",
+        "line_range": "121-126"
+    },
+    {
+        "type": "methods",
+        "line_range": "128-135"
+    },
+    {
+        "type": "methods",
+        "line_range": "137-141"
+    },
+    {
+        "type": "methods",
+        "line_range": "143-156"
+    },
+    {
+        "type": "methods",
+        "line_range": "158-159"
+    },
+    {
+        "type": "methods",
+        "line_range": "161-170"
+    },
+    {
+        "type": "methods",
+        "line_range": "172-181"
+    },
+    {
+        "type": "methods",
+        "line_range": "183-227"
+    },
+    {
+        "type": "classes",
+        "line_range": "27-33,51,59-62,66,70,80,83,86,99,112,120,127,136,142,157,160,171,182"
+    },
+    {
+        "type": "imports",
+        "line_range": "1-21"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "23-24"
+    }
+]

@@ -1,0 +1,12 @@
+
+django/db/models/base.py
+
+ 569⋮ 569│         return getattr(self, meta.pk.attname)
+ 570⋮ 570│ 
+ 571⋮ 571│     def _set_pk_val(self, value):
+    ⋮ 572│+        for parent_link in self._meta.parents.values():
+    ⋮ 573│+            if parent_link and parent_link != self._meta.pk:
+    ⋮ 574│+                setattr(self, parent_link.target_field.attname, value)
+ 572⋮ 575│         return setattr(self, self._meta.pk.attname, value)
+ 573⋮ 576│ 
+ 574⋮ 577│     pk = property(_get_pk_val, _set_pk_val)

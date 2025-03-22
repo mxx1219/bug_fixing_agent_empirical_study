@@ -1,0 +1,11 @@
+
+sympy/printing/latex.py
+
+ 703⋮ 703│         latex_new = (self._print(e) for e in new)
+ 704⋮ 704│         latex_subs = r'\\ '.join(
+ 705⋮ 705│             e[0] + '=' + e[1] for e in zip(latex_old, latex_new))
+ 706⋮    │-        return r'\left. %s \right|_{\substack{ %s }}' % (latex_expr,
+    ⋮ 706│+        return r'\left. \left(%s\right) \right|_{\substack{ %s }}' % (latex_expr,
+ 707⋮ 707│                                                          latex_subs)
+ 708⋮ 708│ 
+ 709⋮ 709│     def _print_Integral(self, expr):

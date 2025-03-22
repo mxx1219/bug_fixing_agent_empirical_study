@@ -1,0 +1,11 @@
+
+xarray/core/dataarray.py
+
+1961⋮1961│         # pull variables out of datarray
+1962⋮1962│         data_dict = {}
+1963⋮1963│         for k in variables:
+1964⋮    │-            data_dict[k] = self.sel({variable_dim: k}).squeeze(drop=True)
+    ⋮1964│+            data_dict[k] = self.sel({variable_dim: k}, drop=True).squeeze(drop=True)
+1965⋮1965│ 
+1966⋮1966│         # unstacked dataset
+1967⋮1967│         return Dataset(data_dict)

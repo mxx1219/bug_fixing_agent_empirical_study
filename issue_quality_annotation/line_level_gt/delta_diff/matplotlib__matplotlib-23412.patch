@@ -1,0 +1,14 @@
+
+lib/matplotlib/patches.py
+
+ 586⋮ 586│         # docstring inherited
+ 587⋮ 587│         if not self.get_visible():
+ 588⋮ 588│             return
+ 589⋮    │-        # Patch has traditionally ignored the dashoffset.
+ 590⋮    │-        with cbook._setattr_cm(
+ 591⋮    │-                 self, _dash_pattern=(0, self._dash_pattern[1])), \
+    ⋮ 589│+
+    ⋮ 590│+        with cbook._setattr_cm(self, _dash_pattern=(self._dash_pattern)), \
+ 592⋮ 591│              self._bind_draw_path_function(renderer) as draw_path:
+ 593⋮ 592│             path = self.get_path()
+ 594⋮ 593│             transform = self.get_transform()

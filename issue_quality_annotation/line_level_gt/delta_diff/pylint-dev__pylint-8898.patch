@@ -1,0 +1,73 @@
+
+pylint/config/argument.py
+
+ 114⋮ 114│ def _regexp_csv_transfomer(value: str) -> Sequence[Pattern[str]]:
+ 115⋮ 115│     """Transforms a comma separated list of regular expressions."""
+ 116⋮ 116│     patterns: list[Pattern[str]] = []
+ 117⋮    │-    for pattern in _csv_transformer(value):
+    ⋮ 117│+    for pattern in pylint_utils._check_regexp_csv(value):
+ 118⋮ 118│         patterns.append(_regex_transformer(pattern))
+ 119⋮ 119│     return patterns
+ 120⋮ 120│ 
+
+pylint/utils/__init__.py
+
+ 14 ⋮ 14 │     HAS_ISORT_5,
+ 15 ⋮ 15 │     IsortDriver,
+ 16 ⋮ 16 │     _check_csv,
+    ⋮ 17 │+    _check_regexp_csv,
+ 17 ⋮ 18 │     _splitstrip,
+ 18 ⋮ 19 │     _unquote,
+ 19 ⋮ 20 │     decoding_stream,
+
+ 32 ⋮ 33 │     "HAS_ISORT_5",
+ 33 ⋮ 34 │     "IsortDriver",
+ 34 ⋮ 35 │     "_check_csv",
+    ⋮ 36 │+    "_check_regexp_csv",
+ 35 ⋮ 37 │     "_splitstrip",
+ 36 ⋮ 38 │     "_unquote",
+ 37 ⋮ 39 │     "decoding_stream",
+
+pylint/utils/utils.py
+
+ 22 ⋮ 22 │ import textwrap
+ 23 ⋮ 23 │ import tokenize
+ 24 ⋮ 24 │ import warnings
+ 25 ⋮    │-from collections.abc import Sequence
+    ⋮ 25 │+from collections import deque
+    ⋮ 26 │+from collections.abc import Iterable, Sequence
+ 26 ⋮ 27 │ from io import BufferedReader, BytesIO
+ 27 ⋮ 28 │ from typing import (
+ 28 ⋮ 29 │     TYPE_CHECKING,
+
+ 253⋮ 254│     return _splitstrip(value)
+ 254⋮ 255│ 
+ 255⋮ 256│ 
+    ⋮ 257│+def _check_regexp_csv(value: list[str] | tuple[str] | str) -> Iterable[str]:
+    ⋮ 258│+    r"""Split a comma-separated list of regexps, taking care to avoid splitting
+    ⋮ 259│+    a regex employing a comma as quantifier, as in `\d{1,2}`."""
+    ⋮ 260│+    if isinstance(value, (list, tuple)):
+    ⋮ 261│+        yield from value
+    ⋮ 262│+    else:
+    ⋮ 263│+        # None is a sentinel value here
+    ⋮ 264│+        regexps: deque[deque[str] | None] = deque([None])
+    ⋮ 265│+        open_braces = False
+    ⋮ 266│+        for char in value:
+    ⋮ 267│+            if char == "{":
+    ⋮ 268│+                open_braces = True
+    ⋮ 269│+            elif char == "}" and open_braces:
+    ⋮ 270│+                open_braces = False
+    ⋮ 271│+
+    ⋮ 272│+            if char == "," and not open_braces:
+    ⋮ 273│+                regexps.append(None)
+    ⋮ 274│+            elif regexps[-1] is None:
+    ⋮ 275│+                regexps.pop()
+    ⋮ 276│+                regexps.append(deque([char]))
+    ⋮ 277│+            else:
+    ⋮ 278│+                regexps[-1].append(char)
+    ⋮ 279│+        yield from ("".join(regexp).strip() for regexp in regexps if regexp is not None)
+    ⋮ 280│+
+    ⋮ 281│+
+ 256⋮ 282│ def _comment(string: str) -> str:
+ 257⋮ 283│     """Return string as a comment."""
+ 258⋮ 284│     lines = [line.strip() for line in string.splitlines()]

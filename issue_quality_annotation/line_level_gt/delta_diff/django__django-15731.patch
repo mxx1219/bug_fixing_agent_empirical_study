@@ -1,0 +1,22 @@
+
+django/db/models/manager.py
+
+  1 ⋮  1 │ import copy
+  2 ⋮  2 │ import inspect
+    ⋮  3 │+from functools import wraps
+  3 ⋮  4 │ from importlib import import_module
+  4 ⋮  5 │ 
+  5 ⋮  6 │ from django.db import router
+
+ 81 ⋮ 82 │     @classmethod
+ 82 ⋮ 83 │     def _get_queryset_methods(cls, queryset_class):
+ 83 ⋮ 84 │         def create_method(name, method):
+    ⋮ 85 │+            @wraps(method)
+ 84 ⋮ 86 │             def manager_method(self, *args, **kwargs):
+ 85 ⋮ 87 │                 return getattr(self.get_queryset(), name)(*args, **kwargs)
+ 86 ⋮ 88 │ 
+ 87 ⋮    │-            manager_method.__name__ = method.__name__
+ 88 ⋮    │-            manager_method.__doc__ = method.__doc__
+ 89 ⋮ 89 │             return manager_method
+ 90 ⋮ 90 │ 
+ 91 ⋮ 91 │         new_methods = {}

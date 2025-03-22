@@ -1,0 +1,49 @@
+
+src/_pytest/python.py
+
+ 528⋮ 528│             autouse=True,
+ 529⋮ 529│             scope="module",
+ 530⋮ 530│             # Use a unique name to speed up lookup.
+ 531⋮    │-            name=f"xunit_setup_module_fixture_{self.obj.__name__}",
+    ⋮ 531│+            name=f"_xunit_setup_module_fixture_{self.obj.__name__}",
+ 532⋮ 532│         )
+ 533⋮ 533│         def xunit_setup_module_fixture(request) -> Generator[None, None, None]:
+ 534⋮ 534│             if setup_module is not None:
+
+ 557⋮ 557│             autouse=True,
+ 558⋮ 558│             scope="function",
+ 559⋮ 559│             # Use a unique name to speed up lookup.
+ 560⋮    │-            name=f"xunit_setup_function_fixture_{self.obj.__name__}",
+    ⋮ 560│+            name=f"_xunit_setup_function_fixture_{self.obj.__name__}",
+ 561⋮ 561│         )
+ 562⋮ 562│         def xunit_setup_function_fixture(request) -> Generator[None, None, None]:
+ 563⋮ 563│             if request.instance is not None:
+
+ 809⋮ 809│             autouse=True,
+ 810⋮ 810│             scope="class",
+ 811⋮ 811│             # Use a unique name to speed up lookup.
+ 812⋮    │-            name=f"xunit_setup_class_fixture_{self.obj.__qualname__}",
+    ⋮ 812│+            name=f"_xunit_setup_class_fixture_{self.obj.__qualname__}",
+ 813⋮ 813│         )
+ 814⋮ 814│         def xunit_setup_class_fixture(cls) -> Generator[None, None, None]:
+ 815⋮ 815│             if setup_class is not None:
+
+ 838⋮ 838│             autouse=True,
+ 839⋮ 839│             scope="function",
+ 840⋮ 840│             # Use a unique name to speed up lookup.
+ 841⋮    │-            name=f"xunit_setup_method_fixture_{self.obj.__qualname__}",
+    ⋮ 841│+            name=f"_xunit_setup_method_fixture_{self.obj.__qualname__}",
+ 842⋮ 842│         )
+ 843⋮ 843│         def xunit_setup_method_fixture(self, request) -> Generator[None, None, None]:
+ 844⋮ 844│             method = request.function
+
+src/_pytest/unittest.py
+
+ 144⋮ 144│         scope=scope,
+ 145⋮ 145│         autouse=True,
+ 146⋮ 146│         # Use a unique name to speed up lookup.
+ 147⋮    │-        name=f"unittest_{setup_name}_fixture_{obj.__qualname__}",
+    ⋮ 147│+        name=f"_unittest_{setup_name}_fixture_{obj.__qualname__}",
+ 148⋮ 148│     )
+ 149⋮ 149│     def fixture(self, request: FixtureRequest) -> Generator[None, None, None]:
+ 150⋮ 150│         if _is_skipped(self):

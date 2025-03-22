@@ -1,0 +1,17 @@
+
+django/db/models/enums.py
+
+ 60 ⋮ 60 │ 
+ 61 ⋮ 61 │ class Choices(enum.Enum, metaclass=ChoicesMeta):
+ 62 ⋮ 62 │     """Class for creating enumerated choices."""
+ 63 ⋮    │-    pass
+    ⋮ 63 │+
+    ⋮ 64 │+    def __str__(self):
+    ⋮ 65 │+        """
+    ⋮ 66 │+        Use value when cast to str, so that Choices set as model instance
+    ⋮ 67 │+        attributes are rendered as expected in templates and similar contexts.
+    ⋮ 68 │+        """
+    ⋮ 69 │+        return str(self.value)
+ 64 ⋮ 70 │ 
+ 65 ⋮ 71 │ 
+ 66 ⋮ 72 │ class IntegerChoices(int, Choices):

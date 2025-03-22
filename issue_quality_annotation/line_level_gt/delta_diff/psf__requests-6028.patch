@@ -1,0 +1,13 @@
+
+requests/utils.py
+
+ 974⋮ 974│     if not netloc:
+ 975⋮ 975│         netloc, path = path, netloc
+ 976⋮ 976│ 
+    ⋮ 977│+    if auth:
+    ⋮ 978│+        # parse_url doesn't provide the netloc with auth
+    ⋮ 979│+        # so we'll add it ourselves.
+    ⋮ 980│+        netloc = '@'.join([auth, netloc])
+ 977⋮ 981│     if scheme is None:
+ 978⋮ 982│         scheme = new_scheme
+ 979⋮ 983│     if path is None:

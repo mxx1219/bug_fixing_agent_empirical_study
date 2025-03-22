@@ -1,0 +1,21 @@
+
+requests/sessions.py
+
+ 12 ⋮ 12 │ from collections import Mapping
+ 13 ⋮ 13 │ from datetime import datetime
+ 14 ⋮ 14 │ 
+ 15 ⋮    │-from .compat import cookielib, OrderedDict, urljoin, urlparse, urlunparse
+    ⋮ 15 │+from .compat import cookielib, OrderedDict, urljoin, urlparse, urlunparse, builtin_str
+ 16 ⋮ 16 │ from .cookies import cookiejar_from_dict, extract_cookies_to_jar, RequestsCookieJar
+ 17 ⋮ 17 │ from .models import Request, PreparedRequest
+ 18 ⋮ 18 │ from .hooks import default_hooks, dispatch_hook
+
+ 309⋮ 309│         :param cert: (optional) if String, path to ssl client cert file (.pem).
+ 310⋮ 310│             If Tuple, ('cert', 'key') pair.
+ 311⋮ 311│         """
+    ⋮ 312│+
+    ⋮ 313│+        method = builtin_str(method)
+    ⋮ 314│+
+ 312⋮ 315│         # Create the Request.
+ 313⋮ 316│         req = Request(
+ 314⋮ 317│             method = method.upper(),

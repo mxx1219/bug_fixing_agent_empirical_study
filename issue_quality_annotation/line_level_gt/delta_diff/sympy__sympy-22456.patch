@@ -1,0 +1,42 @@
+
+sympy/codegen/ast.py
+
+ 133⋮ 133│ from sympy.core.relational import (Ge, Gt, Le, Lt)
+ 134⋮ 134│ from sympy.core import Symbol, Tuple, Dummy
+ 135⋮ 135│ from sympy.core.basic import Basic
+ 136⋮    │-from sympy.core.expr import Expr
+    ⋮ 136│+from sympy.core.expr import Expr, Atom
+ 137⋮ 137│ from sympy.core.numbers import Float, Integer, oo
+ 138⋮ 138│ from sympy.core.sympify import _sympify, sympify, SympifyError
+ 139⋮ 139│ from sympy.utilities.iterables import (iterable, topological_sort,
+
+ 335⋮ 335│         else:
+ 336⋮ 336│             return kwargs
+ 337⋮ 337│ 
+ 338⋮    │-
+ 339⋮ 338│ class BreakToken(Token):
+ 340⋮ 339│     """ Represents 'break' in C/Python ('exit' in Fortran).
+ 341⋮ 340│ 
+
+ 869⋮ 868│         return _sympify(itr)
+ 870⋮ 869│ 
+ 871⋮ 870│ 
+ 872⋮    │-class String(Token):
+    ⋮ 871│+class String(Atom, Token):
+ 873⋮ 872│     """ SymPy object representing a string.
+ 874⋮ 873│ 
+ 875⋮ 874│     Atomic object which is not an expression (as opposed to Symbol).
+
+ 907⋮ 906│     def _sympystr(self, printer, *args, **kwargs):
+ 908⋮ 907│         return self.text
+ 909⋮ 908│ 
+    ⋮ 909│+    def kwargs(self, exclude = (), apply = None):
+    ⋮ 910│+        return {}
+    ⋮ 911│+
+    ⋮ 912│+    #to be removed when Atom is given a suitable func
+    ⋮ 913│+    @property
+    ⋮ 914│+    def func(self):
+    ⋮ 915│+        return lambda: self
+ 910⋮ 916│ 
+ 911⋮ 917│ class QuotedString(String):
+ 912⋮ 918│     """ Represents a string which should be printed with quotes. """

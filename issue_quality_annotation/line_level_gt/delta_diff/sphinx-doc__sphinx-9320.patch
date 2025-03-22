@@ -1,0 +1,24 @@
+
+sphinx/cmd/quickstart.py
+
+ 95 ⋮ 95 │     return x
+ 96 ⋮ 96 │ 
+ 97 ⋮ 97 │ 
+    ⋮ 98 │+def is_path_or_empty(x: str) -> str:
+    ⋮ 99 │+    if x == '':
+    ⋮ 100│+        return x
+    ⋮ 101│+    return is_path(x)
+    ⋮ 102│+
+    ⋮ 103│+
+ 98 ⋮ 104│ def allow_empty(x: str) -> str:
+ 99 ⋮ 105│     return x
+ 100⋮ 106│ 
+
+ 223⋮ 229│         print(__('sphinx-quickstart will not overwrite existing Sphinx projects.'))
+ 224⋮ 230│         print()
+ 225⋮ 231│         d['path'] = do_prompt(__('Please enter a new root path (or just Enter to exit)'),
+ 226⋮    │-                              '', is_path)
+    ⋮ 232│+                              '', is_path_or_empty)
+ 227⋮ 233│         if not d['path']:
+ 228⋮ 234│             sys.exit(1)
+ 229⋮ 235│ 

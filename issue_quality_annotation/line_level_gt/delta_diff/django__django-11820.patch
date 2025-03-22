@@ -1,0 +1,19 @@
+
+django/db/models/base.py
+
+1708⋮1708│             fld = None
+1709⋮1709│             for part in field.split(LOOKUP_SEP):
+1710⋮1710│                 try:
+1711⋮    │-                    fld = _cls._meta.get_field(part)
+    ⋮1711│+                    # pk is an alias that won't be found by opts.get_field.
+    ⋮1712│+                    if part == 'pk':
+    ⋮1713│+                        fld = _cls._meta.pk
+    ⋮1714│+                    else:
+    ⋮1715│+                        fld = _cls._meta.get_field(part)
+1712⋮1716│                     if fld.is_relation:
+1713⋮1717│                         _cls = fld.get_path_info()[-1].to_opts.model
+    ⋮1718│+                    else:
+    ⋮1719│+                        _cls = None
+1714⋮1720│                 except (FieldDoesNotExist, AttributeError):
+1715⋮1721│                     if fld is None or fld.get_transform(part) is None:
+1716⋮1722│                         errors.append(

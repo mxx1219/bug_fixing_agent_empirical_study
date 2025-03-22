@@ -1,0 +1,53 @@
+
+src/_pytest/mark/structures.py
+
+ 355⋮ 355│         return self.with_args(*args, **kwargs)
+ 356⋮ 356│ 
+ 357⋮ 357│ 
+ 358⋮    │-def get_unpacked_marks(obj: object) -> Iterable[Mark]:
+ 359⋮    │-    """Obtain the unpacked marks that are stored on an object."""
+ 360⋮    │-    mark_list = getattr(obj, "pytestmark", [])
+ 361⋮    │-    if not isinstance(mark_list, list):
+ 362⋮    │-        mark_list = [mark_list]
+ 363⋮    │-    return normalize_mark_list(mark_list)
+    ⋮ 358│+def get_unpacked_marks(
+    ⋮ 359│+    obj: Union[object, type],
+    ⋮ 360│+    *,
+    ⋮ 361│+    consider_mro: bool = True,
+    ⋮ 362│+) -> List[Mark]:
+    ⋮ 363│+    """Obtain the unpacked marks that are stored on an object.
+    ⋮ 364│+
+    ⋮ 365│+    If obj is a class and consider_mro is true, return marks applied to
+    ⋮ 366│+    this class and all of its super-classes in MRO order. If consider_mro
+    ⋮ 367│+    is false, only return marks applied directly to this class.
+    ⋮ 368│+    """
+    ⋮ 369│+    if isinstance(obj, type):
+    ⋮ 370│+        if not consider_mro:
+    ⋮ 371│+            mark_lists = [obj.__dict__.get("pytestmark", [])]
+    ⋮ 372│+        else:
+    ⋮ 373│+            mark_lists = [x.__dict__.get("pytestmark", []) for x in obj.__mro__]
+    ⋮ 374│+        mark_list = []
+    ⋮ 375│+        for item in mark_lists:
+    ⋮ 376│+            if isinstance(item, list):
+    ⋮ 377│+                mark_list.extend(item)
+    ⋮ 378│+            else:
+    ⋮ 379│+                mark_list.append(item)
+    ⋮ 380│+    else:
+    ⋮ 381│+        mark_attribute = getattr(obj, "pytestmark", [])
+    ⋮ 382│+        if isinstance(mark_attribute, list):
+    ⋮ 383│+            mark_list = mark_attribute
+    ⋮ 384│+        else:
+    ⋮ 385│+            mark_list = [mark_attribute]
+    ⋮ 386│+    return list(normalize_mark_list(mark_list))
+ 364⋮ 387│ 
+ 365⋮ 388│ 
+ 366⋮ 389│ def normalize_mark_list(
+
+ 388⋮ 411│     assert isinstance(mark, Mark), mark
+ 389⋮ 412│     # Always reassign name to avoid updating pytestmark in a reference that
+ 390⋮ 413│     # was only borrowed.
+ 391⋮    │-    obj.pytestmark = [*get_unpacked_marks(obj), mark]
+    ⋮ 414│+    obj.pytestmark = [*get_unpacked_marks(obj, consider_mro=False), mark]
+ 392⋮ 415│ 
+ 393⋮ 416│ 
+ 394⋮ 417│ # Typing for builtin pytest marks. This is cheating; it gives builtin marks

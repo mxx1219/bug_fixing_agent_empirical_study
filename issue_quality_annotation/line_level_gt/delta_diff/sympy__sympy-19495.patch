@@ -1,0 +1,49 @@
+
+sympy/sets/conditionset.py
+
+ 80 ⋮ 80 │     >>> _.subs(y, 1)
+ 81 ⋮ 81 │     ConditionSet(y, y < 1, FiniteSet(z))
+ 82 ⋮ 82 │ 
+ 83 ⋮    │-    Notes
+ 84 ⋮    │-    =====
+ 85 ⋮    │-
+ 86 ⋮ 83 │     If no base set is specified, the universal set is implied:
+ 87 ⋮ 84 │ 
+ 88 ⋮ 85 │     >>> ConditionSet(x, x < 1).base_set
+
+ 102⋮ 99 │ 
+ 103⋮ 100│     Although the name is usually respected, it must be replaced if
+ 104⋮ 101│     the base set is another ConditionSet and the dummy symbol
+ 105⋮    │-    and appears as a free symbol in the base set and the dummy symbol
+    ⋮ 102│+    appears as a free symbol in the base set and the dummy symbol
+ 106⋮ 103│     of the base set appears as a free symbol in the condition:
+ 107⋮ 104│ 
+ 108⋮ 105│     >>> ConditionSet(x, x < y, ConditionSet(y, x + y < 2, S.Integers))
+
+ 113⋮ 110│ 
+ 114⋮ 111│     >>> _.subs(_.sym, Symbol('_x'))
+ 115⋮ 112│     ConditionSet(_x, (_x < y) & (_x + x < 2), Integers)
+    ⋮ 113│+
+ 116⋮ 114│     """
+ 117⋮ 115│     def __new__(cls, sym, condition, base_set=S.UniversalSet):
+ 118⋮ 116│         # nonlinsolve uses ConditionSet to return an unsolved system
+
+ 240⋮ 238│             # the base set should be filtered and if new is not in
+ 241⋮ 239│             # the base set then this substitution is ignored
+ 242⋮ 240│             return self.func(sym, cond, base)
+ 243⋮    │-        cond = self.condition.subs(old, new)
+ 244⋮    │-        base = self.base_set.subs(old, new)
+ 245⋮    │-        if cond is S.true:
+ 246⋮    │-            return ConditionSet(new, Contains(new, base), base)
+ 247⋮    │-        return self.func(self.sym, cond, base)
+    ⋮ 241│+        else:
+    ⋮ 242│+            cond = self.condition.subs(old, new)
+    ⋮ 243│+            base = self.base_set.subs(old, new)
+    ⋮ 244│+            # The condition may have become true due to assumptions
+    ⋮ 245│+            # on 'sym'. In order for .subs() to be consistent with
+    ⋮ 246│+            # __new__ we *don't* check if 'sym' actually belongs to
+    ⋮ 247│+            # 'base'. In other words: assumptions are ignored.
+    ⋮ 248│+            return self.func(self.sym, cond, base)
+ 248⋮ 249│ 
+ 249⋮ 250│     def dummy_eq(self, other, symbol=None):
+ 250⋮ 251│         if not isinstance(other, self.func):

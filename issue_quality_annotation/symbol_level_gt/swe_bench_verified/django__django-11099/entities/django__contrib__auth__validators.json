@@ -1,0 +1,14 @@
+[
+    {
+        "type": "classes",
+        "line_range": "8-15"
+    },
+    {
+        "type": "classes",
+        "line_range": "18-25"
+    },
+    {
+        "type": "imports",
+        "line_range": "1-5"
+    }
+]

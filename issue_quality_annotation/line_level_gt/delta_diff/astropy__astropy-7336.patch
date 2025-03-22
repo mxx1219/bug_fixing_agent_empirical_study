@@ -1,0 +1,11 @@
+
+astropy/units/decorators.py
+
+ 220⋮ 220│             # Call the original function with any equivalencies in force.
+ 221⋮ 221│             with add_enabled_equivalencies(self.equivalencies):
+ 222⋮ 222│                 return_ = wrapped_function(*func_args, **func_kwargs)
+ 223⋮    │-            if wrapped_signature.return_annotation is not inspect.Signature.empty:
+    ⋮ 223│+            if wrapped_signature.return_annotation not in (inspect.Signature.empty, None):
+ 224⋮ 224│                 return return_.to(wrapped_signature.return_annotation)
+ 225⋮ 225│             else:
+ 226⋮ 226│                 return return_

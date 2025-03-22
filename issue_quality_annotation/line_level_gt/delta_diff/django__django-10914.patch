@@ -1,0 +1,11 @@
+
+django/conf/global_settings.py
+
+ 304⋮ 304│ 
+ 305⋮ 305│ # The numeric mode to set newly-uploaded files to. The value should be a mode
+ 306⋮ 306│ # you'd pass directly to os.chmod; see https://docs.python.org/library/os.html#files-and-directories.
+ 307⋮    │-FILE_UPLOAD_PERMISSIONS = None
+    ⋮ 307│+FILE_UPLOAD_PERMISSIONS = 0o644
+ 308⋮ 308│ 
+ 309⋮ 309│ # The numeric mode to assign to newly-created directories, when uploading files.
+ 310⋮ 310│ # The value should be a mode as you'd pass to os.chmod;

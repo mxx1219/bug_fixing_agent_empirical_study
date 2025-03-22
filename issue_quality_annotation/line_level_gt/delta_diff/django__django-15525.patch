@@ -1,0 +1,13 @@
+
+django/core/serializers/base.py
+
+ 336⋮ 336│         and hasattr(default_manager, "get_by_natural_key")
+ 337⋮ 337│         and hasattr(Model, "natural_key")
+ 338⋮ 338│     ):
+ 339⋮    │-        natural_key = Model(**data).natural_key()
+    ⋮ 339│+        obj = Model(**data)
+    ⋮ 340│+        obj._state.db = db
+    ⋮ 341│+        natural_key = obj.natural_key()
+ 340⋮ 342│         try:
+ 341⋮ 343│             data[Model._meta.pk.attname] = Model._meta.pk.to_python(
+ 342⋮ 344│                 default_manager.db_manager(db).get_by_natural_key(*natural_key).pk

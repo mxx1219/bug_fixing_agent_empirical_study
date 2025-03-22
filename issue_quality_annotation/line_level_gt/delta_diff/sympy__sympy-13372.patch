@@ -1,0 +1,19 @@
+
+sympy/core/evalf.py
+
+1301⋮1301│             elif re.is_number:
+1302⋮1302│                 re = re._to_mpmath(prec, allow_ints=False)._mpf_
+1303⋮1303│                 reprec = prec
+    ⋮1304│+            else:
+    ⋮1305│+                raise NotImplementedError
+1304⋮1306│             if im == 0:
+1305⋮1307│                 im = None
+1306⋮1308│                 imprec = None
+1307⋮1309│             elif im.is_number:
+1308⋮1310│                 im = im._to_mpmath(prec, allow_ints=False)._mpf_
+1309⋮1311│                 imprec = prec
+    ⋮1312│+            else:
+    ⋮1313│+                raise NotImplementedError
+1310⋮1314│             r = re, im, reprec, imprec
+1311⋮1315│         except AttributeError:
+1312⋮1316│             raise NotImplementedError

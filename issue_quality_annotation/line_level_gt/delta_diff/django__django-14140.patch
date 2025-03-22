@@ -1,0 +1,21 @@
+
+django/db/models/query_utils.py
+
+ 84 ⋮ 84 │         path = '%s.%s' % (self.__class__.__module__, self.__class__.__name__)
+ 85 ⋮ 85 │         if path.startswith('django.db.models.query_utils'):
+ 86 ⋮ 86 │             path = path.replace('django.db.models.query_utils', 'django.db.models')
+ 87 ⋮    │-        args, kwargs = (), {}
+ 88 ⋮    │-        if len(self.children) == 1 and not isinstance(self.children[0], Q):
+ 89 ⋮    │-            child = self.children[0]
+ 90 ⋮    │-            kwargs = {child[0]: child[1]}
+ 91 ⋮    │-        else:
+ 92 ⋮    │-            args = tuple(self.children)
+ 93 ⋮    │-            if self.connector != self.default:
+ 94 ⋮    │-                kwargs = {'_connector': self.connector}
+    ⋮ 87 │+        args = tuple(self.children)
+    ⋮ 88 │+        kwargs = {}
+    ⋮ 89 │+        if self.connector != self.default:
+    ⋮ 90 │+            kwargs['_connector'] = self.connector
+ 95 ⋮ 91 │         if self.negated:
+ 96 ⋮ 92 │             kwargs['_negated'] = True
+ 97 ⋮ 93 │         return path, args, kwargs

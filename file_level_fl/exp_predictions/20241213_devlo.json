@@ -1,0 +1,1564 @@
+{
+    "django__django-14404": [
+        "django/contrib/admin/sites.py"
+    ],
+    "django__django-11239": [
+        "django/db/backends/postgresql/client.py"
+    ],
+    "django__django-12308": [
+        "django/contrib/admin/utils.py"
+    ],
+    "sympy__sympy-17630": [
+        "sympy/matrices/expressions/blockmatrix.py"
+    ],
+    "scikit-learn__scikit-learn-13439": [
+        "sklearn/pipeline.py"
+    ],
+    "matplotlib__matplotlib-25311": [
+        "lib/matplotlib/legend.py"
+    ],
+    "django__django-13933": [
+        "django/forms/models.py"
+    ],
+    "django__django-16255": [
+        "django/contrib/sitemaps/__init__.py"
+    ],
+    "sympy__sympy-13372": [
+        "sympy/core/evalf.py"
+    ],
+    "scikit-learn__scikit-learn-13496": [
+        "sklearn/ensemble/iforest.py"
+    ],
+    "sympy__sympy-16450": [
+        "sympy/simplify/simplify.py"
+    ],
+    "django__django-13121": [
+        "django/db/backends/base/operations.py"
+    ],
+    "django__django-14155": [
+        "django/urls/resolvers.py"
+    ],
+    "django__django-11964": [
+        "django/db/models/enums.py"
+    ],
+    "django__django-13658": [
+        "django/core/management/__init__.py"
+    ],
+    "django__django-15280": [
+        "django/db/models/base.py",
+        "django/db/models/fields/related_descriptors.py"
+    ],
+    "astropy__astropy-14598": [
+        "astropy/io/fits/card.py"
+    ],
+    "django__django-15499": [
+        "django/db/migrations/operations/models.py"
+    ],
+    "django__django-14034": [
+        "django/forms/fields.py"
+    ],
+    "matplotlib__matplotlib-23314": [
+        "lib/mpl_toolkits/mplot3d/axes3d.py"
+    ],
+    "scikit-learn__scikit-learn-14983": [
+        "sklearn/model_selection/_split.py"
+    ],
+    "django__django-13810": [
+        "django/core/handlers/base.py"
+    ],
+    "django__django-12273": [
+        "django/db/models/base.py"
+    ],
+    "django__django-12209": [
+        "django/db/models/base.py"
+    ],
+    "django__django-12858": [
+        "django/db/models/base.py"
+    ],
+    "django__django-11815": [
+        "django/db/migrations/serializer.py",
+        "django/db/models/fields/__init__.py"
+    ],
+    "django__django-15572": [
+        "django/template/autoreload.py"
+    ],
+    "sympy__sympy-13647": [
+        "sympy/matrices/common.py"
+    ],
+    "django__django-12325": [
+        "django/db/models/options.py"
+    ],
+    "django__django-13964": [
+        "django/db/models/fields/related_descriptors.py"
+    ],
+    "scikit-learn__scikit-learn-13779": [
+        "sklearn/ensemble/voting.py"
+    ],
+    "django__django-11451": [
+        "django/contrib/auth/backends.py"
+    ],
+    "django__django-14011": [
+        "django/core/servers/basehttp.py"
+    ],
+    "django__django-12663": [
+        "django/db/models/fields/__init__.py"
+    ],
+    "django__django-14493": [
+        "django/contrib/staticfiles/storage.py"
+    ],
+    "django__django-13551": [
+        "django/contrib/auth/tokens.py"
+    ],
+    "django__django-15104": [
+        "django/db/migrations/autodetector.py"
+    ],
+    "django__django-14915": [
+        "django/forms/models.py"
+    ],
+    "django__django-13279": [
+        "django/contrib/sessions/backends/base.py"
+    ],
+    "sympy__sympy-13480": [
+        "sympy/functions/elementary/hyperbolic.py"
+    ],
+    "django__django-16145": [
+        "django/core/management/commands/runserver.py"
+    ],
+    "sympy__sympy-18189": [
+        "sympy/solvers/diophantine.py"
+    ],
+    "astropy__astropy-14508": [
+        "astropy/io/fits/card.py"
+    ],
+    "django__django-13809": [
+        "django/core/management/commands/runserver.py"
+    ],
+    "sphinx-doc__sphinx-11445": [
+        "sphinx/builders/html/transforms.py",
+        "sphinx/domains/python.py",
+        "sphinx/environment/collectors/title.py",
+        "sphinx/environment/collectors/toctree.py",
+        "sphinx/parsers.py",
+        "sphinx/transforms/__init__.py",
+        "sphinx/util/rst.py",
+        "sphinx/writers/html5.py"
+    ],
+    "django__django-11276": [
+        "django/utils/html.py"
+    ],
+    "django__django-14170": [
+        "django/db/models/lookups.py"
+    ],
+    "sympy__sympy-17655": [
+        "sympy/geometry/point.py"
+    ],
+    "sympy__sympy-18199": [
+        "sympy/ntheory/residue_ntheory.py"
+    ],
+    "django__django-13401": [
+        "django/db/models/fields/__init__.py"
+    ],
+    "django__django-12039": [
+        "django/db/backends/ddl_references.py"
+    ],
+    "django__django-13568": [
+        "django/contrib/auth/checks.py"
+    ],
+    "pydata__xarray-4094": [
+        "xarray/core/dataarray.py"
+    ],
+    "sympy__sympy-16792": [
+        "sympy/utilities/autowrap.py",
+        "sympy/utilities/codegen.py"
+    ],
+    "django__django-16819": [
+        "django/db/migrations/operations/models.py"
+    ],
+    "django__django-15695": [
+        "django/db/migrations/operations/models.py"
+    ],
+    "django__django-9296": [
+        "django/core/paginator.py"
+    ],
+    "sphinx-doc__sphinx-8595": [
+        "sphinx/ext/autodoc/__init__.py"
+    ],
+    "django__django-13821": [
+        "django/db/backends/sqlite3/base.py"
+    ],
+    "scikit-learn__scikit-learn-14087": [
+        "sklearn/linear_model/logistic.py"
+    ],
+    "django__django-11551": [
+        "django/contrib/admin/checks.py"
+    ],
+    "django__django-12050": [
+        "django/db/models/sql/query.py"
+    ],
+    "django__django-13363": [
+        "django/db/models/functions/datetime.py"
+    ],
+    "pytest-dev__pytest-7205": [
+        "src/_pytest/setuponly.py"
+    ],
+    "matplotlib__matplotlib-21568": [
+        "lib/matplotlib/dates.py"
+    ],
+    "django__django-14434": [
+        "django/db/backends/base/schema.py"
+    ],
+    "sympy__sympy-20428": [
+        "sympy/polys/densearith.py",
+        "sympy/polys/densebasic.py",
+        "sympy/polys/densetools.py"
+    ],
+    "django__django-13741": [
+        "django/contrib/auth/forms.py"
+    ],
+    "django__django-11880": [
+        "django/forms/fields.py"
+    ],
+    "django__django-15252": [
+        "django/db/migrations/recorder.py"
+    ],
+    "django__django-14765": [
+        "django/db/migrations/state.py"
+    ],
+    "django__django-14580": [
+        "django/db/migrations/serializer.py"
+    ],
+    "django__django-16256": [
+        "django/db/models/fields/related_descriptors.py"
+    ],
+    "django__django-12965": [
+        "django/db/backends/mysql/compiler.py"
+    ],
+    "django__django-11848": [
+        "django/utils/http.py"
+    ],
+    "django__django-12406": [
+        "django/forms/models.py"
+    ],
+    "django__django-10097": [
+        "django/core/validators.py"
+    ],
+    "astropy__astropy-14365": [
+        "astropy/io/ascii/qdp.py"
+    ],
+    "django__django-15973": [
+        "django/db/models/fields/related.py"
+    ],
+    "pylint-dev__pylint-6386": [
+        "pylint/lint/base_options.py"
+    ],
+    "django__django-11292": [
+        "django/core/management/base.py"
+    ],
+    "sympy__sympy-12419": [
+        "sympy/concrete/summations.py",
+        "sympy/matrices/expressions/matexpr.py"
+    ],
+    "matplotlib__matplotlib-23412": [
+        "lib/matplotlib/patches.py"
+    ],
+    "pytest-dev__pytest-5809": [
+        "src/_pytest/pastebin.py"
+    ],
+    "django__django-14373": [
+        "django/utils/dateformat.py"
+    ],
+    "django__django-14771": [
+        "django/utils/autoreload.py"
+    ],
+    "sympy__sympy-15345": [
+        "sympy/printing/mathematica.py"
+    ],
+    "astropy__astropy-14539": [
+        "astropy/io/fits/diff.py"
+    ],
+    "pylint-dev__pylint-4661": [
+        "pylint/config/__init__.py"
+    ],
+    "django__django-12304": [
+        "django/db/models/enums.py"
+    ],
+    "django__django-15268": [
+        "django/db/migrations/operations/models.py",
+        "django/db/migrations/optimizer.py"
+    ],
+    "psf__requests-2931": [
+        "requests/models.py"
+    ],
+    "django__django-16612": [
+        "django/contrib/admin/sites.py"
+    ],
+    "sympy__sympy-20154": [
+        "sympy/utilities/iterables.py"
+    ],
+    "django__django-16631": [
+        "django/contrib/auth/base_user.py"
+    ],
+    "django__django-13195": [
+        "django/http/response.py"
+    ],
+    "mwaskom__seaborn-3187": [
+        "seaborn/_core/scales.py"
+    ],
+    "mwaskom__seaborn-3069": [
+        "seaborn/_core/scales.py"
+    ],
+    "django__django-16595": [
+        "django/db/migrations/operations/fields.py"
+    ],
+    "sympy__sympy-13031": [
+        "sympy/matrices/common.py"
+    ],
+    "django__django-15957": [
+        "django/db/models/query.py"
+    ],
+    "pylint-dev__pylint-6528": [
+        "pylint/lint/pylinter.py"
+    ],
+    "django__django-10973": [
+        "django/db/backends/postgresql/client.py"
+    ],
+    "django__django-11728": [
+        "django/contrib/admindocs/utils.py"
+    ],
+    "sympy__sympy-20438": [
+        "sympy/core/relational.py",
+        "sympy/sets/handlers/issubset.py"
+    ],
+    "django__django-12774": [
+        "django/db/models/query.py"
+    ],
+    "django__django-13023": [
+        "django/db/models/fields/__init__.py"
+    ],
+    "django__django-16454": [
+        "django/core/management/base.py"
+    ],
+    "django__django-12754": [
+        "django/db/migrations/autodetector.py"
+    ],
+    "django__django-13346": [
+        "django/db/models/fields/json.py"
+    ],
+    "django__django-13807": [
+        "django/db/backends/sqlite3/base.py"
+    ],
+    "pydata__xarray-7229": [
+        "xarray/core/merge.py"
+    ],
+    "django__django-10999": [
+        "django/utils/dateparse.py"
+    ],
+    "django__django-11749": [
+        "django/core/management/__init__.py"
+    ],
+    "django__django-15315": [
+        "django/db/models/fields/__init__.py"
+    ],
+    "django__django-14007": [
+        "django/db/models/base.py",
+        "django/db/models/sql/compiler.py"
+    ],
+    "matplotlib__matplotlib-25775": [
+        "lib/matplotlib/text.py"
+    ],
+    "django__django-16662": [
+        "django/db/migrations/writer.py"
+    ],
+    "django__django-14017": [
+        "django/db/models/query_utils.py"
+    ],
+    "matplotlib__matplotlib-20676": [
+        "lib/matplotlib/widgets.py"
+    ],
+    "sphinx-doc__sphinx-7454": [
+        "sphinx/domains/python.py",
+        "sphinx/util/typing.py"
+    ],
+    "pydata__xarray-6461": [
+        "xarray/core/computation.py"
+    ],
+    "pydata__xarray-2905": [
+        "xarray/core/variable.py"
+    ],
+    "django__django-16950": [
+        "django/db/models/base.py"
+    ],
+    "scikit-learn__scikit-learn-11578": [
+        "sklearn/linear_model/logistic.py"
+    ],
+    "astropy__astropy-13236": [
+        "astropy/table/table.py"
+    ],
+    "django__django-14500": [
+        "django/db/migrations/executor.py"
+    ],
+    "django__django-16560": [
+        "django/db/models/constraints.py"
+    ],
+    "pytest-dev__pytest-10081": [
+        "src/_pytest/unittest.py"
+    ],
+    "django__django-12741": [
+        "django/core/management/commands/flush.py",
+        "django/db/backends/base/operations.py"
+    ],
+    "django__django-15863": [
+        "django/template/defaultfilters.py"
+    ],
+    "scikit-learn__scikit-learn-14141": [
+        "sklearn/utils/_show_versions.py"
+    ],
+    "sympy__sympy-13877": [
+        "sympy/matrices/matrices.py"
+    ],
+    "pylint-dev__pylint-4551": [
+        "pylint/pyreverse/diagrams.py",
+        "pylint/pyreverse/inspector.py"
+    ],
+    "pallets__flask-5014": [
+        "src/flask/blueprints.py"
+    ],
+    "scikit-learn__scikit-learn-12585": [
+        "sklearn/base.py"
+    ],
+    "django__django-11299": [
+        "django/db/models/constraints.py",
+        "django/db/models/sql/where.py"
+    ],
+    "django__django-13089": [
+        "django/core/cache/backends/db.py"
+    ],
+    "django__django-11885": [
+        "django/db/models/deletion.py"
+    ],
+    "scikit-learn__scikit-learn-10297": [
+        "sklearn/linear_model/ridge.py"
+    ],
+    "django__django-11400": [
+        "django/contrib/admin/filters.py"
+    ],
+    "django__django-15525": [
+        "django/core/serializers/base.py"
+    ],
+    "pydata__xarray-3305": [
+        "xarray/core/dataarray.py"
+    ],
+    "django__django-15382": [
+        "django/db/models/expressions.py"
+    ],
+    "django__django-15127": [
+        "django/contrib/messages/storage/base.py"
+    ],
+    "matplotlib__matplotlib-24970": [
+        "lib/matplotlib/colors.py"
+    ],
+    "pydata__xarray-6744": [
+        "xarray/core/rolling.py"
+    ],
+    "scikit-learn__scikit-learn-13124": [
+        "sklearn/model_selection/_split.py"
+    ],
+    "sphinx-doc__sphinx-11510": [
+        "sphinx/application.py"
+    ],
+    "django__django-16315": [
+        "django/db/backends/postgresql/operations.py"
+    ],
+    "django__django-13212": [
+        "django/core/validators.py"
+    ],
+    "scikit-learn__scikit-learn-25931": [
+        "sklearn/base.py",
+        "sklearn/ensemble/_iforest.py"
+    ],
+    "sympy__sympy-14531": [
+        "sympy/printing/python.py",
+        "sympy/printing/str.py"
+    ],
+    "django__django-11099": [
+        "django/contrib/auth/validators.py"
+    ],
+    "django__django-16877": [
+        "django/template/defaultfilters.py"
+    ],
+    "django__django-13315": [
+        "django/forms/models.py"
+    ],
+    "django__django-16502": [
+        "django/core/servers/basehttp.py"
+    ],
+    "django__django-11179": [
+        "django/db/models/deletion.py"
+    ],
+    "pydata__xarray-6938": [
+        "xarray/core/dataset.py"
+    ],
+    "sphinx-doc__sphinx-9698": [
+        "sphinx/domains/python.py"
+    ],
+    "scikit-learn__scikit-learn-25973": [
+        "sklearn/feature_selection/_sequential.py"
+    ],
+    "django__django-12143": [
+        "django/contrib/admin/options.py"
+    ],
+    "django__django-11066": [
+        "django/contrib/contenttypes/management/__init__.py"
+    ],
+    "pytest-dev__pytest-7490": [
+        "src/_pytest/skipping.py"
+    ],
+    "sympy__sympy-13852": [
+        "sympy/functions/special/zeta_functions.py"
+    ],
+    "sympy__sympy-22714": [
+        "sympy/geometry/point.py"
+    ],
+    "scikit-learn__scikit-learn-9288": [
+        "sklearn/cluster/k_means_.py"
+    ],
+    "django__django-14792": [
+        "django/utils/timezone.py"
+    ],
+    "django__django-13109": [
+        "django/db/models/fields/related.py"
+    ],
+    "django__django-14140": [
+        "django/db/models/query_utils.py"
+    ],
+    "matplotlib__matplotlib-25479": [
+        "lib/matplotlib/cm.py",
+        "lib/matplotlib/colors.py"
+    ],
+    "django__django-15503": [
+        "django/db/models/fields/json.py"
+    ],
+    "matplotlib__matplotlib-24627": [
+        "lib/matplotlib/axes/_base.py"
+    ],
+    "sphinx-doc__sphinx-10449": [
+        "sphinx/ext/autodoc/typehints.py"
+    ],
+    "sympy__sympy-13757": [
+        "sympy/polys/polytools.py"
+    ],
+    "matplotlib__matplotlib-25332": [
+        "lib/matplotlib/cbook.py"
+    ],
+    "pylint-dev__pylint-4604": [
+        "pylint/checkers/variables.py"
+    ],
+    "matplotlib__matplotlib-22865": [
+        "lib/matplotlib/colorbar.py"
+    ],
+    "pylint-dev__pylint-7080": [
+        "pylint/lint/pylinter.py"
+    ],
+    "matplotlib__matplotlib-24637": [
+        "lib/matplotlib/backends/backend_svg.py",
+        "lib/matplotlib/offsetbox.py"
+    ],
+    "django__django-15277": [
+        "django/db/models/fields/__init__.py"
+    ],
+    "sympy__sympy-13798": [
+        "sympy/printing/latex.py"
+    ],
+    "scikit-learn__scikit-learn-14053": [
+        "sklearn/tree/export.py"
+    ],
+    "sympy__sympy-11618": [
+        "sympy/geometry/point.py"
+    ],
+    "django__django-16139": [
+        "django/contrib/auth/forms.py"
+    ],
+    "django__django-15375": [
+        "django/db/models/aggregates.py"
+    ],
+    "scikit-learn__scikit-learn-10844": [
+        "sklearn/metrics/cluster/supervised.py"
+    ],
+    "django__django-16493": [
+        "django/db/models/fields/files.py"
+    ],
+    "sympy__sympy-23950": [
+        "sympy/functions/elementary/piecewise.py"
+    ],
+    "sphinx-doc__sphinx-9258": [
+        "sphinx/util/typing.py"
+    ],
+    "sympy__sympy-15017": [
+        "sympy/tensor/array/ndim_array.py"
+    ],
+    "sphinx-doc__sphinx-8265": [
+        "sphinx/util/inspect.py"
+    ],
+    "django__django-16661": [
+        "django/contrib/admin/options.py"
+    ],
+    "django__django-16527": [
+        "django/contrib/admin/templatetags/admin_modify.py"
+    ],
+    "django__django-11433": [
+        "django/forms/models.py"
+    ],
+    "sympy__sympy-24539": [
+        "sympy/polys/rings.py"
+    ],
+    "matplotlib__matplotlib-13989": [
+        "lib/matplotlib/axes/_axes.py"
+    ],
+    "sphinx-doc__sphinx-7889": [
+        "sphinx/ext/autodoc/mock.py"
+    ],
+    "sympy__sympy-23824": [
+        "sympy/physics/hep/gamma_matrices.py"
+    ],
+    "sympy__sympy-15599": [
+        "sympy/core/mod.py"
+    ],
+    "pydata__xarray-6721": [
+        "xarray/core/common.py"
+    ],
+    "astropy__astropy-12907": [
+        "astropy/modeling/separable.py"
+    ],
+    "sympy__sympy-13091": [
+        "sympy/core/basic.py"
+    ],
+    "scikit-learn__scikit-learn-14894": [
+        "sklearn/svm/base.py"
+    ],
+    "pytest-dev__pytest-7982": [
+        "src/_pytest/pathlib.py"
+    ],
+    "pytest-dev__pytest-7521": [
+        "src/_pytest/capture.py"
+    ],
+    "matplotlib__matplotlib-24149": [
+        "lib/matplotlib/cbook/__init__.py"
+    ],
+    "sympy__sympy-16886": [
+        "sympy/crypto/crypto.py"
+    ],
+    "django__django-13449": [
+        "django/db/backends/sqlite3/base.py",
+        "django/db/models/expressions.py"
+    ],
+    "django__django-16485": [
+        "django/template/defaultfilters.py"
+    ],
+    "astropy__astropy-7166": [
+        "astropy/utils/misc.py"
+    ],
+    "sphinx-doc__sphinx-8269": [
+        "sphinx/builders/linkcheck.py"
+    ],
+    "sympy__sympy-23262": [
+        "sympy/utilities/lambdify.py"
+    ],
+    "django__django-16901": [
+        "django/db/models/sql/where.py"
+    ],
+    "astropy__astropy-13033": [
+        "astropy/timeseries/core.py"
+    ],
+    "sympy__sympy-13551": [
+        "sympy/concrete/products.py"
+    ],
+    "django__django-14725": [
+        "django/forms/models.py"
+    ],
+    "django__django-13158": [
+        "django/db/models/sql/query.py"
+    ],
+    "django__django-11206": [
+        "django/utils/numberformat.py"
+    ],
+    "matplotlib__matplotlib-20826": [
+        "lib/matplotlib/axes/_base.py"
+    ],
+    "django__django-13344": [
+        "django/core/handlers/base.py"
+    ],
+    "sympy__sympy-19783": [
+        "sympy/physics/quantum/dagger.py",
+        "sympy/physics/quantum/operator.py"
+    ],
+    "django__django-15368": [
+        "django/db/models/query.py"
+    ],
+    "psf__requests-2317": [
+        "requests/sessions.py"
+    ],
+    "sympy__sympy-19954": [
+        "sympy/combinatorics/perm_groups.py"
+    ],
+    "sphinx-doc__sphinx-8548": [
+        "sphinx/ext/autodoc/__init__.py"
+    ],
+    "sphinx-doc__sphinx-9367": [
+        "sphinx/pycode/ast.py"
+    ],
+    "django__django-15037": [
+        "django/core/management/commands/inspectdb.py",
+        "django/db/backends/postgresql/introspection.py"
+    ],
+    "sphinx-doc__sphinx-8593": [
+        "sphinx/ext/autodoc/__init__.py",
+        "sphinx/util/docstrings.py"
+    ],
+    "django__django-15930": [
+        "django/db/models/expressions.py"
+    ],
+    "sphinx-doc__sphinx-9711": [
+        "sphinx/extension.py"
+    ],
+    "django__django-16116": [
+        "django/core/management/commands/makemigrations.py"
+    ],
+    "pytest-dev__pytest-6197": [
+        "src/_pytest/python.py"
+    ],
+    "django__django-13343": [
+        "django/db/models/fields/files.py"
+    ],
+    "scikit-learn__scikit-learn-13142": [
+        "sklearn/mixture/base.py"
+    ],
+    "matplotlib__matplotlib-24026": [
+        "lib/matplotlib/stackplot.py"
+    ],
+    "scikit-learn__scikit-learn-12973": [
+        "sklearn/linear_model/least_angle.py"
+    ],
+    "pytest-dev__pytest-7432": [
+        "src/_pytest/skipping.py"
+    ],
+    "django__django-15987": [
+        "django/core/management/commands/loaddata.py"
+    ],
+    "sympy__sympy-15976": [
+        "sympy/printing/mathml.py"
+    ],
+    "django__django-16569": [
+        "django/forms/formsets.py"
+    ],
+    "django__django-7530": [
+        "django/core/management/commands/makemigrations.py"
+    ],
+    "matplotlib__matplotlib-23299": [
+        "lib/matplotlib/__init__.py"
+    ],
+    "matplotlib__matplotlib-24870": [
+        "lib/matplotlib/contour.py"
+    ],
+    "django__django-14376": [
+        "django/db/backends/mysql/base.py"
+    ],
+    "pydata__xarray-3095": [
+        "xarray/core/variable.py"
+    ],
+    "django__django-15629": [
+        "django/db/backends/mysql/schema.py"
+    ],
+    "django__django-16263": [
+        "django/db/models/sql/query.py"
+    ],
+    "django__django-13128": [
+        "django/db/models/expressions.py"
+    ],
+    "pytest-dev__pytest-7236": [
+        "src/_pytest/unittest.py"
+    ],
+    "sympy__sympy-15349": [
+        "sympy/algebras/quaternion.py"
+    ],
+    "scikit-learn__scikit-learn-25102": [
+        "sklearn/utils/_set_output.py"
+    ],
+    "django__django-15916": [
+        "django/forms/models.py"
+    ],
+    "pytest-dev__pytest-7324": [
+        "src/_pytest/mark/expression.py"
+    ],
+    "astropy__astropy-14096": [
+        "astropy/coordinates/sky_coordinate.py"
+    ],
+    "sympy__sympy-19040": [
+        "sympy/polys/factortools.py"
+    ],
+    "django__django-11477": [
+        "django/urls/resolvers.py"
+    ],
+    "django__django-13417": [
+        "django/db/models/query.py"
+    ],
+    "django__django-10880": [
+        "django/db/models/aggregates.py"
+    ],
+    "sympy__sympy-22456": [
+        "sympy/codegen/ast.py"
+    ],
+    "pydata__xarray-3993": [
+        "xarray/core/dataarray.py"
+    ],
+    "sympy__sympy-16766": [
+        "sympy/printing/pycode.py"
+    ],
+    "sympy__sympy-16597": [
+        "sympy/core/assumptions.py"
+    ],
+    "sphinx-doc__sphinx-9673": [
+        "sphinx/ext/autodoc/typehints.py",
+        "sphinx/ext/napoleon/docstring.py"
+    ],
+    "django__django-11133": [
+        "django/http/response.py"
+    ],
+    "matplotlib__matplotlib-26113": [
+        "lib/matplotlib/axes/_axes.py"
+    ],
+    "django__django-13837": [
+        "django/utils/autoreload.py"
+    ],
+    "sphinx-doc__sphinx-9281": [
+        "sphinx/util/inspect.py"
+    ],
+    "matplotlib__matplotlib-20488": [
+        "lib/matplotlib/colors.py"
+    ],
+    "django__django-14238": [
+        "django/db/models/fields/__init__.py"
+    ],
+    "sympy__sympy-22080": [
+        "sympy/printing/lambdarepr.py",
+        "sympy/printing/pycode.py"
+    ],
+    "django__django-12419": [
+        "django/conf/global_settings.py"
+    ],
+    "scikit-learn__scikit-learn-14496": [
+        "sklearn/cluster/optics_.py"
+    ],
+    "django__django-13012": [
+        "django/db/models/expressions.py"
+    ],
+    "matplotlib__matplotlib-26342": [
+        "lib/matplotlib/contour.py"
+    ],
+    "django__django-11087": [
+        "django/db/models/deletion.py"
+    ],
+    "sympy__sympy-13878": [
+        "sympy/stats/crv_types.py"
+    ],
+    "sphinx-doc__sphinx-9461": [
+        "sphinx/util/inspect.py"
+    ],
+    "django__django-15741": [
+        "django/utils/formats.py"
+    ],
+    "scikit-learn__scikit-learn-26323": [
+        "sklearn/compose/_column_transformer.py"
+    ],
+    "sphinx-doc__sphinx-7590": [
+        "sphinx/domains/cpp.py"
+    ],
+    "sympy__sympy-18211": [
+        "sympy/core/relational.py"
+    ],
+    "django__django-13512": [
+        "django/core/serializers/json.py",
+        "django/db/models/fields/json.py"
+    ],
+    "sphinx-doc__sphinx-10466": [
+        "sphinx/builders/gettext.py"
+    ],
+    "sympy__sympy-23534": [
+        "sympy/core/symbol.py"
+    ],
+    "scikit-learn__scikit-learn-15100": [
+        "sklearn/feature_extraction/text.py"
+    ],
+    "sphinx-doc__sphinx-8035": [
+        "sphinx/ext/autodoc/__init__.py"
+    ],
+    "sphinx-doc__sphinx-7985": [
+        "sphinx/builders/linkcheck.py"
+    ],
+    "sympy__sympy-20916": [
+        "sympy/printing/conventions.py",
+        "sympy/printing/pretty/pretty_symbology.py"
+    ],
+    "sympy__sympy-21596": [
+        "sympy/sets/handlers/intersection.py"
+    ],
+    "sympy__sympy-24213": [
+        "sympy/physics/units/unitsystem.py"
+    ],
+    "django__django-13513": [
+        "django/views/debug.py"
+    ],
+    "django__django-14752": [
+        "django/contrib/admin/views/autocomplete.py"
+    ],
+    "astropy__astropy-13579": [
+        "astropy/wcs/wcsapi/wrappers/sliced_wcs.py"
+    ],
+    "scikit-learn__scikit-learn-11310": [
+        "sklearn/model_selection/_search.py"
+    ],
+    "astropy__astropy-8707": [
+        "astropy/io/fits/header.py"
+    ],
+    "matplotlib__matplotlib-24570": [
+        "lib/matplotlib/offsetbox.py"
+    ],
+    "django__django-15561": [
+        "django/db/backends/base/schema.py"
+    ],
+    "pydata__xarray-3677": [
+        "xarray/core/merge.py"
+    ],
+    "django__django-15022": [
+        "django/contrib/admin/options.py"
+    ],
+    "psf__requests-6028": [
+        "requests/auth.py"
+    ],
+    "sphinx-doc__sphinx-8721": [
+        "sphinx/ext/viewcode.py"
+    ],
+    "django__django-14053": [
+        "django/contrib/staticfiles/storage.py"
+    ],
+    "matplotlib__matplotlib-25960": [
+        "lib/matplotlib/gridspec.py"
+    ],
+    "sympy__sympy-22914": [
+        "sympy/printing/pycode.py"
+    ],
+    "sphinx-doc__sphinx-9591": [
+        "sphinx/ext/autodoc/__init__.py"
+    ],
+    "sympy__sympy-13615": [
+        "sympy/sets/sets.py"
+    ],
+    "astropy__astropy-7336": [
+        "astropy/units/decorators.py"
+    ],
+    "django__django-11333": [
+        "django/urls/resolvers.py"
+    ],
+    "django__django-17029": [
+        "django/apps/registry.py"
+    ],
+    "django__django-15098": [
+        "django/urls/resolvers.py",
+        "django/utils/translation/trans_real.py"
+    ],
+    "django__django-11603": [
+        "django/db/models/aggregates.py"
+    ],
+    "sphinx-doc__sphinx-8459": [
+        "sphinx/ext/autodoc/typehints.py"
+    ],
+    "psf__requests-1921": [
+        "requests/models.py"
+    ],
+    "scikit-learn__scikit-learn-14629": [
+        "sklearn/model_selection/_validation.py"
+    ],
+    "django__django-15467": [
+        "django/contrib/admin/options.py"
+    ],
+    "django__django-12125": [
+        "django/db/migrations/serializer.py"
+    ],
+    "django__django-11163": [
+        "django/forms/models.py"
+    ],
+    "django__django-13925": [
+        "django/db/models/base.py"
+    ],
+    "django__django-15563": [
+        "django/db/models/query.py",
+        "django/db/models/sql/subqueries.py"
+    ],
+    "django__django-11555": [
+        "django/db/models/sql/query.py"
+    ],
+    "django__django-12276": [
+        "django/forms/widgets.py"
+    ],
+    "django__django-13590": [
+        "django/db/models/sql/query.py"
+    ],
+    "matplotlib__matplotlib-22871": [
+        "lib/matplotlib/dates.py"
+    ],
+    "pytest-dev__pytest-7571": [
+        "src/_pytest/logging.py"
+    ],
+    "astropy__astropy-7671": [
+        "astropy/utils/introspection.py"
+    ],
+    "django__django-11740": [
+        "django/db/migrations/autodetector.py"
+    ],
+    "django__django-12262": [
+        "django/template/library.py"
+    ],
+    "psf__requests-1724": [
+        "requests/models.py"
+    ],
+    "psf__requests-5414": [
+        "requests/models.py"
+    ],
+    "matplotlib__matplotlib-24177": [
+        "lib/matplotlib/axes/_axes.py"
+    ],
+    "matplotlib__matplotlib-25287": [
+        "lib/matplotlib/axis.py"
+    ],
+    "sympy__sympy-19637": [
+        "sympy/core/sympify.py"
+    ],
+    "sympy__sympy-14248": [
+        "sympy/matrices/expressions/matadd.py",
+        "sympy/matrices/expressions/matexpr.py",
+        "sympy/printing/pretty/pretty.py",
+        "sympy/printing/str.py"
+    ],
+    "sympy__sympy-21847": [
+        "sympy/polys/monomials.py"
+    ],
+    "pytest-dev__pytest-10051": [
+        "src/_pytest/logging.py"
+    ],
+    "astropy__astropy-8872": [
+        "astropy/units/quantity.py"
+    ],
+    "scikit-learn__scikit-learn-25747": [
+        "sklearn/utils/_set_output.py"
+    ],
+    "django__django-14349": [
+        "django/core/validators.py"
+    ],
+    "django__django-14787": [
+        "django/utils/decorators.py"
+    ],
+    "django__django-17087": [
+        "django/db/migrations/serializer.py"
+    ],
+    "django__django-13569": [
+        "django/db/models/sql/compiler.py"
+    ],
+    "pydata__xarray-4966": [
+        "xarray/coding/variables.py"
+    ],
+    "sphinx-doc__sphinx-9229": [
+        "sphinx/ext/autodoc/__init__.py"
+    ],
+    "scikit-learn__scikit-learn-12682": [
+        "sklearn/decomposition/dict_learning.py"
+    ],
+    "pydata__xarray-6992": [
+        "xarray/core/dataset.py"
+    ],
+    "django__django-16136": [
+        "django/views/generic/base.py"
+    ],
+    "sympy__sympy-24661": [
+        "sympy/parsing/sympy_parser.py"
+    ],
+    "astropy__astropy-14995": [
+        "astropy/nddata/mixins/ndarithmetic.py"
+    ],
+    "django__django-16899": [
+        "django/contrib/admin/checks.py"
+    ],
+    "sphinx-doc__sphinx-7757": [
+        "sphinx/domains/python.py",
+        "sphinx/util/inspect.py"
+    ],
+    "django__django-11138": [
+        "django/db/backends/mysql/operations.py"
+    ],
+    "pydata__xarray-4075": [
+        "xarray/core/weighted.py"
+    ],
+    "pydata__xarray-3151": [
+        "xarray/core/combine.py"
+    ],
+    "sympy__sympy-24066": [
+        "sympy/physics/units/unitsystem.py"
+    ],
+    "sympy__sympy-19346": [
+        "sympy/printing/repr.py"
+    ],
+    "pydata__xarray-4629": [
+        "xarray/core/merge.py"
+    ],
+    "sympy__sympy-20590": [
+        "sympy/core/symbol.py"
+    ],
+    "pydata__xarray-4687": [
+        "xarray/core/computation.py",
+        "xarray/core/dataarray.py"
+    ],
+    "pytest-dev__pytest-5787": [
+        "src/_pytest/reports.py"
+    ],
+    "sympy__sympy-15809": [
+        "sympy/functions/elementary/miscellaneous.py"
+    ],
+    "sympy__sympy-13974": [
+        "sympy/physics/quantum/tensorproduct.py"
+    ],
+    "pydata__xarray-4695": [
+        "xarray/core/indexing.py"
+    ],
+    "django__django-13670": [
+        "django/utils/dateformat.py"
+    ],
+    "django__django-16667": [
+        "django/forms/widgets.py"
+    ],
+    "sphinx-doc__sphinx-10323": [
+        "sphinx/directives/code.py"
+    ],
+    "sympy__sympy-24562": [
+        "sympy/core/numbers.py"
+    ],
+    "django__django-16429": [
+        "django/utils/timesince.py"
+    ],
+    "psf__requests-1766": [
+        "requests/auth.py"
+    ],
+    "django__django-14534": [
+        "django/forms/boundfield.py"
+    ],
+    "django__django-11951": [
+        "django/db/models/query.py"
+    ],
+    "django__django-14559": [
+        "django/db/models/query.py"
+    ],
+    "django__django-16082": [
+        "django/db/models/functions/mixins.py"
+    ],
+    "sympy__sympy-12489": [
+        "sympy/combinatorics/permutations.py"
+    ],
+    "django__django-17084": [
+        "django/db/models/aggregates.py"
+    ],
+    "astropy__astropy-13398": [
+        "astropy/coordinates/builtin_frames/__init__.py"
+    ],
+    "django__django-14351": [
+        "django/db/models/fields/related_lookups.py",
+        "django/db/models/sql/compiler.py",
+        "django/db/models/sql/where.py"
+    ],
+    "sphinx-doc__sphinx-7910": [
+        "sphinx/ext/autodoc/__init__.py"
+    ],
+    "django__django-11490": [
+        "django/db/models/sql/compiler.py"
+    ],
+    "django__django-15554": [
+        "django/db/models/sql/datastructures.py"
+    ],
+    "django__django-14315": [
+        "django/db/backends/base/client.py"
+    ],
+    "sphinx-doc__sphinx-7748": [
+        "sphinx/ext/autodoc/__init__.py"
+    ],
+    "sympy__sympy-12096": [
+        "sympy/core/function.py"
+    ],
+    "django__django-12708": [
+        "django/db/backends/base/schema.py"
+    ],
+    "django__django-11734": [
+        "django/db/models/expressions.py",
+        "django/db/models/sql/query.py"
+    ],
+    "sphinx-doc__sphinx-8056": [
+        "sphinx/ext/napoleon/docstring.py"
+    ],
+    "sympy__sympy-18698": [
+        "sympy/polys/polytools.py"
+    ],
+    "sphinx-doc__sphinx-9658": [
+        "sphinx/ext/autodoc/mock.py",
+        "sphinx/util/typing.py"
+    ],
+    "django__django-16642": [
+        "django/http/response.py"
+    ],
+    "sphinx-doc__sphinx-8120": [
+        "sphinx/application.py",
+        "sphinx/locale/__init__.py",
+        "sphinx/util/i18n.py"
+    ],
+    "sphinx-doc__sphinx-8475": [
+        "sphinx/builders/linkcheck.py"
+    ],
+    "sympy__sympy-12481": [
+        "sympy/combinatorics/permutations.py"
+    ],
+    "pytest-dev__pytest-5840": [
+        "src/_pytest/python.py"
+    ],
+    "scikit-learn__scikit-learn-13328": [
+        "sklearn/linear_model/huber.py"
+    ],
+    "django__django-11790": [
+        "django/contrib/auth/forms.py"
+    ],
+    "django__django-16938": [
+        "django/core/serializers/python.py"
+    ],
+    "django__django-13794": [
+        "django/template/defaultfilters.py"
+    ],
+    "sphinx-doc__sphinx-9230": [
+        "sphinx/domains/python.py"
+    ],
+    "django__django-11532": [
+        "django/core/mail/message.py"
+    ],
+    "django__django-16333": [
+        "django/contrib/auth/forms.py"
+    ],
+    "django__django-12193": [
+        "django/forms/widgets.py"
+    ],
+    "django__django-11119": [
+        "django/template/engine.py"
+    ],
+    "sphinx-doc__sphinx-8638": [
+        "sphinx/domains/python.py"
+    ],
+    "django__django-11141": [
+        "django/db/migrations/loader.py"
+    ],
+    "django__django-14672": [
+        "django/db/models/fields/reverse_related.py"
+    ],
+    "pytest-dev__pytest-6202": [
+        "src/_pytest/python.py"
+    ],
+    "django__django-12713": [
+        "django/contrib/admin/options.py"
+    ],
+    "django__django-15278": [
+        "django/db/backends/sqlite3/schema.py"
+    ],
+    "django__django-14608": [
+        "django/forms/formsets.py"
+    ],
+    "sphinx-doc__sphinx-9320": [
+        "sphinx/cmd/quickstart.py"
+    ],
+    "astropy__astropy-13977": [
+        "astropy/units/core.py",
+        "astropy/units/quantity.py",
+        "astropy/units/quantity_helper/converters.py"
+    ],
+    "sympy__sympy-23413": [
+        "sympy/polys/matrices/normalforms.py"
+    ],
+    "sympy__sympy-15875": [
+        "sympy/core/add.py"
+    ],
+    "sympy__sympy-17318": [
+        "sympy/simplify/radsimp.py"
+    ],
+    "sphinx-doc__sphinx-7462": [
+        "sphinx/domains/python.py"
+    ],
+    "django__django-15103": [
+        "django/utils/html.py"
+    ],
+    "sympy__sympy-14976": [
+        "sympy/printing/pycode.py"
+    ],
+    "django__django-14311": [
+        "django/utils/autoreload.py"
+    ],
+    "sympy__sympy-21379": [
+        "sympy/polys/polytools.py"
+    ],
+    "django__django-13033": [
+        "django/db/models/sql/compiler.py",
+        "django/db/models/sql/query.py"
+    ],
+    "pylint-dev__pylint-6903": [
+        "pylint/lint/run.py"
+    ],
+    "django__django-14855": [
+        "django/contrib/admin/helpers.py"
+    ],
+    "psf__requests-1142": [
+        "requests/models.py",
+        "requests/packages/urllib3/connectionpool.py"
+    ],
+    "sphinx-doc__sphinx-7440": [
+        "sphinx/domains/std.py"
+    ],
+    "django__django-12155": [
+        "django/contrib/admindocs/utils.py"
+    ],
+    "sympy__sympy-17139": [
+        "sympy/simplify/fu.py"
+    ],
+    "sympy__sympy-19495": [
+        "sympy/sets/conditionset.py"
+    ],
+    "astropy__astropy-14182": [
+        "astropy/io/ascii/rst.py"
+    ],
+    "matplotlib__matplotlib-26208": [
+        "lib/matplotlib/axes/_axes.py",
+        "lib/matplotlib/axes/_base.py",
+        "lib/matplotlib/stackplot.py"
+    ],
+    "django__django-14999": [
+        "django/db/migrations/operations/models.py",
+        "django/db/migrations/state.py"
+    ],
+    "pytest-dev__pytest-5262": [
+        "src/_pytest/capture.py"
+    ],
+    "django__django-15814": [
+        "django/db/models/sql/query.py"
+    ],
+    "sympy__sympy-18763": [
+        "sympy/printing/latex.py"
+    ],
+    "matplotlib__matplotlib-14623": [
+        "lib/matplotlib/scale.py"
+    ],
+    "scikit-learn__scikit-learn-25232": [
+        "sklearn/impute/_iterative.py"
+    ],
+    "scikit-learn__scikit-learn-14710": [
+        "sklearn/ensemble/_hist_gradient_boosting/gradient_boosting.py"
+    ],
+    "pylint-dev__pylint-8898": [
+        "pylint/config/argument.py"
+    ],
+    "sympy__sympy-24443": [
+        "sympy/combinatorics/homomorphisms.py"
+    ],
+    "scikit-learn__scikit-learn-13135": [
+        "sklearn/preprocessing/_discretization.py"
+    ],
+    "astropy__astropy-13453": [
+        "astropy/io/ascii/html.py"
+    ],
+    "matplotlib__matplotlib-26466": [
+        "lib/matplotlib/text.py"
+    ],
+    "matplotlib__matplotlib-20859": [
+        "lib/matplotlib/legend.py"
+    ],
+    "django__django-11820": [
+        "django/db/models/base.py"
+    ],
+    "pydata__xarray-4356": [
+        "xarray/core/nanops.py"
+    ],
+    "matplotlib__matplotlib-23476": [
+        "lib/matplotlib/figure.py"
+    ],
+    "django__django-13410": [
+        "django/core/files/locks.py"
+    ],
+    "sympy__sympy-14711": [
+        "sympy/physics/vector/vector.py"
+    ],
+    "pytest-dev__pytest-10356": [
+        "src/_pytest/mark/structures.py"
+    ],
+    "sympy__sympy-21612": [
+        "sympy/parsing/latex/_antlr/latexlexer.py",
+        "sympy/parsing/latex/_antlr/latexparser.py",
+        "sympy/parsing/latex/_parse_latex_antlr.py"
+    ],
+    "django__django-15380": [
+        "django/db/migrations/autodetector.py"
+    ],
+    "sympy__sympy-20801": [
+        "sympy/core/numbers.py",
+        "sympy/logic/boolalg.py"
+    ],
+    "django__django-11999": [
+        "django/db/models/fields/__init__.py"
+    ],
+    "django__django-10554": [
+        "django/db/models/sql/compiler.py"
+    ],
+    "django__django-13516": [
+        "django/core/management/base.py"
+    ],
+    "django__django-14631": [
+        "django/forms/boundfield.py",
+        "django/forms/forms.py"
+    ],
+    "scikit-learn__scikit-learn-10908": [
+        "sklearn/feature_extraction/text.py"
+    ],
+    "sympy__sympy-21930": [
+        "sympy/physics/secondquant.py"
+    ],
+    "astropy__astropy-14309": [
+        "astropy/io/fits/connect.py"
+    ],
+    "django__django-15851": [
+        "django/db/backends/postgresql/client.py"
+    ],
+    "django__django-13820": [
+        "django/db/migrations/loader.py"
+    ],
+    "matplotlib__matplotlib-26291": [
+        "lib/mpl_toolkits/axes_grid1/inset_locator.py"
+    ],
+    "django__django-16100": [
+        "django/contrib/admin/options.py"
+    ],
+    "pytest-dev__pytest-8399": [
+        "src/_pytest/unittest.py"
+    ],
+    "django__django-13786": [
+        "django/db/migrations/operations/models.py"
+    ],
+    "matplotlib__matplotlib-22719": [
+        "lib/matplotlib/category.py"
+    ],
+    "django__django-15161": [
+        "django/db/models/expressions.py"
+    ],
+    "django__django-13297": [
+        "django/db/backends/sqlite3/base.py"
+    ],
+    "astropy__astropy-7606": [
+        "astropy/units/core.py"
+    ],
+    "pytest-dev__pytest-5631": [
+        "src/_pytest/compat.py"
+    ],
+    "sphinx-doc__sphinx-10435": [
+        "sphinx/writers/latex.py"
+    ],
+    "django__django-14089": [
+        "django/utils/datastructures.py"
+    ],
+    "sphinx-doc__sphinx-10614": [
+        "sphinx/ext/inheritance_diagram.py"
+    ],
+    "django__django-15569": [
+        "django/db/models/query_utils.py"
+    ],
+    "django__django-15731": [
+        "django/db/models/manager.py"
+    ],
+    "django__django-11265": [
+        "django/db/models/sql/query.py"
+    ],
+    "django__django-13406": [
+        "django/db/models/query.py",
+        "django/db/models/sql/compiler.py",
+        "django/db/models/sql/query.py"
+    ],
+    "django__django-10914": [
+        "django/conf/global_settings.py"
+    ],
+    "pydata__xarray-7233": [
+        "xarray/core/rolling.py"
+    ],
+    "pylint-dev__pylint-7277": [
+        "pylint/__init__.py"
+    ],
+    "django__django-16801": [
+        "django/db/models/fields/files.py"
+    ],
+    "matplotlib__matplotlib-25122": [
+        "lib/matplotlib/mlab.py"
+    ],
+    "django__django-15128": [
+        "django/db/models/sql/query.py"
+    ],
+    "django__django-15732": [
+        "django/db/backends/base/schema.py"
+    ],
+    "django__django-14122": [
+        "django/db/models/sql/compiler.py"
+    ],
+    "astropy__astropy-14369": [
+        "astropy/io/ascii/cds.py",
+        "astropy/units/format/cds.py"
+    ],
+    "pylint-dev__pylint-4970": [
+        "pylint/checkers/similar.py"
+    ],
+    "django__django-13112": [
+        "django/apps/registry.py",
+        "django/db/models/fields/related.py"
+    ],
+    "django__django-14539": [
+        "django/utils/html.py"
+    ],
+    "django__django-16032": [
+        "django/db/models/lookups.py",
+        "django/db/models/sql/compiler.py"
+    ],
+    "django__django-13028": [
+        "django/db/models/sql/query.py"
+    ],
+    "django__django-11149": [
+        "django/contrib/admin/options.py"
+    ],
+    "sphinx-doc__sphinx-9602": [
+        "sphinx/domains/python.py"
+    ],
+    "sphinx-doc__sphinx-8551": [
+        "sphinx/domains/python.py"
+    ],
+    "django__django-11211": [
+        "django/contrib/contenttypes/fields.py"
+    ],
+    "sphinx-doc__sphinx-10673": [
+        "sphinx/environment/adapters/toctree.py"
+    ],
+    "django__django-11095": [
+        "django/contrib/admin/options.py"
+    ],
+    "scikit-learn__scikit-learn-26194": [
+        "sklearn/metrics/_ranking.py"
+    ],
+    "sphinx-doc__sphinx-8621": [
+        "sphinx/roles.py"
+    ],
+    "pydata__xarray-7393": [
+        "xarray/core/variable.py"
+    ],
+    "pydata__xarray-6599": [
+        "xarray/core/computation.py",
+        "xarray/core/duck_array_ops.py"
+    ]
+}

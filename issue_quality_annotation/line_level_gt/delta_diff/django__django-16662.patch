@@ -1,0 +1,14 @@
+
+django/db/migrations/writer.py
+
+ 175⋮ 175│ 
+ 176⋮ 176│         # Sort imports by the package / module to be imported (the part after
+ 177⋮ 177│         # "from" in "from ... import ..." or after "import" in "import ...").
+ 178⋮    │-        sorted_imports = sorted(imports, key=lambda i: i.split()[1])
+    ⋮ 178│+        # First group the "import" statements, then "from ... import ...".
+    ⋮ 179│+        sorted_imports = sorted(
+    ⋮ 180│+            imports, key=lambda i: (i.split()[0] == "from", i.split()[1])
+    ⋮ 181│+        )
+ 179⋮ 182│         items["imports"] = "\n".join(sorted_imports) + "\n" if imports else ""
+ 180⋮ 183│         if migration_imports:
+ 181⋮ 184│             items["imports"] += (

@@ -1,0 +1,30 @@
+
+django/db/migrations/loader.py
+
+ 84 ⋮ 84 │                     continue
+ 85 ⋮ 85 │                 raise
+ 86 ⋮ 86 │             else:
+ 87 ⋮    │-                # Empty directories are namespaces.
+ 88 ⋮    │-                # getattr() needed on PY36 and older (replace w/attribute access).
+ 89 ⋮    │-                if getattr(module, '__file__', None) is None:
+ 90 ⋮    │-                    self.unmigrated_apps.add(app_config.label)
+ 91 ⋮    │-                    continue
+ 92 ⋮ 87 │                 # Module is not a package (e.g. migrations.py).
+ 93 ⋮ 88 │                 if not hasattr(module, '__path__'):
+ 94 ⋮ 89 │                     self.unmigrated_apps.add(app_config.label)
+
+ 96 ⋮ 91 │                 # Force a reload if it's already loaded (tests need this)
+ 97 ⋮ 92 │                 if was_loaded:
+ 98 ⋮ 93 │                     reload(module)
+ 99 ⋮    │-            self.migrated_apps.add(app_config.label)
+ 100⋮ 94 │             migration_names = {
+ 101⋮ 95 │                 name for _, name, is_pkg in pkgutil.iter_modules(module.__path__)
+ 102⋮ 96 │                 if not is_pkg and name[0] not in '_~'
+ 103⋮ 97 │             }
+    ⋮ 98 │+            if migration_names or self.ignore_no_migrations:
+    ⋮ 99 │+                self.migrated_apps.add(app_config.label)
+    ⋮ 100│+            else:
+    ⋮ 101│+                self.unmigrated_apps.add(app_config.label)
+ 104⋮ 102│             # Load migrations
+ 105⋮ 103│             for migration_name in migration_names:
+ 106⋮ 104│                 migration_path = '%s.%s' % (module_name, migration_name)

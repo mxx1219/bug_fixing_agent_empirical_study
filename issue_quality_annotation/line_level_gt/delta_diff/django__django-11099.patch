@@ -1,0 +1,20 @@
+
+django/contrib/auth/validators.py
+
+  7 ⋮  7 │ 
+  8 ⋮  8 │ @deconstructible
+  9 ⋮  9 │ class ASCIIUsernameValidator(validators.RegexValidator):
+ 10 ⋮    │-    regex = r'^[\w.@+-]+$'
+    ⋮ 10 │+    regex = r'^[\w.@+-]+\Z'
+ 11 ⋮ 11 │     message = _(
+ 12 ⋮ 12 │         'Enter a valid username. This value may contain only English letters, '
+ 13 ⋮ 13 │         'numbers, and @/./+/-/_ characters.'
+
+ 17 ⋮ 17 │ 
+ 18 ⋮ 18 │ @deconstructible
+ 19 ⋮ 19 │ class UnicodeUsernameValidator(validators.RegexValidator):
+ 20 ⋮    │-    regex = r'^[\w.@+-]+$'
+    ⋮ 20 │+    regex = r'^[\w.@+-]+\Z'
+ 21 ⋮ 21 │     message = _(
+ 22 ⋮ 22 │         'Enter a valid username. This value may contain only letters, '
+ 23 ⋮ 23 │         'numbers, and @/./+/-/_ characters.'

@@ -1,0 +1,29 @@
+
+django/contrib/admin/options.py
+
+2011⋮2011│             )
+2012⋮2012│             if formset.is_valid():
+2013⋮2013│                 changecount = 0
+2014⋮    │-                for form in formset.forms:
+2015⋮    │-                    if form.has_changed():
+2016⋮    │-                        obj = self.save_form(request, form, change=True)
+2017⋮    │-                        self.save_model(request, obj, form, change=True)
+2018⋮    │-                        self.save_related(request, form, formsets=[], change=True)
+2019⋮    │-                        change_msg = self.construct_change_message(request, form, None)
+2020⋮    │-                        self.log_change(request, obj, change_msg)
+2021⋮    │-                        changecount += 1
+2022⋮    │-
+    ⋮2014│+                with transaction.atomic(using=router.db_for_write(self.model)):
+    ⋮2015│+                    for form in formset.forms:
+    ⋮2016│+                        if form.has_changed():
+    ⋮2017│+                            obj = self.save_form(request, form, change=True)
+    ⋮2018│+                            self.save_model(request, obj, form, change=True)
+    ⋮2019│+                            self.save_related(request, form, formsets=[], change=True)
+    ⋮2020│+                            change_msg = self.construct_change_message(
+    ⋮2021│+                                request, form, None
+    ⋮2022│+                            )
+    ⋮2023│+                            self.log_change(request, obj, change_msg)
+    ⋮2024│+                            changecount += 1
+2023⋮2025│                 if changecount:
+2024⋮2026│                     msg = ngettext(
+2025⋮2027│                         "%(count)s %(name)s was changed successfully.",

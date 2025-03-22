@@ -1,0 +1,12 @@
+
+django/db/models/fields/__init__.py
+
+1010⋮1010│     def __init__(self, *args, db_collation=None, **kwargs):
+1011⋮1011│         super().__init__(*args, **kwargs)
+1012⋮1012│         self.db_collation = db_collation
+1013⋮    │-        self.validators.append(validators.MaxLengthValidator(self.max_length))
+    ⋮1013│+        if self.max_length is not None:
+    ⋮1014│+            self.validators.append(validators.MaxLengthValidator(self.max_length))
+1014⋮1015│ 
+1015⋮1016│     def check(self, **kwargs):
+1016⋮1017│         databases = kwargs.get('databases') or []

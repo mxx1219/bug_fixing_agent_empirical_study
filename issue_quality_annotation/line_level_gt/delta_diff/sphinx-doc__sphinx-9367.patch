@@ -1,0 +1,18 @@
+
+sphinx/pycode/ast.py
+
+ 213⋮ 213│         return "%s %s" % (self.visit(node.op), self.visit(node.operand))
+ 214⋮ 214│ 
+ 215⋮ 215│     def visit_Tuple(self, node: ast.Tuple) -> str:
+ 216⋮    │-        if node.elts:
+ 217⋮    │-            return "(" + ", ".join(self.visit(e) for e in node.elts) + ")"
+ 218⋮    │-        else:
+    ⋮ 216│+        if len(node.elts) == 0:
+ 219⋮ 217│             return "()"
+    ⋮ 218│+        elif len(node.elts) == 1:
+    ⋮ 219│+            return "(%s,)" % self.visit(node.elts[0])
+    ⋮ 220│+        else:
+    ⋮ 221│+            return "(" + ", ".join(self.visit(e) for e in node.elts) + ")"
+ 220⋮ 222│ 
+ 221⋮ 223│     if sys.version_info < (3, 8):
+ 222⋮ 224│         # these ast nodes were deprecated in python 3.8

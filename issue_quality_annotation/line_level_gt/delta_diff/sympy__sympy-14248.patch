@@ -1,0 +1,106 @@
+
+sympy/printing/latex.py
+
+1477⋮1477│             return r"%s^\dagger" % self._print(mat)
+1478⋮1478│ 
+1479⋮1479│     def _print_MatAdd(self, expr):
+1480⋮    │-        terms = list(expr.args)
+1481⋮    │-        tex = " + ".join(map(self._print, terms))
+1482⋮    │-        return tex
+    ⋮1480│+        terms = [self._print(t) for t in expr.args]
+    ⋮1481│+        l = []
+    ⋮1482│+        for t in terms:
+    ⋮1483│+            if t.startswith('-'):
+    ⋮1484│+                sign = "-"
+    ⋮1485│+                t = t[1:]
+    ⋮1486│+            else:
+    ⋮1487│+                sign = "+"
+    ⋮1488│+            l.extend([sign, t])
+    ⋮1489│+        sign = l.pop(0)
+    ⋮1490│+        if sign == '+':
+    ⋮1491│+            sign = ""
+    ⋮1492│+        return sign + ' '.join(l)
+1483⋮1493│ 
+1484⋮1494│     def _print_MatMul(self, expr):
+1485⋮    │-        from sympy import Add, MatAdd, HadamardProduct
+    ⋮1495│+        from sympy import Add, MatAdd, HadamardProduct, MatMul, Mul
+1486⋮1496│ 
+1487⋮1497│         def parens(x):
+1488⋮1498│             if isinstance(x, (Add, MatAdd, HadamardProduct)):
+1489⋮1499│                 return r"\left(%s\right)" % self._print(x)
+1490⋮1500│             return self._print(x)
+1491⋮    │-        return ' '.join(map(parens, expr.args))
+    ⋮1501│+
+    ⋮1502│+        if isinstance(expr, MatMul) and expr.args[0].is_Number and expr.args[0]<0:
+    ⋮1503│+            expr = Mul(-1*expr.args[0], MatMul(*expr.args[1:]))
+    ⋮1504│+            return '-' + ' '.join(map(parens, expr.args))
+    ⋮1505│+        else:
+    ⋮1506│+            return ' '.join(map(parens, expr.args))
+1492⋮1507│ 
+1493⋮1508│     def _print_Mod(self, expr, exp=None):
+1494⋮1509│         if exp is not None:
+
+sympy/printing/pretty/pretty.py
+
+ 819⋮ 819│         return self._print(B.blocks)
+ 820⋮ 820│ 
+ 821⋮ 821│     def _print_MatAdd(self, expr):
+ 822⋮    │-        return self._print_seq(expr.args, None, None, ' + ')
+    ⋮ 822│+        s = None
+    ⋮ 823│+        for item in expr.args:
+    ⋮ 824│+            pform = self._print(item)
+    ⋮ 825│+            if s is None:
+    ⋮ 826│+                s = pform     # First element
+    ⋮ 827│+            else:
+    ⋮ 828│+                if S(item.args[0]).is_negative:
+    ⋮ 829│+                    s = prettyForm(*stringPict.next(s, ' '))
+    ⋮ 830│+                    pform = self._print(item)
+    ⋮ 831│+                else:
+    ⋮ 832│+                    s = prettyForm(*stringPict.next(s, ' + '))
+    ⋮ 833│+                s = prettyForm(*stringPict.next(s, pform))
+    ⋮ 834│+
+    ⋮ 835│+        return s
+ 823⋮ 836│ 
+ 824⋮ 837│     def _print_MatMul(self, expr):
+ 825⋮ 838│         args = list(expr.args)
+
+sympy/printing/str.py
+
+ 304⋮ 304│             return sign + '*'.join(a_str) + "/(%s)" % '*'.join(b_str)
+ 305⋮ 305│ 
+ 306⋮ 306│     def _print_MatMul(self, expr):
+ 307⋮    │-        return '*'.join([self.parenthesize(arg, precedence(expr))
+    ⋮ 307│+        c, m = expr.as_coeff_mmul()
+    ⋮ 308│+        if c.is_number and c < 0:
+    ⋮ 309│+            expr = _keep_coeff(-c, m)
+    ⋮ 310│+            sign = "-"
+    ⋮ 311│+        else:
+    ⋮ 312│+            sign = ""
+    ⋮ 313│+
+    ⋮ 314│+        return sign + '*'.join([self.parenthesize(arg, precedence(expr))
+ 308⋮ 315│             for arg in expr.args])
+ 309⋮ 316│ 
+ 310⋮ 317│     def _print_HadamardProduct(self, expr):
+
+ 312⋮ 319│             for arg in expr.args])
+ 313⋮ 320│ 
+ 314⋮ 321│     def _print_MatAdd(self, expr):
+ 315⋮    │-        return ' + '.join([self.parenthesize(arg, precedence(expr))
+ 316⋮    │-            for arg in expr.args])
+    ⋮ 322│+        terms = [self.parenthesize(arg, precedence(expr))
+    ⋮ 323│+             for arg in expr.args]
+    ⋮ 324│+        l = []
+    ⋮ 325│+        for t in terms:
+    ⋮ 326│+            if t.startswith('-'):
+    ⋮ 327│+                sign = "-"
+    ⋮ 328│+                t = t[1:]
+    ⋮ 329│+            else:
+    ⋮ 330│+                sign = "+"
+    ⋮ 331│+            l.extend([sign, t])
+    ⋮ 332│+        sign = l.pop(0)
+    ⋮ 333│+        if sign == '+':
+    ⋮ 334│+            sign = ""
+    ⋮ 335│+        return sign + ' '.join(l)
+ 317⋮ 336│ 
+ 318⋮ 337│     def _print_NaN(self, expr):
+ 319⋮ 338│         return 'nan'

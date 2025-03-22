@@ -1,0 +1,11 @@
+
+sympy/core/add.py
+
+ 554⋮ 554│                 return
+ 555⋮ 555│         if z == len(self.args):
+ 556⋮ 556│             return True
+ 557⋮    │-        if len(nz) == len(self.args):
+    ⋮ 557│+        if len(nz) == 0 or len(nz) == len(self.args):
+ 558⋮ 558│             return None
+ 559⋮ 559│         b = self.func(*nz)
+ 560⋮ 560│         if b.is_zero:

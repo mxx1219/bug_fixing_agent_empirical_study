@@ -1,0 +1,84 @@
+
+src/_pytest/config/__init__.py
+
+ 30 ⋮ 30 │ from _pytest.compat import importlib_metadata
+ 31 ⋮ 31 │ from _pytest.outcomes import fail
+ 32 ⋮ 32 │ from _pytest.outcomes import Skipped
+ 33 ⋮    │-from _pytest.pathlib import unique_path
+ 34 ⋮ 33 │ from _pytest.warning_types import PytestConfigWarning
+ 35 ⋮ 34 │ 
+ 36 ⋮ 35 │ hookimpl = HookimplMarker("pytest")
+
+ 367⋮ 366│         """
+ 368⋮ 367│         current = py.path.local()
+ 369⋮ 368│         self._confcutdir = (
+ 370⋮    │-            unique_path(current.join(namespace.confcutdir, abs=True))
+    ⋮ 369│+            current.join(namespace.confcutdir, abs=True)
+ 371⋮ 370│             if namespace.confcutdir
+ 372⋮ 371│             else None
+ 373⋮ 372│         )
+
+ 406⋮ 405│         else:
+ 407⋮ 406│             directory = path
+ 408⋮ 407│ 
+ 409⋮    │-        directory = unique_path(directory)
+ 410⋮    │-
+ 411⋮ 408│         # XXX these days we may rather want to use config.rootdir
+ 412⋮ 409│         # and allow users to opt into looking into the rootdir parent
+ 413⋮ 410│         # directories instead of requiring to specify confcutdir
+ 414⋮ 411│         clist = []
+ 415⋮    │-        for parent in directory.parts():
+    ⋮ 412│+        for parent in directory.realpath().parts():
+ 416⋮ 413│             if self._confcutdir and self._confcutdir.relto(parent):
+ 417⋮ 414│                 continue
+ 418⋮ 415│             conftestpath = parent.join("conftest.py")
+
+ 432⋮ 429│         raise KeyError(name)
+ 433⋮ 430│ 
+ 434⋮ 431│     def _importconftest(self, conftestpath):
+ 435⋮    │-        # Use realpath to avoid loading the same conftest twice
+    ⋮ 432│+        # Use a resolved Path object as key to avoid loading the same conftest twice
+ 436⋮ 433│         # with build systems that create build directories containing
+ 437⋮ 434│         # symlinks to actual files.
+ 438⋮    │-        conftestpath = unique_path(conftestpath)
+    ⋮ 435│+        # Using Path().resolve() is better than py.path.realpath because
+    ⋮ 436│+        # it resolves to the correct path/drive in case-insensitive file systems (#5792)
+    ⋮ 437│+        key = Path(str(conftestpath)).resolve()
+ 439⋮ 438│         try:
+ 440⋮    │-            return self._conftestpath2mod[conftestpath]
+    ⋮ 439│+            return self._conftestpath2mod[key]
+ 441⋮ 440│         except KeyError:
+ 442⋮ 441│             pkgpath = conftestpath.pypkgpath()
+ 443⋮ 442│             if pkgpath is None:
+
+ 454⋮ 453│                 raise ConftestImportFailure(conftestpath, sys.exc_info())
+ 455⋮ 454│ 
+ 456⋮ 455│             self._conftest_plugins.add(mod)
+ 457⋮    │-            self._conftestpath2mod[conftestpath] = mod
+    ⋮ 456│+            self._conftestpath2mod[key] = mod
+ 458⋮ 457│             dirpath = conftestpath.dirpath()
+ 459⋮ 458│             if dirpath in self._dirpath2confmods:
+ 460⋮ 459│                 for path, mods in self._dirpath2confmods.items():
+
+src/_pytest/pathlib.py
+
+ 11 ⋮ 11 │ from os.path import expanduser
+ 12 ⋮ 12 │ from os.path import expandvars
+ 13 ⋮ 13 │ from os.path import isabs
+ 14 ⋮    │-from os.path import normcase
+ 15 ⋮ 14 │ from os.path import sep
+ 16 ⋮ 15 │ from posixpath import sep as posix_sep
+ 17 ⋮ 16 │ 
+
+ 335⋮ 334│ def parts(s):
+ 336⋮ 335│     parts = s.split(sep)
+ 337⋮ 336│     return {sep.join(parts[: i + 1]) or sep for i in range(len(parts))}
+ 338⋮    │-
+ 339⋮    │-
+ 340⋮    │-def unique_path(path):
+ 341⋮    │-    """Returns a unique path in case-insensitive (but case-preserving) file
+ 342⋮    │-    systems such as Windows.
+ 343⋮    │-
+ 344⋮    │-    This is needed only for ``py.path.local``; ``pathlib.Path`` handles this
+ 345⋮    │-    natively with ``resolve()``."""
+ 346⋮    │-    return type(path)(normcase(str(path.realpath())))

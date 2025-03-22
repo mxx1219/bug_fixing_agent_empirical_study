@@ -1,0 +1,36 @@
+
+sphinx/ext/napoleon/docstring.py
+
+ 266⋮ 266│         _descs = self.__class__(_descs, self._config).lines()
+ 267⋮ 267│         return _name, _type, _descs
+ 268⋮ 268│ 
+ 269⋮    │-    def _consume_fields(self, parse_type: bool = True, prefer_type: bool = False
+ 270⋮    │-                        ) -> List[Tuple[str, str, List[str]]]:
+    ⋮ 269│+    def _consume_fields(self, parse_type: bool = True, prefer_type: bool = False,
+    ⋮ 270│+                        multiple: bool = False) -> List[Tuple[str, str, List[str]]]:
+ 271⋮ 271│         self._consume_empty()
+ 272⋮ 272│         fields = []
+ 273⋮ 273│         while not self._is_section_break():
+ 274⋮ 274│             _name, _type, _desc = self._consume_field(parse_type, prefer_type)
+ 275⋮    │-            if _name or _type or _desc:
+    ⋮ 275│+            if multiple and _name:
+    ⋮ 276│+                for name in _name.split(","):
+    ⋮ 277│+                    fields.append((name.strip(), _type, _desc))
+    ⋮ 278│+            elif _name or _type or _desc:
+ 276⋮ 279│                 fields.append((_name, _type, _desc,))
+ 277⋮ 280│         return fields
+ 278⋮ 281│ 
+
+ 681⋮ 684│         return self._format_fields(_('Other Parameters'), self._consume_fields())
+ 682⋮ 685│ 
+ 683⋮ 686│     def _parse_parameters_section(self, section: str) -> List[str]:
+ 684⋮    │-        fields = self._consume_fields()
+ 685⋮ 687│         if self._config.napoleon_use_param:
+    ⋮ 688│+            # Allow to declare multiple parameters at once (ex: x, y: int)
+    ⋮ 689│+            fields = self._consume_fields(multiple=True)
+ 686⋮ 690│             return self._format_docutils_params(fields)
+ 687⋮ 691│         else:
+    ⋮ 692│+            fields = self._consume_fields()
+ 688⋮ 693│             return self._format_fields(_('Parameters'), fields)
+ 689⋮ 694│ 
+ 690⋮ 695│     def _parse_raises_section(self, section: str) -> List[str]:

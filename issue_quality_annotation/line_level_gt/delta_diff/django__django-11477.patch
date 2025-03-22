@@ -1,0 +1,11 @@
+
+django/urls/resolvers.py
+
+ 153⋮ 153│             # If there are any named groups, use those as kwargs, ignoring
+ 154⋮ 154│             # non-named groups. Otherwise, pass all non-named arguments as
+ 155⋮ 155│             # positional arguments.
+ 156⋮    │-            kwargs = match.groupdict()
+    ⋮ 156│+            kwargs = {k: v for k, v in match.groupdict().items() if v is not None}
+ 157⋮ 157│             args = () if kwargs else match.groups()
+ 158⋮ 158│             return path[match.end():], args, kwargs
+ 159⋮ 159│         return None

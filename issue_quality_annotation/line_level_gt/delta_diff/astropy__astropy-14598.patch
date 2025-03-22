@@ -1,0 +1,20 @@
+
+astropy/io/fits/card.py
+
+ 66 ⋮ 66 │     # followed by an optional comment
+ 67 ⋮ 67 │     _strg = r"\'(?P<strg>([ -~]+?|\'\'|) *?)\'(?=$|/| )"
+ 68 ⋮ 68 │     _comm_field = r"(?P<comm_field>(?P<sepr>/ *)(?P<comm>(.|\n)*))"
+ 69 ⋮    │-    _strg_comment_RE = re.compile(f"({_strg})? *{_comm_field}?")
+    ⋮ 69 │+    _strg_comment_RE = re.compile(f"({_strg})? *{_comm_field}?$")
+ 70 ⋮ 70 │ 
+ 71 ⋮ 71 │     # FSC commentary card string which must contain printable ASCII characters.
+ 72 ⋮ 72 │     # Note: \Z matches the end of the string without allowing newlines
+
+ 859⋮ 859│                     return kw, vc
+ 860⋮ 860│ 
+ 861⋮ 861│                 value = m.group("strg") or ""
+ 862⋮    │-                value = value.rstrip().replace("''", "'")
+    ⋮ 862│+                value = value.rstrip()
+ 863⋮ 863│                 if value and value[-1] == "&":
+ 864⋮ 864│                     value = value[:-1]
+ 865⋮ 865│                 values.append(value)

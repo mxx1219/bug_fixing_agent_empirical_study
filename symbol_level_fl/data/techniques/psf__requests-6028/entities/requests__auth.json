@@ -1,0 +1,106 @@
+[
+    {
+        "type": "functions",
+        "line_range": "28-69"
+    },
+    {
+        "type": "methods",
+        "line_range": "75-76"
+    },
+    {
+        "type": "methods",
+        "line_range": "82-84"
+    },
+    {
+        "type": "methods",
+        "line_range": "86-90"
+    },
+    {
+        "type": "methods",
+        "line_range": "92-93"
+    },
+    {
+        "type": "methods",
+        "line_range": "95-97"
+    },
+    {
+        "type": "methods",
+        "line_range": "103-105"
+    },
+    {
+        "type": "methods",
+        "line_range": "111-115"
+    },
+    {
+        "type": "methods",
+        "line_range": "117-125"
+    },
+    {
+        "type": "methods",
+        "line_range": "127-144,149-150,155-156,161-162,167-227"
+    },
+    {
+        "type": "methods",
+        "line_range": "145-148"
+    },
+    {
+        "type": "methods",
+        "line_range": "151-154"
+    },
+    {
+        "type": "methods",
+        "line_range": "157-160"
+    },
+    {
+        "type": "methods",
+        "line_range": "163-166"
+    },
+    {
+        "type": "methods",
+        "line_range": "229-232"
+    },
+    {
+        "type": "methods",
+        "line_range": "234-276"
+    },
+    {
+        "type": "methods",
+        "line_range": "278-296"
+    },
+    {
+        "type": "methods",
+        "line_range": "298-302"
+    },
+    {
+        "type": "methods",
+        "line_range": "304-305"
+    },
+    {
+        "type": "classes",
+        "line_range": "72-74"
+    },
+    {
+        "type": "classes",
+        "line_range": "79-81,85,91,94"
+    },
+    {
+        "type": "classes",
+        "line_range": "100-102"
+    },
+    {
+        "type": "classes",
+        "line_range": "108-110,116,126,228,233,277,297,303"
+    },
+    {
+        "type": "imports",
+        "line_range": "10-22"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "3-8"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "24-25"
+    }
+]

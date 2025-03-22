@@ -1,0 +1,11 @@
+
+requests/sessions.py
+
+ 59 ⋮ 59 │         if v is None:
+ 60 ⋮ 60 │             del merged_setting[k]
+ 61 ⋮ 61 │ 
+    ⋮ 62 │+    merged_setting = dict((k, v) for (k, v) in merged_setting.items() if v is not None)
+    ⋮ 63 │+
+ 62 ⋮ 64 │     return merged_setting
+ 63 ⋮ 65 │ 
+ 64 ⋮ 66 │ 

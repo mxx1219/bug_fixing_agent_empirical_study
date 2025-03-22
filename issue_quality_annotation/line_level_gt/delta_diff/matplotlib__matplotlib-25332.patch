@@ -1,0 +1,22 @@
+
+lib/matplotlib/cbook.py
+
+ 788⋮ 788│     def __init__(self, init=()):
+ 789⋮ 789│         self._mapping = {weakref.ref(x): [weakref.ref(x)] for x in init}
+ 790⋮ 790│ 
+    ⋮ 791│+    def __getstate__(self):
+    ⋮ 792│+        return {
+    ⋮ 793│+            **vars(self),
+    ⋮ 794│+            # Convert weak refs to strong ones.
+    ⋮ 795│+            "_mapping": {k(): [v() for v in vs] for k, vs in self._mapping.items()},
+    ⋮ 796│+        }
+    ⋮ 797│+
+    ⋮ 798│+    def __setstate__(self, state):
+    ⋮ 799│+        vars(self).update(state)
+    ⋮ 800│+        # Convert strong refs to weak ones.
+    ⋮ 801│+        self._mapping = {weakref.ref(k): [*map(weakref.ref, vs)]
+    ⋮ 802│+                         for k, vs in self._mapping.items()}
+    ⋮ 803│+
+ 791⋮ 804│     def __contains__(self, item):
+ 792⋮ 805│         return weakref.ref(item) in self._mapping
+ 793⋮ 806│ 

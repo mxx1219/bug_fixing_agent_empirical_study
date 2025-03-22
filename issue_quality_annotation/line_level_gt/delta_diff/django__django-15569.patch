@@ -1,0 +1,10 @@
+
+django/db/models/query_utils.py
+
+ 217⋮ 217│         if lookup_name is None:
+ 218⋮ 218│             lookup_name = lookup.lookup_name
+ 219⋮ 219│         del cls.class_lookups[lookup_name]
+    ⋮ 220│+        cls._clear_cached_lookups()
+ 220⋮ 221│ 
+ 221⋮ 222│ 
+ 222⋮ 223│ def select_related_descend(field, restricted, requested, load_fields, reverse=False):

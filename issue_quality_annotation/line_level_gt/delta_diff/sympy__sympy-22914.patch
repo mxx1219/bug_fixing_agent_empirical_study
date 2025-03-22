@@ -1,0 +1,11 @@
+
+sympy/printing/pycode.py
+
+ 18 ⋮ 18 │ 
+ 19 ⋮ 19 │ _known_functions = {
+ 20 ⋮ 20 │     'Abs': 'abs',
+    ⋮ 21 │+    'Min': 'min',
+    ⋮ 22 │+    'Max': 'max',
+ 21 ⋮ 23 │ }
+ 22 ⋮ 24 │ _known_functions_math = {
+ 23 ⋮ 25 │     'acos': 'acos',

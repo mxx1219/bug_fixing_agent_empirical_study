@@ -1,0 +1,41 @@
+
+django/db/models/fields/json.py
+
+ 378⋮ 378│         return super().as_sql(compiler, connection)
+ 379⋮ 379│ 
+ 380⋮ 380│ 
+    ⋮ 381│+class KeyTransformIn(lookups.In):
+    ⋮ 382│+    def process_rhs(self, compiler, connection):
+    ⋮ 383│+        rhs, rhs_params = super().process_rhs(compiler, connection)
+    ⋮ 384│+        if not connection.features.has_native_json_field:
+    ⋮ 385│+            func = ()
+    ⋮ 386│+            if connection.vendor == 'oracle':
+    ⋮ 387│+                func = []
+    ⋮ 388│+                for value in rhs_params:
+    ⋮ 389│+                    value = json.loads(value)
+    ⋮ 390│+                    function = 'JSON_QUERY' if isinstance(value, (list, dict)) else 'JSON_VALUE'
+    ⋮ 391│+                    func.append("%s('%s', '$.value')" % (
+    ⋮ 392│+                        function,
+    ⋮ 393│+                        json.dumps({'value': value}),
+    ⋮ 394│+                    ))
+    ⋮ 395│+                func = tuple(func)
+    ⋮ 396│+                rhs_params = ()
+    ⋮ 397│+            elif connection.vendor == 'mysql' and connection.mysql_is_mariadb:
+    ⋮ 398│+                func = ("JSON_UNQUOTE(JSON_EXTRACT(%s, '$'))",) * len(rhs_params)
+    ⋮ 399│+            elif connection.vendor in {'sqlite', 'mysql'}:
+    ⋮ 400│+                func = ("JSON_EXTRACT(%s, '$')",) * len(rhs_params)
+    ⋮ 401│+            rhs = rhs % func
+    ⋮ 402│+        return rhs, rhs_params
+    ⋮ 403│+
+    ⋮ 404│+
+ 381⋮ 405│ class KeyTransformExact(JSONExact):
+ 382⋮ 406│     def process_lhs(self, compiler, connection):
+ 383⋮ 407│         lhs, lhs_params = super().process_lhs(compiler, connection)
+
+ 479⋮ 503│     pass
+ 480⋮ 504│ 
+ 481⋮ 505│ 
+    ⋮ 506│+KeyTransform.register_lookup(KeyTransformIn)
+ 482⋮ 507│ KeyTransform.register_lookup(KeyTransformExact)
+ 483⋮ 508│ KeyTransform.register_lookup(KeyTransformIExact)
+ 484⋮ 509│ KeyTransform.register_lookup(KeyTransformIsNull)

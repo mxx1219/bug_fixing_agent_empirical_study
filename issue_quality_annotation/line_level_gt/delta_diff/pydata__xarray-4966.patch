@@ -1,0 +1,17 @@
+
+xarray/coding/variables.py
+
+ 316⋮ 316│                     if "_FillValue" in attrs:
+ 317⋮ 317│                         new_fill = unsigned_dtype.type(attrs["_FillValue"])
+ 318⋮ 318│                         attrs["_FillValue"] = new_fill
+    ⋮ 319│+            elif data.dtype.kind == "u":
+    ⋮ 320│+                if unsigned == "false":
+    ⋮ 321│+                    signed_dtype = np.dtype("i%s" % data.dtype.itemsize)
+    ⋮ 322│+                    transform = partial(np.asarray, dtype=signed_dtype)
+    ⋮ 323│+                    data = lazy_elemwise_func(data, transform, signed_dtype)
+    ⋮ 324│+                    if "_FillValue" in attrs:
+    ⋮ 325│+                        new_fill = signed_dtype.type(attrs["_FillValue"])
+    ⋮ 326│+                        attrs["_FillValue"] = new_fill
+ 319⋮ 327│             else:
+ 320⋮ 328│                 warnings.warn(
+ 321⋮ 329│                     "variable %r has _Unsigned attribute but is not "

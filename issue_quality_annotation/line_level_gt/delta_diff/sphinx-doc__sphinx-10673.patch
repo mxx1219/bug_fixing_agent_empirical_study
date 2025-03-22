@@ -1,0 +1,97 @@
+
+sphinx/directives/other.py
+
+ 77 ⋮ 77 │         return ret
+ 78 ⋮ 78 │ 
+ 79 ⋮ 79 │     def parse_content(self, toctree: addnodes.toctree) -> List[Node]:
+    ⋮ 80 │+        generated_docnames = frozenset(self.env.domains['std'].initial_data['labels'].keys())
+ 80 ⋮ 81 │         suffixes = self.config.source_suffix
+ 81 ⋮ 82 │ 
+ 82 ⋮ 83 │         # glob target documents
+ 83 ⋮    │-        all_docnames = self.env.found_docs.copy()
+    ⋮ 84 │+        all_docnames = self.env.found_docs.copy() | generated_docnames
+ 84 ⋮ 85 │         all_docnames.remove(self.env.docname)  # remove current document
+ 85 ⋮ 86 │ 
+ 86 ⋮ 87 │         ret: List[Node] = []
+
+ 95 ⋮ 96 │                 patname = docname_join(self.env.docname, entry)
+ 96 ⋮ 97 │                 docnames = sorted(patfilter(all_docnames, patname))
+ 97 ⋮ 98 │                 for docname in docnames:
+    ⋮ 99 │+                    if docname in generated_docnames:
+    ⋮ 100│+                        # don't include generated documents in globs
+    ⋮ 101│+                        continue
+ 98 ⋮ 102│                     all_docnames.remove(docname)  # don't include it again
+ 99 ⋮ 103│                     toctree['entries'].append((None, docname))
+ 100⋮ 104│                     toctree['includefiles'].append(docname)
+
+ 118⋮ 122│                 docname = docname_join(self.env.docname, docname)
+ 119⋮ 123│                 if url_re.match(ref) or ref == 'self':
+ 120⋮ 124│                     toctree['entries'].append((title, ref))
+ 121⋮    │-                elif docname not in self.env.found_docs:
+    ⋮ 125│+                elif docname not in self.env.found_docs | generated_docnames:
+ 122⋮ 126│                     if excluded(self.env.doc2path(docname, False)):
+ 123⋮ 127│                         message = __('toctree contains reference to excluded document %r')
+ 124⋮ 128│                         subtype = 'excluded'
+
+sphinx/environment/adapters/toctree.py
+
+  1 ⋮  1 │ """Toctree adapter for sphinx.environment."""
+  2 ⋮  2 │ 
+  3 ⋮    │-from typing import TYPE_CHECKING, Any, Iterable, List, Optional, cast
+    ⋮  3 │+from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Tuple, cast
+  4 ⋮  4 │ 
+  5 ⋮  5 │ from docutils import nodes
+  6 ⋮  6 │ from docutils.nodes import Element, Node
+
+ 54 ⋮ 54 │         """
+ 55 ⋮ 55 │         if toctree.get('hidden', False) and not includehidden:
+ 56 ⋮ 56 │             return None
+    ⋮ 57 │+        generated_docnames: Dict[str, Tuple[str, str, str]] = self.env.domains['std'].initial_data['labels'].copy()  # NoQA: E501
+ 57 ⋮ 58 │ 
+ 58 ⋮ 59 │         # For reading the following two helper function, it is useful to keep
+ 59 ⋮ 60 │         # in mind the node structure of a toctree (using HTML-like node names
+
+ 139⋮ 140│                         item = nodes.list_item('', para)
+ 140⋮ 141│                         # don't show subitems
+ 141⋮ 142│                         toc = nodes.bullet_list('', item)
+    ⋮ 143│+                    elif ref in generated_docnames:
+    ⋮ 144│+                        docname, _, sectionname = generated_docnames[ref]
+    ⋮ 145│+                        if not title:
+    ⋮ 146│+                            title = sectionname
+    ⋮ 147│+                        reference = nodes.reference('', title, internal=True,
+    ⋮ 148│+                                                    refuri=docname, anchorname='')
+    ⋮ 149│+                        para = addnodes.compact_paragraph('', '', reference)
+    ⋮ 150│+                        item = nodes.list_item('', para)
+    ⋮ 151│+                        # don't show subitems
+    ⋮ 152│+                        toc = nodes.bullet_list('', item)
+ 142⋮ 153│                     else:
+ 143⋮ 154│                         if ref in parents:
+ 144⋮ 155│                             logger.warning(__('circular toctree references '
+
+sphinx/environment/collectors/toctree.py
+
+ 201⋮ 201│ 
+ 202⋮ 202│     def assign_figure_numbers(self, env: BuildEnvironment) -> List[str]:
+ 203⋮ 203│         """Assign a figure number to each figure under a numbered toctree."""
+    ⋮ 204│+        generated_docnames = frozenset(env.domains['std'].initial_data['labels'].keys())
+ 204⋮ 205│ 
+ 205⋮ 206│         rewrite_needed = []
+ 206⋮ 207│ 
+
+ 247⋮ 248│             fignumbers[figure_id] = get_next_fignumber(figtype, secnum)
+ 248⋮ 249│ 
+ 249⋮ 250│         def _walk_doctree(docname: str, doctree: Element, secnum: Tuple[int, ...]) -> None:
+    ⋮ 251│+            nonlocal generated_docnames
+ 250⋮ 252│             for subnode in doctree.children:
+ 251⋮ 253│                 if isinstance(subnode, nodes.section):
+ 252⋮ 254│                     next_secnum = get_section_number(docname, subnode)
+
+ 259⋮ 261│                         if url_re.match(subdocname) or subdocname == 'self':
+ 260⋮ 262│                             # don't mess with those
+ 261⋮ 263│                             continue
+    ⋮ 264│+                        if subdocname in generated_docnames:
+    ⋮ 265│+                            # or these
+    ⋮ 266│+                            continue
+ 262⋮ 267│ 
+ 263⋮ 268│                         _walk_doc(subdocname, secnum)
+ 264⋮ 269│                 elif isinstance(subnode, nodes.Element):

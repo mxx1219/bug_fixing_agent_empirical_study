@@ -1,0 +1,15 @@
+
+lib/matplotlib/dates.py
+
+ 796⋮ 796│         # mostly 0: years,  1: months,  2: days,
+ 797⋮ 797│         # 3: hours, 4: minutes, 5: seconds, 6: microseconds
+ 798⋮ 798│         for level in range(5, -1, -1):
+ 799⋮    │-            if len(np.unique(tickdate[:, level])) > 1:
+ 800⋮    │-                if level < 2:
+    ⋮ 799│+            unique = np.unique(tickdate[:, level])
+    ⋮ 800│+            if len(unique) > 1:
+    ⋮ 801│+                # if 1 is included in unique, the year is shown in ticks
+    ⋮ 802│+                if level < 2 and np.any(unique == 1):
+ 801⋮ 803│                     show_offset = False
+ 802⋮ 804│                 break
+ 803⋮ 805│             elif level == 0:

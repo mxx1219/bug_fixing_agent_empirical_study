@@ -1,0 +1,28 @@
+
+django/db/migrations/autodetector.py
+
+ 912⋮ 912│             old_field_name = self.renamed_fields.get((app_label, model_name, field_name), field_name)
+ 913⋮ 913│             old_field = self.old_apps.get_model(app_label, old_model_name)._meta.get_field(old_field_name)
+ 914⋮ 914│             new_field = self.new_apps.get_model(app_label, model_name)._meta.get_field(field_name)
+    ⋮ 915│+            dependencies = []
+ 915⋮ 916│             # Implement any model renames on relations; these are handled by RenameModel
+ 916⋮ 917│             # so we need to exclude them from the comparison
+ 917⋮ 918│             if hasattr(new_field, "remote_field") and getattr(new_field.remote_field, "model", None):
+
+ 939⋮ 940│                         self.renamed_fields.get(rename_key + (to_field,), to_field)
+ 940⋮ 941│                         for to_field in new_field.to_fields
+ 941⋮ 942│                     ])
+    ⋮ 943│+                dependencies.extend(self._get_dependencies_for_foreign_key(new_field))
+ 942⋮ 944│             if hasattr(new_field, "remote_field") and getattr(new_field.remote_field, "through", None):
+ 943⋮ 945│                 rename_key = (
+ 944⋮ 946│                     new_field.remote_field.through._meta.app_label,
+
+ 970⋮ 972│                             name=field_name,
+ 971⋮ 973│                             field=field,
+ 972⋮ 974│                             preserve_default=preserve_default,
+ 973⋮    │-                        )
+    ⋮ 975│+                        ),
+    ⋮ 976│+                        dependencies=dependencies,
+ 974⋮ 977│                     )
+ 975⋮ 978│                 else:
+ 976⋮ 979│                     # We cannot alter between m2m and concrete fields

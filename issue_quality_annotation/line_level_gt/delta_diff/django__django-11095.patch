@@ -1,0 +1,22 @@
+
+django/contrib/admin/options.py
+
+ 327⋮ 327│             return self.fieldsets
+ 328⋮ 328│         return [(None, {'fields': self.get_fields(request, obj)})]
+ 329⋮ 329│ 
+    ⋮ 330│+    def get_inlines(self, request, obj):
+    ⋮ 331│+        """Hook for specifying custom inlines."""
+    ⋮ 332│+        return self.inlines
+    ⋮ 333│+
+ 330⋮ 334│     def get_ordering(self, request):
+ 331⋮ 335│         """
+ 332⋮ 336│         Hook for specifying field ordering.
+
+ 582⋮ 586│ 
+ 583⋮ 587│     def get_inline_instances(self, request, obj=None):
+ 584⋮ 588│         inline_instances = []
+ 585⋮    │-        for inline_class in self.inlines:
+    ⋮ 589│+        for inline_class in self.get_inlines(request, obj):
+ 586⋮ 590│             inline = inline_class(self.model, self.admin_site)
+ 587⋮ 591│             if request:
+ 588⋮ 592│                 if not (inline.has_view_or_change_permission(request, obj) or

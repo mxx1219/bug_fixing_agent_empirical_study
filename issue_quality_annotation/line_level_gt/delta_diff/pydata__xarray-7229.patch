@@ -1,0 +1,49 @@
+
+xarray/core/computation.py
+
+1855⋮1855│     Dataset.where, DataArray.where :
+1856⋮1856│         equivalent methods
+1857⋮1857│     """
+    ⋮1858│+    from .dataset import Dataset
+    ⋮1859│+
+1858⋮1860│     if keep_attrs is None:
+1859⋮1861│         keep_attrs = _get_keep_attrs(default=False)
+1860⋮    │-    if keep_attrs is True:
+1861⋮    │-        # keep the attributes of x, the second parameter, by default to
+1862⋮    │-        # be consistent with the `where` method of `DataArray` and `Dataset`
+1863⋮    │-        keep_attrs = lambda attrs, context: getattr(x, "attrs", {})
+1864⋮1862│ 
+1865⋮1863│     # alignment for three arguments is complicated, so don't support it yet
+1866⋮    │-    return apply_ufunc(
+    ⋮1864│+    result = apply_ufunc(
+1867⋮1865│         duck_array_ops.where,
+1868⋮1866│         cond,
+1869⋮1867│         x,
+
+1874⋮1872│         keep_attrs=keep_attrs,
+1875⋮1873│     )
+1876⋮1874│ 
+    ⋮1875│+    # keep the attributes of x, the second parameter, by default to
+    ⋮1876│+    # be consistent with the `where` method of `DataArray` and `Dataset`
+    ⋮1877│+    # rebuild the attrs from x at each level of the output, which could be
+    ⋮1878│+    # Dataset, DataArray, or Variable, and also handle coords
+    ⋮1879│+    if keep_attrs is True:
+    ⋮1880│+        if isinstance(y, Dataset) and not isinstance(x, Dataset):
+    ⋮1881│+            # handle special case where x gets promoted to Dataset
+    ⋮1882│+            result.attrs = {}
+    ⋮1883│+            if getattr(x, "name", None) in result.data_vars:
+    ⋮1884│+                result[x.name].attrs = getattr(x, "attrs", {})
+    ⋮1885│+        else:
+    ⋮1886│+            # otherwise, fill in global attrs and variable attrs (if they exist)
+    ⋮1887│+            result.attrs = getattr(x, "attrs", {})
+    ⋮1888│+            for v in getattr(result, "data_vars", []):
+    ⋮1889│+                result[v].attrs = getattr(getattr(x, v, None), "attrs", {})
+    ⋮1890│+        for c in getattr(result, "coords", []):
+    ⋮1891│+            # always fill coord attrs of x
+    ⋮1892│+            result[c].attrs = getattr(getattr(x, c, None), "attrs", {})
+    ⋮1893│+
+    ⋮1894│+    return result
+    ⋮1895│+
+1877⋮1896│ 
+1878⋮1897│ @overload
+1879⋮1898│ def polyval(

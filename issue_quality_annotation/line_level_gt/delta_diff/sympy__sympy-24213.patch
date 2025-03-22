@@ -1,0 +1,11 @@
+
+sympy/physics/units/unitsystem.py
+
+ 175⋮ 175│             for addend in expr.args[1:]:
+ 176⋮ 176│                 addend_factor, addend_dim = \
+ 177⋮ 177│                     self._collect_factor_and_dimension(addend)
+ 178⋮    │-                if dim != addend_dim:
+    ⋮ 178│+                if not self.get_dimension_system().equivalent_dims(dim, addend_dim):
+ 179⋮ 179│                     raise ValueError(
+ 180⋮ 180│                         'Dimension of "{}" is {}, '
+ 181⋮ 181│                         'but it should be {}'.format(

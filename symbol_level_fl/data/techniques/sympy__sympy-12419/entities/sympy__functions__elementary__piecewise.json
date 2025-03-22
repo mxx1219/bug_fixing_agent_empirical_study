@@ -1,0 +1,114 @@
+[
+    {
+        "type": "functions",
+        "line_range": "522-572"
+    },
+    {
+        "type": "methods",
+        "line_range": "14-19"
+    },
+    {
+        "type": "methods",
+        "line_range": "21-26"
+    },
+    {
+        "type": "methods",
+        "line_range": "28-33"
+    },
+    {
+        "type": "methods",
+        "line_range": "35-44"
+    },
+    {
+        "type": "methods",
+        "line_range": "46-48"
+    },
+    {
+        "type": "methods",
+        "line_range": "50-52"
+    },
+    {
+        "type": "methods",
+        "line_range": "92-117"
+    },
+    {
+        "type": "methods",
+        "line_range": "119-165"
+    },
+    {
+        "type": "methods",
+        "line_range": "167-179"
+    },
+    {
+        "type": "methods",
+        "line_range": "181-184"
+    },
+    {
+        "type": "methods",
+        "line_range": "186-187"
+    },
+    {
+        "type": "methods",
+        "line_range": "189-190"
+    },
+    {
+        "type": "methods",
+        "line_range": "192-193"
+    },
+    {
+        "type": "methods",
+        "line_range": "195-196"
+    },
+    {
+        "type": "methods",
+        "line_range": "198-200"
+    },
+    {
+        "type": "methods",
+        "line_range": "202-285"
+    },
+    {
+        "type": "methods",
+        "line_range": "287-435"
+    },
+    {
+        "type": "methods",
+        "line_range": "437-439"
+    },
+    {
+        "type": "methods",
+        "line_range": "441-442"
+    },
+    {
+        "type": "methods",
+        "line_range": "444-460"
+    },
+    {
+        "type": "methods",
+        "line_range": "462-463"
+    },
+    {
+        "type": "methods",
+        "line_range": "465-475"
+    },
+    {
+        "type": "methods",
+        "line_range": "500-510"
+    },
+    {
+        "type": "methods",
+        "line_range": "512-519"
+    },
+    {
+        "type": "classes",
+        "line_range": "11-13,20,27,34,45,49"
+    },
+    {
+        "type": "classes",
+        "line_range": "55-91,118,166,180,185,188,191,194,197,201,286,436,440,443,461,464,476-499,511"
+    },
+    {
+        "type": "imports",
+        "line_range": "1-8"
+    }
+]

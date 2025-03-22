@@ -1,0 +1,42 @@
+
+django/contrib/staticfiles/storage.py
+
+ 226⋮ 226│             path for path in paths
+ 227⋮ 227│             if matches_patterns(path, self._patterns)
+ 228⋮ 228│         ]
+ 229⋮    │-        # Do a single pass first. Post-process all files once, then repeat for
+ 230⋮    │-        # adjustable files.
+    ⋮ 229│+
+    ⋮ 230│+        # Adjustable files to yield at end, keyed by the original path.
+    ⋮ 231│+        processed_adjustable_paths = {}
+    ⋮ 232│+
+    ⋮ 233│+        # Do a single pass first. Post-process all files once, yielding not
+    ⋮ 234│+        # adjustable files and exceptions, and collecting adjustable files.
+ 231⋮ 235│         for name, hashed_name, processed, _ in self._post_process(paths, adjustable_paths, hashed_files):
+ 232⋮    │-            yield name, hashed_name, processed
+    ⋮ 236│+            if name not in adjustable_paths or isinstance(processed, Exception):
+    ⋮ 237│+                yield name, hashed_name, processed
+    ⋮ 238│+            else:
+    ⋮ 239│+                processed_adjustable_paths[name] = (name, hashed_name, processed)
+ 233⋮ 240│ 
+ 234⋮ 241│         paths = {path: paths[path] for path in adjustable_paths}
+ 235⋮ 242│ 
+ 236⋮ 243│         for i in range(self.max_post_process_passes):
+ 237⋮ 244│             substitutions = False
+ 238⋮ 245│             for name, hashed_name, processed, subst in self._post_process(paths, adjustable_paths, hashed_files):
+ 239⋮    │-                yield name, hashed_name, processed
+    ⋮ 246│+                # Overwrite since hashed_name may be newer.
+    ⋮ 247│+                processed_adjustable_paths[name] = (name, hashed_name, processed)
+ 240⋮ 248│                 substitutions = substitutions or subst
+ 241⋮ 249│ 
+ 242⋮ 250│             if not substitutions:
+
+ 248⋮ 256│         # Store the processed paths
+ 249⋮ 257│         self.hashed_files.update(hashed_files)
+ 250⋮ 258│ 
+    ⋮ 259│+        # Yield adjustable files with final, hashed name.
+    ⋮ 260│+        yield from processed_adjustable_paths.values()
+    ⋮ 261│+
+ 251⋮ 262│     def _post_process(self, paths, adjustable_paths, hashed_files):
+ 252⋮ 263│         # Sort the files by directory level
+ 253⋮ 264│         def path_level(name):

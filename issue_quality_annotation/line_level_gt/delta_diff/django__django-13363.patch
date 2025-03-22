@@ -1,0 +1,20 @@
+
+django/db/models/functions/datetime.py
+
+ 292⋮ 292│     def as_sql(self, compiler, connection):
+ 293⋮ 293│         # Cast to date rather than truncate to date.
+ 294⋮ 294│         lhs, lhs_params = compiler.compile(self.lhs)
+ 295⋮    │-        tzname = timezone.get_current_timezone_name() if settings.USE_TZ else None
+    ⋮ 295│+        tzname = self.get_tzname()
+ 296⋮ 296│         sql = connection.ops.datetime_cast_date_sql(lhs, tzname)
+ 297⋮ 297│         return sql, lhs_params
+ 298⋮ 298│ 
+
+ 305⋮ 305│     def as_sql(self, compiler, connection):
+ 306⋮ 306│         # Cast to time rather than truncate to time.
+ 307⋮ 307│         lhs, lhs_params = compiler.compile(self.lhs)
+ 308⋮    │-        tzname = timezone.get_current_timezone_name() if settings.USE_TZ else None
+    ⋮ 308│+        tzname = self.get_tzname()
+ 309⋮ 309│         sql = connection.ops.datetime_cast_time_sql(lhs, tzname)
+ 310⋮ 310│         return sql, lhs_params
+ 311⋮ 311│ 

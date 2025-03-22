@@ -1,0 +1,16 @@
+
+sympy/physics/units/unitsystem.py
+
+ 190⋮ 190│                 dim /= idim**count
+ 191⋮ 191│             return factor, dim
+ 192⋮ 192│         elif isinstance(expr, Function):
+ 193⋮    │-            fds = [self._collect_factor_and_dimension(
+ 194⋮    │-                arg) for arg in expr.args]
+ 195⋮    │-            return (expr.func(*(f[0] for f in fds)),
+ 196⋮    │-                    *(d[1] for d in fds))
+    ⋮ 193│+            fds = [self._collect_factor_and_dimension(arg) for arg in expr.args]
+    ⋮ 194│+            dims = [Dimension(1) if self.get_dimension_system().is_dimensionless(d[1]) else d[1] for d in fds]
+    ⋮ 195│+            return (expr.func(*(f[0] for f in fds)), *dims)
+ 197⋮ 196│         elif isinstance(expr, Dimension):
+ 198⋮ 197│             return S.One, expr
+ 199⋮ 198│         else:

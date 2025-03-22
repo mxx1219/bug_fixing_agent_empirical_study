@@ -1,0 +1,211 @@
+
+django/contrib/admin/utils.py
+
+ 182⋮ 182│         except models.ProtectedError as e:
+ 183⋮ 183│             self.protected.update(e.protected_objects)
+ 184⋮ 184│ 
+ 185⋮    │-    def related_objects(self, related, objs):
+ 186⋮    │-        qs = super().related_objects(related, objs)
+ 187⋮    │-        return qs.select_related(related.field.name)
+    ⋮ 185│+    def related_objects(self, related_model, related_fields, objs):
+    ⋮ 186│+        qs = super().related_objects(related_model, related_fields, objs)
+    ⋮ 187│+        return qs.select_related(*[related_field.name for related_field in related_fields])
+ 188⋮ 188│ 
+ 189⋮ 189│     def _nested(self, obj, seen, format_callback):
+ 190⋮ 190│         if obj in seen:
+
+django/db/models/deletion.py
+
+  1 ⋮    │-from collections import Counter
+    ⋮  1 │+import operator
+    ⋮  2 │+from collections import Counter, defaultdict
+    ⋮  3 │+from functools import partial, reduce
+  2 ⋮  4 │ from itertools import chain
+  3 ⋮  5 │ from operator import attrgetter
+  4 ⋮  6 │ 
+  5 ⋮  7 │ from django.db import IntegrityError, connections, transaction
+  6 ⋮    │-from django.db.models import signals, sql
+    ⋮  8 │+from django.db.models import query_utils, signals, sql
+  7 ⋮  9 │ 
+  8 ⋮ 10 │ 
+  9 ⋮ 11 │ class ProtectedError(IntegrityError):
+
+ 65 ⋮ 67 │     def __init__(self, using):
+ 66 ⋮ 68 │         self.using = using
+ 67 ⋮ 69 │         # Initially, {model: {instances}}, later values become lists.
+ 68 ⋮    │-        self.data = {}
+ 69 ⋮    │-        self.field_updates = {}  # {model: {(field, value): {instances}}}
+    ⋮ 70 │+        self.data = defaultdict(set)
+    ⋮ 71 │+        # {model: {(field, value): {instances}}}
+    ⋮ 72 │+        self.field_updates = defaultdict(partial(defaultdict, set))
+ 70 ⋮ 73 │         # fast_deletes is a list of queryset-likes that can be deleted without
+ 71 ⋮ 74 │         # fetching the objects into memory.
+ 72 ⋮ 75 │         self.fast_deletes = []
+
+ 76 ⋮ 79 │         # should be included, as the dependencies exist only between actual
+ 77 ⋮ 80 │         # database tables; proxy models are represented here by their concrete
+ 78 ⋮ 81 │         # parent.
+ 79 ⋮    │-        self.dependencies = {}  # {model: {models}}
+    ⋮ 82 │+        self.dependencies = defaultdict(set)  # {model: {models}}
+ 80 ⋮ 83 │ 
+ 81 ⋮ 84 │     def add(self, objs, source=None, nullable=False, reverse_dependency=False):
+ 82 ⋮ 85 │         """
+
+ 90 ⋮ 93 │             return []
+ 91 ⋮ 94 │         new_objs = []
+ 92 ⋮ 95 │         model = objs[0].__class__
+ 93 ⋮    │-        instances = self.data.setdefault(model, set())
+    ⋮ 96 │+        instances = self.data[model]
+ 94 ⋮ 97 │         for obj in objs:
+ 95 ⋮ 98 │             if obj not in instances:
+ 96 ⋮ 99 │                 new_objs.append(obj)
+
+ 101⋮ 104│         if source is not None and not nullable:
+ 102⋮ 105│             if reverse_dependency:
+ 103⋮ 106│                 source, model = model, source
+ 104⋮    │-            self.dependencies.setdefault(
+ 105⋮    │-                source._meta.concrete_model, set()).add(model._meta.concrete_model)
+    ⋮ 107│+            self.dependencies[source._meta.concrete_model].add(model._meta.concrete_model)
+ 106⋮ 108│         return new_objs
+ 107⋮ 109│ 
+ 108⋮ 110│     def add_field_update(self, field, value, objs):
+
+ 113⋮ 115│         if not objs:
+ 114⋮ 116│             return
+ 115⋮ 117│         model = objs[0].__class__
+ 116⋮    │-        self.field_updates.setdefault(
+ 117⋮    │-            model, {}).setdefault(
+ 118⋮    │-            (field, value), set()).update(objs)
+    ⋮ 118│+        self.field_updates[model][field, value].update(objs)
+ 119⋮ 119│ 
+ 120⋮ 120│     def _has_signal_listeners(self, model):
+ 121⋮ 121│         return (
+
+ 137⋮ 137│         if from_field and from_field.remote_field.on_delete is not CASCADE:
+ 138⋮ 138│             return False
+ 139⋮ 139│         if hasattr(objs, '_meta'):
+ 140⋮    │-            model = type(objs)
+    ⋮ 140│+            model = objs._meta.model
+ 141⋮ 141│         elif hasattr(objs, 'model') and hasattr(objs, '_raw_delete'):
+ 142⋮ 142│             model = objs.model
+ 143⋮ 143│         else:
+
+ 159⋮ 159│             )
+ 160⋮ 160│         )
+ 161⋮ 161│ 
+ 162⋮    │-    def get_del_batches(self, objs, field):
+    ⋮ 162│+    def get_del_batches(self, objs, fields):
+ 163⋮ 163│         """
+ 164⋮ 164│         Return the objs in suitably sized batches for the used connection.
+ 165⋮ 165│         """
+    ⋮ 166│+        field_names = [field.name for field in fields]
+ 166⋮ 167│         conn_batch_size = max(
+ 167⋮    │-            connections[self.using].ops.bulk_batch_size([field.name], objs), 1)
+    ⋮ 168│+            connections[self.using].ops.bulk_batch_size(field_names, objs), 1)
+ 168⋮ 169│         if len(objs) > conn_batch_size:
+ 169⋮ 170│             return [objs[i:i + conn_batch_size]
+ 170⋮ 171│                     for i in range(0, len(objs), conn_batch_size)]
+
+ 211⋮ 212│                                  source_attr=ptr.remote_field.related_name,
+ 212⋮ 213│                                  collect_related=False,
+ 213⋮ 214│                                  reverse_dependency=True)
+ 214⋮    │-        if collect_related:
+ 215⋮    │-            if keep_parents:
+ 216⋮    │-                parents = set(model._meta.get_parent_list())
+ 217⋮    │-            for related in get_candidate_relations_to_delete(model._meta):
+ 218⋮    │-                # Preserve parent reverse relationships if keep_parents=True.
+ 219⋮    │-                if keep_parents and related.model in parents:
+ 220⋮    │-                    continue
+ 221⋮    │-                field = related.field
+ 222⋮    │-                if field.remote_field.on_delete == DO_NOTHING:
+ 223⋮    │-                    continue
+ 224⋮    │-                batches = self.get_del_batches(new_objs, field)
+ 225⋮    │-                for batch in batches:
+ 226⋮    │-                    sub_objs = self.related_objects(related, batch)
+ 227⋮    │-                    if self.can_fast_delete(sub_objs, from_field=field):
+ 228⋮    │-                        self.fast_deletes.append(sub_objs)
+ 229⋮    │-                    else:
+ 230⋮    │-                        related_model = related.related_model
+ 231⋮    │-                        # Non-referenced fields can be deferred if no signal
+ 232⋮    │-                        # receivers are connected for the related model as
+ 233⋮    │-                        # they'll never be exposed to the user. Skip field
+ 234⋮    │-                        # deferring when some relationships are select_related
+ 235⋮    │-                        # as interactions between both features are hard to
+ 236⋮    │-                        # get right. This should only happen in the rare
+ 237⋮    │-                        # cases where .related_objects is overridden anyway.
+ 238⋮    │-                        if not (sub_objs.query.select_related or self._has_signal_listeners(related_model)):
+ 239⋮    │-                            referenced_fields = set(chain.from_iterable(
+ 240⋮    │-                                (rf.attname for rf in rel.field.foreign_related_fields)
+ 241⋮    │-                                for rel in get_candidate_relations_to_delete(related_model._meta)
+ 242⋮    │-                            ))
+ 243⋮    │-                            sub_objs = sub_objs.only(*tuple(referenced_fields))
+ 244⋮    │-                        if sub_objs:
+ 245⋮    │-                            field.remote_field.on_delete(self, field, sub_objs, self.using)
+ 246⋮    │-            for field in model._meta.private_fields:
+ 247⋮    │-                if hasattr(field, 'bulk_related_objects'):
+ 248⋮    │-                    # It's something like generic foreign key.
+ 249⋮    │-                    sub_objs = field.bulk_related_objects(new_objs, self.using)
+ 250⋮    │-                    self.collect(sub_objs, source=model, nullable=True)
+ 251⋮    │-
+ 252⋮    │-    def related_objects(self, related, objs):
+    ⋮ 215│+        if not collect_related:
+    ⋮ 216│+            return
+    ⋮ 217│+
+    ⋮ 218│+        if keep_parents:
+    ⋮ 219│+            parents = set(model._meta.get_parent_list())
+    ⋮ 220│+        model_fast_deletes = defaultdict(list)
+    ⋮ 221│+        for related in get_candidate_relations_to_delete(model._meta):
+    ⋮ 222│+            # Preserve parent reverse relationships if keep_parents=True.
+    ⋮ 223│+            if keep_parents and related.model in parents:
+    ⋮ 224│+                continue
+    ⋮ 225│+            field = related.field
+    ⋮ 226│+            if field.remote_field.on_delete == DO_NOTHING:
+    ⋮ 227│+                continue
+    ⋮ 228│+            related_model = related.related_model
+    ⋮ 229│+            if self.can_fast_delete(related_model, from_field=field):
+    ⋮ 230│+                model_fast_deletes[related_model].append(field)
+    ⋮ 231│+                continue
+    ⋮ 232│+            batches = self.get_del_batches(new_objs, [field])
+    ⋮ 233│+            for batch in batches:
+    ⋮ 234│+                sub_objs = self.related_objects(related_model, [field], batch)
+    ⋮ 235│+                # Non-referenced fields can be deferred if no signal receivers
+    ⋮ 236│+                # are connected for the related model as they'll never be
+    ⋮ 237│+                # exposed to the user. Skip field deferring when some
+    ⋮ 238│+                # relationships are select_related as interactions between both
+    ⋮ 239│+                # features are hard to get right. This should only happen in
+    ⋮ 240│+                # the rare cases where .related_objects is overridden anyway.
+    ⋮ 241│+                if not (sub_objs.query.select_related or self._has_signal_listeners(related_model)):
+    ⋮ 242│+                    referenced_fields = set(chain.from_iterable(
+    ⋮ 243│+                        (rf.attname for rf in rel.field.foreign_related_fields)
+    ⋮ 244│+                        for rel in get_candidate_relations_to_delete(related_model._meta)
+    ⋮ 245│+                    ))
+    ⋮ 246│+                    sub_objs = sub_objs.only(*tuple(referenced_fields))
+    ⋮ 247│+                if sub_objs:
+    ⋮ 248│+                    field.remote_field.on_delete(self, field, sub_objs, self.using)
+    ⋮ 249│+        for related_model, related_fields in model_fast_deletes.items():
+    ⋮ 250│+            batches = self.get_del_batches(new_objs, related_fields)
+    ⋮ 251│+            for batch in batches:
+    ⋮ 252│+                sub_objs = self.related_objects(related_model, related_fields, batch)
+    ⋮ 253│+                self.fast_deletes.append(sub_objs)
+    ⋮ 254│+        for field in model._meta.private_fields:
+    ⋮ 255│+            if hasattr(field, 'bulk_related_objects'):
+    ⋮ 256│+                # It's something like generic foreign key.
+    ⋮ 257│+                sub_objs = field.bulk_related_objects(new_objs, self.using)
+    ⋮ 258│+                self.collect(sub_objs, source=model, nullable=True)
+    ⋮ 259│+
+    ⋮ 260│+    def related_objects(self, related_model, related_fields, objs):
+ 253⋮ 261│         """
+ 254⋮    │-        Get a QuerySet of objects related to `objs` via the relation `related`.
+    ⋮ 262│+        Get a QuerySet of the related model to objs via related fields.
+ 255⋮ 263│         """
+ 256⋮    │-        return related.related_model._base_manager.using(self.using).filter(
+ 257⋮    │-            **{"%s__in" % related.field.name: objs}
+ 258⋮    │-        )
+    ⋮ 264│+        predicate = reduce(operator.or_, (
+    ⋮ 265│+            query_utils.Q(**{'%s__in' % related_field.name: objs})
+    ⋮ 266│+            for related_field in related_fields
+    ⋮ 267│+        ))
+    ⋮ 268│+        return related_model._base_manager.using(self.using).filter(predicate)
+ 259⋮ 269│ 
+ 260⋮ 270│     def instances_with_model(self):
+ 261⋮ 271│         for model, instances in self.data.items():

@@ -1,0 +1,57 @@
+
+pylint/config/__init__.py
+
+ 36 ⋮ 36 │ import pickle
+ 37 ⋮ 37 │ import sys
+ 38 ⋮ 38 │ 
+    ⋮ 39 │+import appdirs
+    ⋮ 40 │+
+ 39 ⋮ 41 │ from pylint.config.configuration_mixin import ConfigurationMixIn
+ 40 ⋮ 42 │ from pylint.config.find_default_config_files import find_default_config_files
+ 41 ⋮ 43 │ from pylint.config.man_help_formatter import _ManHelpFormatter
+
+ 63 ⋮ 65 │ elif USER_HOME == "~":
+ 64 ⋮ 66 │     PYLINT_HOME = ".pylint.d"
+ 65 ⋮ 67 │ else:
+ 66 ⋮    │-    PYLINT_HOME = os.path.join(USER_HOME, ".pylint.d")
+    ⋮ 68 │+    PYLINT_HOME = appdirs.user_cache_dir("pylint")
+    ⋮ 69 │+
+    ⋮ 70 │+    old_home = os.path.join(USER_HOME, ".pylint.d")
+    ⋮ 71 │+    if os.path.exists(old_home):
+    ⋮ 72 │+        print(
+    ⋮ 73 │+            f"PYLINTHOME is now '{PYLINT_HOME}' but obsolescent '{old_home}' is found; "
+    ⋮ 74 │+            "you can safely remove the latter",
+    ⋮ 75 │+            file=sys.stderr,
+    ⋮ 76 │+        )
+ 67 ⋮ 77 │ 
+ 68 ⋮ 78 │ 
+ 69 ⋮ 79 │ def _get_pdata_path(base_name, recurs):
+
+setup.cfg
+
+ 42 ⋮ 42 │ [options]
+ 43 ⋮ 43 │ packages = find:
+ 44 ⋮ 44 │ install_requires =
+    ⋮ 45 │+    appdirs>=1.4.0
+ 45 ⋮ 46 │     astroid>=2.6.5,<2.7 # (You should also upgrade requirements_test_min.txt)
+ 46 ⋮ 47 │     isort>=4.2.5,<6
+ 47 ⋮ 48 │     mccabe>=0.6,<0.7
+
+ 74 ⋮ 75 │ [isort]
+ 75 ⋮ 76 │ multi_line_output = 3
+ 76 ⋮ 77 │ line_length = 88
+ 77 ⋮    │-known_third_party = astroid, sphinx, isort, pytest, mccabe, six, toml
+    ⋮ 78 │+known_third_party = appdirs, astroid, sphinx, isort, pytest, mccabe, six, toml
+ 78 ⋮ 79 │ include_trailing_comma = True
+ 79 ⋮ 80 │ skip_glob = tests/functional/**,tests/input/**,tests/extensions/data/**,tests/regrtest_data/**,tests/data/**,astroid/**,venv/**
+ 80 ⋮ 81 │ src_paths = pylint
+
+ 82 ⋮ 83 │ [mypy]
+ 83 ⋮ 84 │ scripts_are_modules = True
+ 84 ⋮ 85 │ 
+    ⋮ 86 │+[mypy-appdirs]
+    ⋮ 87 │+ignore_missing_imports = True
+    ⋮ 88 │+
+ 85 ⋮ 89 │ [mypy-astroid.*]
+ 86 ⋮ 90 │ ignore_missing_imports = True
+ 87 ⋮ 91 │ 

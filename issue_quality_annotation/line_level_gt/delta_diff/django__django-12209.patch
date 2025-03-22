@@ -1,0 +1,10 @@
+
+django/db/models/base.py
+
+ 849⋮ 849│         updated = False
+ 850⋮ 850│         # Skip an UPDATE when adding an instance and primary key has a default.
+ 851⋮ 851│         if (
+    ⋮ 852│+            not raw and
+ 852⋮ 853│             not force_insert and
+ 853⋮ 854│             self._state.adding and
+ 854⋮ 855│             self._meta.pk.default and

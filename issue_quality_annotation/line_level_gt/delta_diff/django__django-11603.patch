@@ -1,0 +1,18 @@
+
+django/db/models/aggregates.py
+
+ 99 ⋮ 99 │ class Avg(FixDurationInputMixin, NumericOutputFieldMixin, Aggregate):
+ 100⋮ 100│     function = 'AVG'
+ 101⋮ 101│     name = 'Avg'
+    ⋮ 102│+    allow_distinct = True
+ 102⋮ 103│ 
+ 103⋮ 104│ 
+ 104⋮ 105│ class Count(Aggregate):
+
+ 142⋮ 143│ class Sum(FixDurationInputMixin, Aggregate):
+ 143⋮ 144│     function = 'SUM'
+ 144⋮ 145│     name = 'Sum'
+    ⋮ 146│+    allow_distinct = True
+ 145⋮ 147│ 
+ 146⋮ 148│ 
+ 147⋮ 149│ class Variance(NumericOutputFieldMixin, Aggregate):

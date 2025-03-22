@@ -1,0 +1,61 @@
+
+sympy/sets/handlers/intersection.py
+
+  5 ⋮  5 │ from sympy.sets.fancysets import (Integers, Naturals, Reals, Range,
+  6 ⋮  6 │     ImageSet, Rationals)
+  7 ⋮  7 │ from sympy.sets.sets import UniversalSet, imageset, ProductSet
+  8 ⋮    │-
+    ⋮  8 │+from sympy.simplify.radsimp import numer
+  9 ⋮  9 │ 
+ 10 ⋮ 10 │ @dispatch(ConditionSet, ConditionSet)  # type: ignore # noqa:F811
+ 11 ⋮ 11 │ def intersection_sets(a, b): # noqa:F811
+
+ 280⋮ 280│         from sympy.core.function import expand_complex
+ 281⋮ 281│         from sympy.solvers.solvers import denoms, solve_linear
+ 282⋮ 282│         from sympy.core.relational import Eq
+    ⋮ 283│+
+    ⋮ 284│+        def _solution_union(exprs, sym):
+    ⋮ 285│+            # return a union of linear solutions to i in expr;
+    ⋮ 286│+            # if i cannot be solved, use a ConditionSet for solution
+    ⋮ 287│+            sols = []
+    ⋮ 288│+            for i in exprs:
+    ⋮ 289│+                x, xis = solve_linear(i, 0, [sym])
+    ⋮ 290│+                if x == sym:
+    ⋮ 291│+                    sols.append(FiniteSet(xis))
+    ⋮ 292│+                else:
+    ⋮ 293│+                    sols.append(ConditionSet(sym, Eq(i, 0)))
+    ⋮ 294│+            return Union(*sols)
+    ⋮ 295│+
+ 283⋮ 296│         f = self.lamda.expr
+ 284⋮ 297│         n = self.lamda.variables[0]
+ 285⋮ 298│ 
+
+ 303⋮ 316│         elif ifree != {n}:
+ 304⋮ 317│             return None
+ 305⋮ 318│         else:
+ 306⋮    │-            # univarite imaginary part in same variable
+ 307⋮    │-            x, xis = zip(*[solve_linear(i, 0) for i in Mul.make_args(im) if n in i.free_symbols])
+ 308⋮    │-            if x and all(i == n for i in x):
+ 309⋮    │-                base_set -= FiniteSet(xis)
+ 310⋮    │-            else:
+ 311⋮    │-                base_set -= ConditionSet(n, Eq(im, 0), S.Integers)
+    ⋮ 319│+            # univarite imaginary part in same variable;
+    ⋮ 320│+            # use numer instead of as_numer_denom to keep
+    ⋮ 321│+            # this as fast as possible while still handling
+    ⋮ 322│+            # simple cases
+    ⋮ 323│+            base_set &= _solution_union(
+    ⋮ 324│+                Mul.make_args(numer(im)), n)
+ 312⋮ 325│         # exclude values that make denominators 0
+ 313⋮    │-        for i in denoms(f):
+ 314⋮    │-            if i.has(n):
+ 315⋮    │-                sol = list(zip(*[solve_linear(i, 0) for i in Mul.make_args(im) if n in i.free_symbols]))
+ 316⋮    │-                if sol != []:
+ 317⋮    │-                    x, xis = sol
+ 318⋮    │-                    if x and all(i == n for i in x):
+ 319⋮    │-                        base_set -= FiniteSet(xis)
+ 320⋮    │-                else:
+ 321⋮    │-                    base_set -= ConditionSet(n, Eq(i, 0), S.Integers)
+    ⋮ 326│+        base_set -= _solution_union(denoms(f), n)
+ 322⋮ 327│         return imageset(lam, base_set)
+ 323⋮ 328│ 
+ 324⋮ 329│     elif isinstance(other, Interval):

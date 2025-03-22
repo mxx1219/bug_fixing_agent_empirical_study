@@ -1,0 +1,16 @@
+
+lib/matplotlib/widgets.py
+
+2156⋮2156│             self.artists.append(self._rect)
+2157⋮2157│ 
+2158⋮2158│     def _setup_edge_handle(self, props):
+2159⋮    │-        self._edge_handles = ToolLineHandles(self.ax, self.extents,
+    ⋮2159│+        # Define initial position using the axis bounds to keep the same bounds
+    ⋮2160│+        if self.direction == 'horizontal':
+    ⋮2161│+            positions = self.ax.get_xbound()
+    ⋮2162│+        else:
+    ⋮2163│+            positions = self.ax.get_ybound()
+    ⋮2164│+        self._edge_handles = ToolLineHandles(self.ax, positions,
+2160⋮2165│                                              direction=self.direction,
+2161⋮2166│                                              line_props=props,
+2162⋮2167│                                              useblit=self.useblit)

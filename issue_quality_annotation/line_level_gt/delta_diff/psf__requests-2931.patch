@@ -1,0 +1,21 @@
+
+requests/models.py
+
+ 81 ⋮ 81 │         """
+ 82 ⋮ 82 │ 
+ 83 ⋮ 83 │         if isinstance(data, (str, bytes)):
+ 84 ⋮    │-            return to_native_string(data)
+    ⋮ 84 │+            return data
+ 85 ⋮ 85 │         elif hasattr(data, 'read'):
+ 86 ⋮ 86 │             return data
+ 87 ⋮ 87 │         elif hasattr(data, '__iter__'):
+
+ 385⋮ 385│             if isinstance(fragment, str):
+ 386⋮ 386│                 fragment = fragment.encode('utf-8')
+ 387⋮ 387│ 
+    ⋮ 388│+        if isinstance(params, (str, bytes)):
+    ⋮ 389│+            params = to_native_string(params)
+    ⋮ 390│+
+ 388⋮ 391│         enc_params = self._encode_params(params)
+ 389⋮ 392│         if enc_params:
+ 390⋮ 393│             if query:

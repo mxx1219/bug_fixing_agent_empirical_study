@@ -1,0 +1,11 @@
+
+django/db/migrations/autodetector.py
+
+ 96 ⋮ 96 │         for name, field in sorted(fields.items()):
+ 97 ⋮ 97 │             deconstruction = self.deep_deconstruct(field)
+ 98 ⋮ 98 │             if field.remote_field and field.remote_field.model:
+ 99 ⋮    │-                del deconstruction[2]['to']
+    ⋮ 99 │+                deconstruction[2].pop('to', None)
+ 100⋮ 100│             fields_def.append(deconstruction)
+ 101⋮ 101│         return fields_def
+ 102⋮ 102│ 

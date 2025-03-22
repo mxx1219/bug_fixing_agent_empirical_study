@@ -1,0 +1,53 @@
+
+sklearn/feature_selection/_sequential.py
+
+  8 ⋮  8 │ import warnings
+  9 ⋮  9 │ 
+ 10 ⋮ 10 │ from ._base import SelectorMixin
+ 11 ⋮    │-from ..base import BaseEstimator, MetaEstimatorMixin, clone
+    ⋮ 11 │+from ..base import BaseEstimator, MetaEstimatorMixin, clone, is_classifier
+ 12 ⋮ 12 │ from ..utils._param_validation import HasMethods, Hidden, Interval, StrOptions
+ 13 ⋮ 13 │ from ..utils._param_validation import RealNotInt
+ 14 ⋮ 14 │ from ..utils._tags import _safe_tags
+ 15 ⋮ 15 │ from ..utils.validation import check_is_fitted
+ 16 ⋮    │-from ..model_selection import cross_val_score
+    ⋮ 16 │+from ..model_selection import cross_val_score, check_cv
+ 17 ⋮ 17 │ from ..metrics import get_scorer_names
+ 18 ⋮ 18 │ 
+ 19 ⋮ 19 │ 
+
+ 259⋮ 259│         if self.tol is not None and self.tol < 0 and self.direction == "forward":
+ 260⋮ 260│             raise ValueError("tol must be positive when doing forward selection")
+ 261⋮ 261│ 
+    ⋮ 262│+        cv = check_cv(self.cv, y, classifier=is_classifier(self.estimator))
+    ⋮ 263│+
+ 262⋮ 264│         cloned_estimator = clone(self.estimator)
+ 263⋮ 265│ 
+ 264⋮ 266│         # the current mask corresponds to the set of features:
+
+ 275⋮ 277│         is_auto_select = self.tol is not None and self.n_features_to_select == "auto"
+ 276⋮ 278│         for _ in range(n_iterations):
+ 277⋮ 279│             new_feature_idx, new_score = self._get_best_new_feature_score(
+ 278⋮    │-                cloned_estimator, X, y, current_mask
+    ⋮ 280│+                cloned_estimator, X, y, cv, current_mask
+ 279⋮ 281│             )
+ 280⋮ 282│             if is_auto_select and ((new_score - old_score) < self.tol):
+ 281⋮ 283│                 break
+
+ 291⋮ 293│ 
+ 292⋮ 294│         return self
+ 293⋮ 295│ 
+ 294⋮    │-    def _get_best_new_feature_score(self, estimator, X, y, current_mask):
+    ⋮ 296│+    def _get_best_new_feature_score(self, estimator, X, y, cv, current_mask):
+ 295⋮ 297│         # Return the best new feature and its score to add to the current_mask,
+ 296⋮ 298│         # i.e. return the best new feature and its score to add (resp. remove)
+ 297⋮ 299│         # when doing forward selection (resp. backward selection).
+
+ 309⋮ 311│                 estimator,
+ 310⋮ 312│                 X_new,
+ 311⋮ 313│                 y,
+ 312⋮    │-                cv=self.cv,
+    ⋮ 314│+                cv=cv,
+ 313⋮ 315│                 scoring=self.scoring,
+ 314⋮ 316│                 n_jobs=self.n_jobs,
+ 315⋮ 317│             ).mean()

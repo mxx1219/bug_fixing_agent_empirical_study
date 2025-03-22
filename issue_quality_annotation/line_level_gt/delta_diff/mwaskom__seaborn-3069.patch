@@ -1,0 +1,45 @@
+
+seaborn/_core/plot.py
+
+ 25 ⋮ 25 │ from seaborn._stats.base import Stat
+ 26 ⋮ 26 │ from seaborn._core.data import PlotData
+ 27 ⋮ 27 │ from seaborn._core.moves import Move
+ 28 ⋮    │-from seaborn._core.scales import Scale
+    ⋮ 28 │+from seaborn._core.scales import Scale, Nominal
+ 29 ⋮ 29 │ from seaborn._core.subplots import Subplots
+ 30 ⋮ 30 │ from seaborn._core.groupby import GroupBy
+ 31 ⋮ 31 │ from seaborn._core.properties import PROPERTIES, Property
+
+1238⋮1238│             # This only affects us when sharing *paired* axes. This is a novel/niche
+1239⋮1239│             # behavior, so we will raise rather than hack together a workaround.
+1240⋮1240│             if axis is not None and Version(mpl.__version__) < Version("3.4.0"):
+1241⋮    │-                from seaborn._core.scales import Nominal
+1242⋮1241│                 paired_axis = axis in p._pair_spec.get("structure", {})
+1243⋮1242│                 cat_scale = isinstance(scale, Nominal)
+1244⋮1243│                 ok_dim = {"x": "col", "y": "row"}[axis]
+
+1631⋮1630│             ax = sub["ax"]
+1632⋮1631│             for axis in "xy":
+1633⋮1632│                 axis_key = sub[axis]
+    ⋮1633│+                axis_obj = getattr(ax, f"{axis}axis")
+1634⋮1634│ 
+1635⋮1635│                 # Axis limits
+1636⋮1636│                 if axis_key in p._limits:
+
+1644⋮1644│                         hi = cast(float, hi) + 0.5
+1645⋮1645│                     ax.set(**{f"{axis}lim": (lo, hi)})
+1646⋮1646│ 
+    ⋮1647│+                # Nominal scale special-casing
+    ⋮1648│+                if isinstance(self._scales.get(axis_key), Nominal):
+    ⋮1649│+                    axis_obj.grid(False, which="both")
+    ⋮1650│+                    if axis_key not in p._limits:
+    ⋮1651│+                        nticks = len(axis_obj.get_major_ticks())
+    ⋮1652│+                        lo, hi = -.5, nticks - .5
+    ⋮1653│+                        if axis == "y":
+    ⋮1654│+                            lo, hi = hi, lo
+    ⋮1655│+                        set_lim = getattr(ax, f"set_{axis}lim")
+    ⋮1656│+                        set_lim(lo, hi, auto=None)
+    ⋮1657│+
+1647⋮1658│         engine_default = None if p._target is not None else "tight"
+1648⋮1659│         layout_engine = p._layout_spec.get("engine", engine_default)
+1649⋮1660│         set_layout_engine(self._figure, layout_engine)

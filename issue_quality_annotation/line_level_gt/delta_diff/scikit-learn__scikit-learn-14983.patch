@@ -1,0 +1,21 @@
+
+sklearn/model_selection/_split.py
+
+1163⋮1163│                      **self.cvargs)
+1164⋮1164│         return cv.get_n_splits(X, y, groups) * self.n_repeats
+1165⋮1165│ 
+    ⋮1166│+    def __repr__(self):
+    ⋮1167│+        return _build_repr(self)
+    ⋮1168│+
+1166⋮1169│ 
+1167⋮1170│ class RepeatedKFold(_RepeatedSplits):
+1168⋮1171│     """Repeated K-Fold cross validator.
+
+2158⋮2161│         try:
+2159⋮2162│             with warnings.catch_warnings(record=True) as w:
+2160⋮2163│                 value = getattr(self, key, None)
+    ⋮2164│+                if value is None and hasattr(self, 'cvargs'):
+    ⋮2165│+                    value = self.cvargs.get(key, None)
+2161⋮2166│             if len(w) and w[0].category == DeprecationWarning:
+2162⋮2167│                 # if the parameter is deprecated, don't show it
+2163⋮2168│                 continue

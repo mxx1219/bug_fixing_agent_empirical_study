@@ -1,0 +1,100 @@
+
+django/contrib/sessions/middleware.py
+
+ 13 ⋮ 13 │     # RemovedInDjango40Warning: when the deprecation ends, replace with:
+ 14 ⋮ 14 │     #   def __init__(self, get_response):
+ 15 ⋮ 15 │     def __init__(self, get_response=None):
+ 16 ⋮    │-        self._get_response_none_deprecation(get_response)
+ 17 ⋮    │-        self.get_response = get_response
+ 18 ⋮    │-        self._async_check()
+    ⋮ 16 │+        super().__init__(get_response)
+ 19 ⋮ 17 │         engine = import_module(settings.SESSION_ENGINE)
+ 20 ⋮ 18 │         self.SessionStore = engine.SessionStore
+ 21 ⋮ 19 │ 
+
+django/middleware/cache.py
+
+ 64 ⋮ 64 │     # RemovedInDjango40Warning: when the deprecation ends, replace with:
+ 65 ⋮ 65 │     #   def __init__(self, get_response):
+ 66 ⋮ 66 │     def __init__(self, get_response=None):
+ 67 ⋮    │-        self._get_response_none_deprecation(get_response)
+    ⋮ 67 │+        super().__init__(get_response)
+ 68 ⋮ 68 │         self.cache_timeout = settings.CACHE_MIDDLEWARE_SECONDS
+ 69 ⋮ 69 │         self.page_timeout = None
+ 70 ⋮ 70 │         self.key_prefix = settings.CACHE_MIDDLEWARE_KEY_PREFIX
+ 71 ⋮ 71 │         self.cache_alias = settings.CACHE_MIDDLEWARE_ALIAS
+ 72 ⋮ 72 │         self.cache = caches[self.cache_alias]
+ 73 ⋮    │-        self.get_response = get_response
+ 74 ⋮ 73 │ 
+ 75 ⋮ 74 │     def _should_update_cache(self, request, response):
+ 76 ⋮ 75 │         return hasattr(request, '_cache_update_cache') and request._cache_update_cache
+
+ 128⋮ 127│     # RemovedInDjango40Warning: when the deprecation ends, replace with:
+ 129⋮ 128│     #   def __init__(self, get_response):
+ 130⋮ 129│     def __init__(self, get_response=None):
+ 131⋮    │-        self._get_response_none_deprecation(get_response)
+    ⋮ 130│+        super().__init__(get_response)
+ 132⋮ 131│         self.key_prefix = settings.CACHE_MIDDLEWARE_KEY_PREFIX
+ 133⋮ 132│         self.cache_alias = settings.CACHE_MIDDLEWARE_ALIAS
+ 134⋮ 133│         self.cache = caches[self.cache_alias]
+ 135⋮    │-        self.get_response = get_response
+ 136⋮ 134│ 
+ 137⋮ 135│     def process_request(self, request):
+ 138⋮ 136│         """
+
+ 173⋮ 171│     # RemovedInDjango40Warning: when the deprecation ends, replace with:
+ 174⋮ 172│     #   def __init__(self, get_response, cache_timeout=None, page_timeout=None, **kwargs):
+ 175⋮ 173│     def __init__(self, get_response=None, cache_timeout=None, page_timeout=None, **kwargs):
+ 176⋮    │-        self._get_response_none_deprecation(get_response)
+ 177⋮    │-        self.get_response = get_response
+    ⋮ 174│+        super().__init__(get_response)
+ 178⋮ 175│         # We need to differentiate between "provided, but using default value",
+ 179⋮ 176│         # and "not provided". If the value is provided using a default, then
+ 180⋮ 177│         # we fall back to system defaults. If it is not provided at all,
+
+ 184⋮ 181│             key_prefix = kwargs['key_prefix']
+ 185⋮ 182│             if key_prefix is None:
+ 186⋮ 183│                 key_prefix = ''
+    ⋮ 184│+            self.key_prefix = key_prefix
+ 187⋮ 185│         except KeyError:
+ 188⋮    │-            key_prefix = settings.CACHE_MIDDLEWARE_KEY_PREFIX
+ 189⋮    │-        self.key_prefix = key_prefix
+ 190⋮    │-
+    ⋮ 186│+            pass
+ 191⋮ 187│         try:
+ 192⋮ 188│             cache_alias = kwargs['cache_alias']
+ 193⋮ 189│             if cache_alias is None:
+ 194⋮ 190│                 cache_alias = DEFAULT_CACHE_ALIAS
+    ⋮ 191│+            self.cache_alias = cache_alias
+    ⋮ 192│+            self.cache = caches[self.cache_alias]
+ 195⋮ 193│         except KeyError:
+ 196⋮    │-            cache_alias = settings.CACHE_MIDDLEWARE_ALIAS
+ 197⋮    │-        self.cache_alias = cache_alias
+    ⋮ 194│+            pass
+ 198⋮ 195│ 
+ 199⋮    │-        if cache_timeout is None:
+ 200⋮    │-            cache_timeout = settings.CACHE_MIDDLEWARE_SECONDS
+ 201⋮    │-        self.cache_timeout = cache_timeout
+    ⋮ 196│+        if cache_timeout is not None:
+    ⋮ 197│+            self.cache_timeout = cache_timeout
+ 202⋮ 198│         self.page_timeout = page_timeout
+ 203⋮    │-        self.cache = caches[self.cache_alias]
+
+django/middleware/security.py
+
+  9 ⋮  9 │     # RemovedInDjango40Warning: when the deprecation ends, replace with:
+ 10 ⋮ 10 │     #   def __init__(self, get_response):
+ 11 ⋮ 11 │     def __init__(self, get_response=None):
+ 12 ⋮    │-        self._get_response_none_deprecation(get_response)
+    ⋮ 12 │+        super().__init__(get_response)
+ 13 ⋮ 13 │         self.sts_seconds = settings.SECURE_HSTS_SECONDS
+ 14 ⋮ 14 │         self.sts_include_subdomains = settings.SECURE_HSTS_INCLUDE_SUBDOMAINS
+ 15 ⋮ 15 │         self.sts_preload = settings.SECURE_HSTS_PRELOAD
+
+ 19 ⋮ 19 │         self.redirect_host = settings.SECURE_SSL_HOST
+ 20 ⋮ 20 │         self.redirect_exempt = [re.compile(r) for r in settings.SECURE_REDIRECT_EXEMPT]
+ 21 ⋮ 21 │         self.referrer_policy = settings.SECURE_REFERRER_POLICY
+ 22 ⋮    │-        self.get_response = get_response
+ 23 ⋮ 22 │ 
+ 24 ⋮ 23 │     def process_request(self, request):
+ 25 ⋮ 24 │         path = request.path.lstrip("/")

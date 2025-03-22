@@ -1,0 +1,11 @@
+
+django/db/migrations/autodetector.py
+
+1422⋮1422│         dependencies = [(dep_app_label, dep_object_name, None, True)]
+1423⋮1423│         if getattr(field.remote_field, "through", None):
+1424⋮1424│             through_app_label, through_object_name = resolve_relation(
+1425⋮    │-                remote_field_model,
+    ⋮1425│+                field.remote_field.through,
+1426⋮1426│                 app_label,
+1427⋮1427│                 model_name,
+1428⋮1428│             )

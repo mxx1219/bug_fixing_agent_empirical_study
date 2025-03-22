@@ -1,0 +1,70 @@
+
+django/utils/html.py
+
+  1 ⋮  1 │ """HTML utilities suitable for global use."""
+  2 ⋮  2 │ 
+    ⋮  3 │+import html
+  3 ⋮  4 │ import json
+  4 ⋮  5 │ import re
+  5 ⋮  6 │ from html.parser import HTMLParser
+
+ 24 ⋮ 25 │ simple_url_re = re.compile(r'^https?://\[?\w', re.IGNORECASE)
+ 25 ⋮ 26 │ simple_url_2_re = re.compile(r'^www\.|^(?!http)\w[^@]+\.(com|edu|gov|int|mil|net|org)($|/.*)$', re.IGNORECASE)
+ 26 ⋮ 27 │ 
+ 27 ⋮    │-_html_escapes = {
+ 28 ⋮    │-    ord('&'): '&amp;',
+ 29 ⋮    │-    ord('<'): '&lt;',
+ 30 ⋮    │-    ord('>'): '&gt;',
+ 31 ⋮    │-    ord('"'): '&quot;',
+ 32 ⋮    │-    ord("'"): '&#39;',
+ 33 ⋮    │-}
+ 34 ⋮    │-
+ 35 ⋮ 28 │ 
+ 36 ⋮ 29 │ @keep_lazy(str, SafeString)
+ 37 ⋮ 30 │ def escape(text):
+
+ 43 ⋮ 36 │     This may result in double-escaping. If this is a concern, use
+ 44 ⋮ 37 │     conditional_escape() instead.
+ 45 ⋮ 38 │     """
+ 46 ⋮    │-    return mark_safe(str(text).translate(_html_escapes))
+    ⋮ 39 │+    return mark_safe(html.escape(str(text)))
+ 47 ⋮ 40 │ 
+ 48 ⋮ 41 │ 
+ 49 ⋮ 42 │ _js_escapes = {
+
+ 259⋮ 252│             return x
+ 260⋮ 253│         return '%s…' % x[:max(0, limit - 1)]
+ 261⋮ 254│ 
+ 262⋮    │-    def unescape(text):
+ 263⋮    │-        """
+ 264⋮    │-        If input URL is HTML-escaped, unescape it so that it can be safely fed
+ 265⋮    │-        to smart_urlquote. For example:
+ 266⋮    │-        http://example.com?x=1&amp;y=&lt;2&gt; => http://example.com?x=1&y=<2>
+ 267⋮    │-        """
+ 268⋮    │-        return text.replace('&amp;', '&').replace('&lt;', '<').replace(
+ 269⋮    │-            '&gt;', '>').replace('&quot;', '"').replace('&#39;', "'")
+ 270⋮    │-
+ 271⋮ 255│     def trim_punctuation(lead, middle, trail):
+ 272⋮ 256│         """
+ 273⋮ 257│         Trim trailing and wrapping punctuation from `middle`. Return the items
+
+ 292⋮ 276│             # Trim trailing punctuation (after trimming wrapping punctuation,
+ 293⋮ 277│             # as encoded entities contain ';'). Unescape entites to avoid
+ 294⋮ 278│             # breaking them by removing ';'.
+ 295⋮    │-            middle_unescaped = unescape(middle)
+    ⋮ 279│+            middle_unescaped = html.unescape(middle)
+ 296⋮ 280│             stripped = middle_unescaped.rstrip(TRAILING_PUNCTUATION_CHARS)
+ 297⋮ 281│             if middle_unescaped != stripped:
+ 298⋮ 282│                 trail = middle[len(stripped):] + trail
+
+ 329⋮ 313│             url = None
+ 330⋮ 314│             nofollow_attr = ' rel="nofollow"' if nofollow else ''
+ 331⋮ 315│             if simple_url_re.match(middle):
+ 332⋮    │-                url = smart_urlquote(unescape(middle))
+    ⋮ 316│+                url = smart_urlquote(html.unescape(middle))
+ 333⋮ 317│             elif simple_url_2_re.match(middle):
+ 334⋮    │-                url = smart_urlquote('http://%s' % unescape(middle))
+    ⋮ 318│+                url = smart_urlquote('http://%s' % html.unescape(middle))
+ 335⋮ 319│             elif ':' not in middle and is_email_simple(middle):
+ 336⋮ 320│                 local, domain = middle.rsplit('@', 1)
+ 337⋮ 321│                 try:

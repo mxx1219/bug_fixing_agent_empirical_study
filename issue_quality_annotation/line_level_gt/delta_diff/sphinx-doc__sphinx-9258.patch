@@ -1,0 +1,11 @@
+
+sphinx/domains/python.py
+
+ 304⋮ 304│     def make_xrefs(self, rolename: str, domain: str, target: str,
+ 305⋮ 305│                    innernode: Type[TextlikeNode] = nodes.emphasis,
+ 306⋮ 306│                    contnode: Node = None, env: BuildEnvironment = None) -> List[Node]:
+ 307⋮    │-        delims = r'(\s*[\[\]\(\),](?:\s*or\s)?\s*|\s+or\s+|\.\.\.)'
+    ⋮ 307│+        delims = r'(\s*[\[\]\(\),](?:\s*or\s)?\s*|\s+or\s+|\s*\|\s*|\.\.\.)'
+ 308⋮ 308│         delims_re = re.compile(delims)
+ 309⋮ 309│         sub_targets = re.split(delims, target)
+ 310⋮ 310│ 

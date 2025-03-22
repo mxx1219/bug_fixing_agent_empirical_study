@@ -1,0 +1,11 @@
+
+lib/matplotlib/axes/_base.py
+
+2434⋮2434│         # Get all vertices on the path
+2435⋮2435│         # Loop through each segment to get extrema for Bezier curve sections
+2436⋮2436│         vertices = []
+2437⋮    │-        for curve, code in p.iter_bezier():
+    ⋮2437│+        for curve, code in p.iter_bezier(simplify=False):
+2438⋮2438│             # Get distance along the curve of any extrema
+2439⋮2439│             _, dzeros = curve.axis_aligned_extrema()
+2440⋮2440│             # Calculate vertices of start, end and any extrema in between

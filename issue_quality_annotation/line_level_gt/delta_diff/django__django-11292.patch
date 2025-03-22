@@ -1,0 +1,41 @@
+
+django/core/management/base.py
+
+ 95 ⋮ 95 │     """
+ 96 ⋮ 96 │     show_last = {
+ 97 ⋮ 97 │         '--version', '--verbosity', '--traceback', '--settings', '--pythonpath',
+ 98 ⋮    │-        '--no-color', '--force-color',
+    ⋮ 98 │+        '--no-color', '--force-color', '--skip-checks',
+ 99 ⋮ 99 │     }
+ 100⋮ 100│ 
+ 101⋮ 101│     def _reordered_actions(self, actions):
+
+ 223⋮ 223│     requires_system_checks = True
+ 224⋮ 224│     # Arguments, common to all commands, which aren't defined by the argument
+ 225⋮ 225│     # parser.
+ 226⋮    │-    base_stealth_options = ('skip_checks', 'stderr', 'stdout')
+    ⋮ 226│+    base_stealth_options = ('stderr', 'stdout')
+ 227⋮ 227│     # Command-specific options not defined by the argument parser.
+ 228⋮ 228│     stealth_options = ()
+ 229⋮ 229│ 
+
+ 286⋮ 286│             '--force-color', action='store_true',
+ 287⋮ 287│             help='Force colorization of the command output.',
+ 288⋮ 288│         )
+    ⋮ 289│+        if self.requires_system_checks:
+    ⋮ 290│+            parser.add_argument(
+    ⋮ 291│+                '--skip-checks', action='store_true',
+    ⋮ 292│+                help='Skip system checks.',
+    ⋮ 293│+            )
+ 289⋮ 294│         self.add_arguments(parser)
+ 290⋮ 295│         return parser
+ 291⋮ 296│ 
+
+ 357⋮ 362│         if options.get('stderr'):
+ 358⋮ 363│             self.stderr = OutputWrapper(options['stderr'])
+ 359⋮ 364│ 
+ 360⋮    │-        if self.requires_system_checks and not options.get('skip_checks'):
+    ⋮ 365│+        if self.requires_system_checks and not options['skip_checks']:
+ 361⋮ 366│             self.check()
+ 362⋮ 367│         if self.requires_migrations_checks:
+ 363⋮ 368│             self.check_migrations()

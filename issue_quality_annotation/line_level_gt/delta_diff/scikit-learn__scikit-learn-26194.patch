@@ -1,0 +1,45 @@
+
+sklearn/metrics/_ranking.py
+
+1016⋮1016│         Increasing true positive rates such that element `i` is the true
+1017⋮1017│         positive rate of predictions with score >= `thresholds[i]`.
+1018⋮1018│ 
+1019⋮    │-    thresholds : ndarray of shape = (n_thresholds,)
+    ⋮1019│+    thresholds : ndarray of shape (n_thresholds,)
+1020⋮1020│         Decreasing thresholds on the decision function used to compute
+1021⋮1021│         fpr and tpr. `thresholds[0]` represents no instances being predicted
+1022⋮    │-        and is arbitrarily set to `max(y_score) + 1`.
+    ⋮1022│+        and is arbitrarily set to `np.inf`.
+1023⋮1023│ 
+1024⋮1024│     See Also
+1025⋮1025│     --------
+
+1036⋮1036│     are reversed upon returning them to ensure they correspond to both ``fpr``
+1037⋮1037│     and ``tpr``, which are sorted in reversed order during their calculation.
+1038⋮1038│ 
+    ⋮1039│+    An arbritrary threshold is added for the case `tpr=0` and `fpr=0` to
+    ⋮1040│+    ensure that the curve starts at `(0, 0)`. This threshold corresponds to the
+    ⋮1041│+    `np.inf`.
+    ⋮1042│+
+1039⋮1043│     References
+1040⋮1044│     ----------
+1041⋮1045│     .. [1] `Wikipedia entry for the Receiver operating characteristic
+
+1056⋮1060│     >>> tpr
+1057⋮1061│     array([0. , 0.5, 0.5, 1. , 1. ])
+1058⋮1062│     >>> thresholds
+1059⋮    │-    array([1.8 , 0.8 , 0.4 , 0.35, 0.1 ])
+    ⋮1063│+    array([ inf, 0.8 , 0.4 , 0.35, 0.1 ])
+1060⋮1064│     """
+1061⋮1065│     fps, tps, thresholds = _binary_clf_curve(
+1062⋮1066│         y_true, y_score, pos_label=pos_label, sample_weight=sample_weight
+
+1083⋮1087│     # to make sure that the curve starts at (0, 0)
+1084⋮1088│     tps = np.r_[0, tps]
+1085⋮1089│     fps = np.r_[0, fps]
+1086⋮    │-    thresholds = np.r_[thresholds[0] + 1, thresholds]
+    ⋮1090│+    # get dtype of `y_score` even if it is an array-like
+    ⋮1091│+    thresholds = np.r_[np.inf, thresholds]
+1087⋮1092│ 
+1088⋮1093│     if fps[-1] <= 0:
+1089⋮1094│         warnings.warn(

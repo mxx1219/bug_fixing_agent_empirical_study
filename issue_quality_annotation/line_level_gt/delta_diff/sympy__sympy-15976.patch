@@ -1,0 +1,53 @@
+
+sympy/printing/mathml.py
+
+ 743⋮ 743│         return mrow
+ 744⋮ 744│ 
+ 745⋮ 745│     def _print_Symbol(self, sym, style='plain'):
+ 746⋮    │-        x = self.dom.createElement('mi')
+ 747⋮    │-
+ 748⋮    │-        if style == 'bold':
+ 749⋮    │-            x.setAttribute('mathvariant', 'bold')
+ 750⋮    │-
+ 751⋮ 746│         def join(items):
+ 752⋮ 747│             if len(items) > 1:
+ 753⋮ 748│                 mrow = self.dom.createElement('mrow')
+
+ 781⋮ 776│         mname.appendChild(self.dom.createTextNode(name))
+ 782⋮ 777│         if len(supers) == 0:
+ 783⋮ 778│             if len(subs) == 0:
+ 784⋮    │-                x.appendChild(self.dom.createTextNode(name))
+    ⋮ 779│+                x = mname
+ 785⋮ 780│             else:
+ 786⋮    │-                msub = self.dom.createElement('msub')
+ 787⋮    │-                msub.appendChild(mname)
+ 788⋮    │-                msub.appendChild(join(subs))
+ 789⋮    │-                x.appendChild(msub)
+    ⋮ 781│+                x = self.dom.createElement('msub')
+    ⋮ 782│+                x.appendChild(mname)
+    ⋮ 783│+                x.appendChild(join(subs))
+ 790⋮ 784│         else:
+ 791⋮ 785│             if len(subs) == 0:
+ 792⋮    │-                msup = self.dom.createElement('msup')
+ 793⋮    │-                msup.appendChild(mname)
+ 794⋮    │-                msup.appendChild(join(supers))
+ 795⋮    │-                x.appendChild(msup)
+    ⋮ 786│+                x = self.dom.createElement('msup')
+    ⋮ 787│+                x.appendChild(mname)
+    ⋮ 788│+                x.appendChild(join(supers))
+ 796⋮ 789│             else:
+ 797⋮    │-                msubsup = self.dom.createElement('msubsup')
+ 798⋮    │-                msubsup.appendChild(mname)
+ 799⋮    │-                msubsup.appendChild(join(subs))
+ 800⋮    │-                msubsup.appendChild(join(supers))
+ 801⋮    │-                x.appendChild(msubsup)
+    ⋮ 790│+                x = self.dom.createElement('msubsup')
+    ⋮ 791│+                x.appendChild(mname)
+    ⋮ 792│+                x.appendChild(join(subs))
+    ⋮ 793│+                x.appendChild(join(supers))
+    ⋮ 794│+        # Set bold font?
+    ⋮ 795│+        if style == 'bold':
+    ⋮ 796│+            x.setAttribute('mathvariant', 'bold')
+ 802⋮ 797│         return x
+ 803⋮ 798│ 
+ 804⋮ 799│     def _print_MatrixSymbol(self, sym):

@@ -1,0 +1,30 @@
+
+django/forms/boundfield.py
+
+  2 ⋮  2 │ 
+  3 ⋮  3 │ from django.core.exceptions import ValidationError
+  4 ⋮  4 │ from django.forms.utils import flatatt, pretty_name
+  5 ⋮    │-from django.forms.widgets import Textarea, TextInput
+    ⋮  5 │+from django.forms.widgets import MultiWidget, Textarea, TextInput
+  6 ⋮  6 │ from django.utils.functional import cached_property
+  7 ⋮  7 │ from django.utils.html import conditional_escape, format_html, html_safe
+  8 ⋮  8 │ from django.utils.safestring import mark_safe
+
+ 233⋮ 233│         widget = widget or self.field.widget
+ 234⋮ 234│         attrs = dict(attrs)  # Copy attrs to avoid modifying the argument.
+ 235⋮ 235│         if widget.use_required_attribute(self.initial) and self.field.required and self.form.use_required_attribute:
+ 236⋮    │-            attrs['required'] = True
+    ⋮ 236│+            # MultiValueField has require_all_fields: if False, fall back
+    ⋮ 237│+            # on subfields.
+    ⋮ 238│+            if (
+    ⋮ 239│+                hasattr(self.field, 'require_all_fields') and
+    ⋮ 240│+                not self.field.require_all_fields and
+    ⋮ 241│+                isinstance(self.field.widget, MultiWidget)
+    ⋮ 242│+            ):
+    ⋮ 243│+                for subfield, subwidget in zip(self.field.fields, widget.widgets):
+    ⋮ 244│+                    subwidget.attrs['required'] = subwidget.use_required_attribute(self.initial) and subfield.required
+    ⋮ 245│+            else:
+    ⋮ 246│+                attrs['required'] = True
+ 237⋮ 247│         if self.field.disabled:
+ 238⋮ 248│             attrs['disabled'] = True
+ 239⋮ 249│         return attrs

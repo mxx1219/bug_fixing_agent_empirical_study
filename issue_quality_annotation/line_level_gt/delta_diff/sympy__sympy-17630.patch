@@ -1,0 +1,11 @@
+
+sympy/matrices/expressions/matexpr.py
+
+ 627⋮ 627│                 # manipulate them like non-commutative scalars.
+ 628⋮ 628│                 return cls._from_args(nonmatrices + [mat_class(*matrices).doit(deep=False)])
+ 629⋮ 629│ 
+    ⋮ 630│+        if mat_class == MatAdd:
+    ⋮ 631│+            return mat_class(*matrices).doit(deep=False)
+ 630⋮ 632│         return mat_class(cls._from_args(nonmatrices), *matrices).doit(deep=False)
+ 631⋮ 633│     return _postprocessor
+ 632⋮ 634│ 

@@ -1,0 +1,20 @@
+
+sphinx/domains/std.py
+
+ 305⋮ 305│         term['ids'].append(node_id)
+ 306⋮ 306│ 
+ 307⋮ 307│     std = cast(StandardDomain, env.get_domain('std'))
+ 308⋮    │-    std.note_object('term', termtext.lower(), node_id, location=term)
+    ⋮ 308│+    std.note_object('term', termtext, node_id, location=term)
+ 309⋮ 309│ 
+ 310⋮ 310│     # add an index entry too
+ 311⋮ 311│     indexnode = addnodes.index()
+
+ 565⋮ 565│         # links to tokens in grammar productions
+ 566⋮ 566│         'token':   TokenXRefRole(),
+ 567⋮ 567│         # links to terms in glossary
+ 568⋮    │-        'term':    XRefRole(lowercase=True, innernodeclass=nodes.inline,
+    ⋮ 568│+        'term':    XRefRole(innernodeclass=nodes.inline,
+ 569⋮ 569│                             warn_dangling=True),
+ 570⋮ 570│         # links to headings or arbitrary labels
+ 571⋮ 571│         'ref':     XRefRole(lowercase=True, innernodeclass=nodes.inline,

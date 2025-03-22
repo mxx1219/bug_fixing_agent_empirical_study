@@ -1,0 +1,19 @@
+
+django/core/validators.py
+
+ 92 ⋮ 92 │         r'\Z', re.IGNORECASE)
+ 93 ⋮ 93 │     message = _('Enter a valid URL.')
+ 94 ⋮ 94 │     schemes = ['http', 'https', 'ftp', 'ftps']
+    ⋮ 95 │+    unsafe_chars = frozenset('\t\r\n')
+ 95 ⋮ 96 │ 
+ 96 ⋮ 97 │     def __init__(self, schemes=None, **kwargs):
+ 97 ⋮ 98 │         super().__init__(**kwargs)
+
+ 101⋮ 102│     def __call__(self, value):
+ 102⋮ 103│         if not isinstance(value, str):
+ 103⋮ 104│             raise ValidationError(self.message, code=self.code, params={'value': value})
+    ⋮ 105│+        if self.unsafe_chars.intersection(value):
+    ⋮ 106│+            raise ValidationError(self.message, code=self.code, params={'value': value})
+ 104⋮ 107│         # Check if the scheme is valid.
+ 105⋮ 108│         scheme = value.split('://')[0].lower()
+ 106⋮ 109│         if scheme not in self.schemes:

@@ -1,0 +1,50 @@
+[
+    {
+        "type": "functions",
+        "line_range": "13-15"
+    },
+    {
+        "type": "functions",
+        "line_range": "18-24"
+    },
+    {
+        "type": "functions",
+        "line_range": "27-30"
+    },
+    {
+        "type": "functions",
+        "line_range": "33-39"
+    },
+    {
+        "type": "functions",
+        "line_range": "42-48"
+    },
+    {
+        "type": "functions",
+        "line_range": "51-57"
+    },
+    {
+        "type": "functions",
+        "line_range": "60-66"
+    },
+    {
+        "type": "functions",
+        "line_range": "69-75"
+    },
+    {
+        "type": "functions",
+        "line_range": "78-83"
+    },
+    {
+        "type": "functions",
+        "line_range": "86-92"
+    },
+    {
+        "type": "imports",
+        "line_range": "1-7"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "9-10"
+    }
+]

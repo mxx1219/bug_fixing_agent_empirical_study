@@ -1,0 +1,15 @@
+
+astropy/io/fits/connect.py
+
+ 65 ⋮ 65 │         fileobj.seek(pos)
+ 66 ⋮ 66 │         return sig == FITS_SIGNATURE
+ 67 ⋮ 67 │     elif filepath is not None:
+ 68 ⋮    │-        if filepath.lower().endswith(
+    ⋮ 68 │+        return filepath.lower().endswith(
+ 69 ⋮ 69 │             (".fits", ".fits.gz", ".fit", ".fit.gz", ".fts", ".fts.gz")
+ 70 ⋮    │-        ):
+ 71 ⋮    │-            return True
+    ⋮ 70 │+        )
+ 72 ⋮ 71 │     return isinstance(args[0], (HDUList, TableHDU, BinTableHDU, GroupsHDU))
+ 73 ⋮ 72 │ 
+ 74 ⋮ 73 │ 

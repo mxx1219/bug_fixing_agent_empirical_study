@@ -1,0 +1,18 @@
+
+xarray/core/weighted.py
+
+ 142⋮ 142│         # we need to mask data values that are nan; else the weights are wrong
+ 143⋮ 143│         mask = da.notnull()
+ 144⋮ 144│ 
+ 145⋮    │-        sum_of_weights = self._reduce(mask, self.weights, dim=dim, skipna=False)
+    ⋮ 145│+        # bool -> int, because ``xr.dot([True, True], [True, True])`` -> True
+    ⋮ 146│+        # (and not 2); GH4074
+    ⋮ 147│+        if self.weights.dtype == bool:
+    ⋮ 148│+            sum_of_weights = self._reduce(
+    ⋮ 149│+                mask, self.weights.astype(int), dim=dim, skipna=False
+    ⋮ 150│+            )
+    ⋮ 151│+        else:
+    ⋮ 152│+            sum_of_weights = self._reduce(mask, self.weights, dim=dim, skipna=False)
+ 146⋮ 153│ 
+ 147⋮ 154│         # 0-weights are not valid
+ 148⋮ 155│         valid_weights = sum_of_weights != 0.0

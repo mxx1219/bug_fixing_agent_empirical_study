@@ -1,0 +1,12 @@
+
+sklearn/tree/export.py
+
+ 890⋮ 890│         value_fmt = "{}{} value: {}\n"
+ 891⋮ 891│ 
+ 892⋮ 892│     if feature_names:
+ 893⋮    │-        feature_names_ = [feature_names[i] for i in tree_.feature]
+    ⋮ 893│+        feature_names_ = [feature_names[i] if i != _tree.TREE_UNDEFINED
+    ⋮ 894│+                          else None for i in tree_.feature]
+ 894⋮ 895│     else:
+ 895⋮ 896│         feature_names_ = ["feature_{}".format(i) for i in tree_.feature]
+ 896⋮ 897│ 

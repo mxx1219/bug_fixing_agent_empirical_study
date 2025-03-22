@@ -1,0 +1,19 @@
+
+sympy/printing/repr.py
+
+ 144⋮ 144│     def _print_list(self, expr):
+ 145⋮ 145│         return "[%s]" % self.reprify(expr, ", ")
+ 146⋮ 146│ 
+    ⋮ 147│+    def _print_dict(self, expr):
+    ⋮ 148│+        sep = ", "
+    ⋮ 149│+        dict_kvs = ["%s: %s" % (self.doprint(key), self.doprint(value)) for key, value in expr.items()]
+    ⋮ 150│+        return "{%s}" % sep.join(dict_kvs)
+    ⋮ 151│+
+    ⋮ 152│+    def _print_set(self, expr):
+    ⋮ 153│+        if not expr:
+    ⋮ 154│+            return "set()"
+    ⋮ 155│+        return "{%s}" % self.reprify(expr, ", ")
+    ⋮ 156│+
+ 147⋮ 157│     def _print_MatrixBase(self, expr):
+ 148⋮ 158│         # special case for some empty matrices
+ 149⋮ 159│         if (expr.rows == 0) ^ (expr.cols == 0):

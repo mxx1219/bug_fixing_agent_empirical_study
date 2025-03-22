@@ -1,0 +1,54 @@
+
+django/db/backends/base/schema.py
+
+1376⋮1376│         # - changing only a field name
+1377⋮1377│         # - changing an attribute that doesn't affect the schema
+1378⋮1378│         # - adding only a db_column and the column name is not changed
+1379⋮    │-        non_database_attrs = [
+1380⋮    │-            "blank",
+1381⋮    │-            "db_column",
+1382⋮    │-            "editable",
+1383⋮    │-            "error_messages",
+1384⋮    │-            "help_text",
+1385⋮    │-            "limit_choices_to",
+1386⋮    │-            # Database-level options are not supported, see #21961.
+1387⋮    │-            "on_delete",
+1388⋮    │-            "related_name",
+1389⋮    │-            "related_query_name",
+1390⋮    │-            "validators",
+1391⋮    │-            "verbose_name",
+1392⋮    │-        ]
+1393⋮    │-        for attr in non_database_attrs:
+    ⋮1379│+        for attr in old_field.non_db_attrs:
+1394⋮1380│             old_kwargs.pop(attr, None)
+    ⋮1381│+        for attr in new_field.non_db_attrs:
+1395⋮1382│             new_kwargs.pop(attr, None)
+1396⋮1383│         return self.quote_name(old_field.column) != self.quote_name(
+1397⋮1384│             new_field.column
+
+django/db/models/fields/__init__.py
+
+ 140⋮ 140│     system_check_deprecated_details = None
+ 141⋮ 141│     system_check_removed_details = None
+ 142⋮ 142│ 
+    ⋮ 143│+    # Attributes that don't affect a column definition.
+    ⋮ 144│+    # These attributes are ignored when altering the field.
+    ⋮ 145│+    non_db_attrs = (
+    ⋮ 146│+        "blank",
+    ⋮ 147│+        "choices",
+    ⋮ 148│+        "db_column",
+    ⋮ 149│+        "editable",
+    ⋮ 150│+        "error_messages",
+    ⋮ 151│+        "help_text",
+    ⋮ 152│+        "limit_choices_to",
+    ⋮ 153│+        # Database-level options are not supported, see #21961.
+    ⋮ 154│+        "on_delete",
+    ⋮ 155│+        "related_name",
+    ⋮ 156│+        "related_query_name",
+    ⋮ 157│+        "validators",
+    ⋮ 158│+        "verbose_name",
+    ⋮ 159│+    )
+    ⋮ 160│+
+ 143⋮ 161│     # Field flags
+ 144⋮ 162│     hidden = False
+ 145⋮ 163│ 

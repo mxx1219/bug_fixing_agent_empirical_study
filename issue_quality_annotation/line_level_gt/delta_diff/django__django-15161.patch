@@ -1,0 +1,50 @@
+
+django/db/models/expressions.py
+
+ 651⋮ 651│         return self
+ 652⋮ 652│ 
+ 653⋮ 653│ 
+    ⋮ 654│+@deconstructible(path='django.db.models.Func')
+ 654⋮ 655│ class Func(SQLiteNumericMixin, Expression):
+ 655⋮ 656│     """An SQL function call."""
+ 656⋮ 657│     function = None
+
+ 731⋮ 732│         return copy
+ 732⋮ 733│ 
+ 733⋮ 734│ 
+    ⋮ 735│+@deconstructible(path='django.db.models.Value')
+ 734⋮ 736│ class Value(SQLiteNumericMixin, Expression):
+ 735⋮ 737│     """Represent a wrapped value as a node within an expression."""
+ 736⋮ 738│     # Provide a default value for `for_save` in order to allow unresolved
+
+ 953⋮ 955│         return super().as_sql(*args, **kwargs)
+ 954⋮ 956│ 
+ 955⋮ 957│ 
+    ⋮ 958│+@deconstructible(path='django.db.models.ExpressionWrapper')
+ 956⋮ 959│ class ExpressionWrapper(SQLiteNumericMixin, Expression):
+ 957⋮ 960│     """
+ 958⋮ 961│     An expression that can wrap another expression so that it can provide
+
+ 985⋮ 988│         return "{}({})".format(self.__class__.__name__, self.expression)
+ 986⋮ 989│ 
+ 987⋮ 990│ 
+    ⋮ 991│+@deconstructible(path='django.db.models.When')
+ 988⋮ 992│ class When(Expression):
+ 989⋮ 993│     template = 'WHEN %(condition)s THEN %(result)s'
+ 990⋮ 994│     # This isn't a complete conditional expression, must be used in Case().
+
+1052⋮1056│         return cols
+1053⋮1057│ 
+1054⋮1058│ 
+    ⋮1059│+@deconstructible(path='django.db.models.Case')
+1055⋮1060│ class Case(SQLiteNumericMixin, Expression):
+1056⋮1061│     """
+1057⋮1062│     An SQL searched CASE expression:
+
+1225⋮1230│         return sql, params
+1226⋮1231│ 
+1227⋮1232│ 
+    ⋮1233│+@deconstructible(path='django.db.models.OrderBy')
+1228⋮1234│ class OrderBy(Expression):
+1229⋮1235│     template = '%(expression)s %(ordering)s'
+1230⋮1236│     conditional = False

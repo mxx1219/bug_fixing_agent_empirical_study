@@ -1,0 +1,11 @@
+
+django/utils/translation/trans_real.py
+
+ 43 ⋮ 43 │     re.IGNORECASE
+ 44 ⋮ 44 │ )
+ 45 ⋮ 45 │ 
+ 46 ⋮    │-language_code_prefix_re = _lazy_re_compile(r'^/(\w+([@-]\w+)?)(/|$)')
+    ⋮ 46 │+language_code_prefix_re = _lazy_re_compile(r'^/(\w+([@-]\w+){0,2})(/|$)')
+ 47 ⋮ 47 │ 
+ 48 ⋮ 48 │ 
+ 49 ⋮ 49 │ @receiver(setting_changed)

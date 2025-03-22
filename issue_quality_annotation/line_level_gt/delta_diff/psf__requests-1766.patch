@@ -1,0 +1,20 @@
+
+requests/auth.py
+
+ 105⋮ 105│ 
+ 106⋮ 106│         A1 = '%s:%s:%s' % (self.username, realm, self.password)
+ 107⋮ 107│         A2 = '%s:%s' % (method, path)
+ 108⋮    │-        
+    ⋮ 108│+
+ 109⋮ 109│         HA1 = hash_utf8(A1)
+ 110⋮ 110│         HA2 = hash_utf8(A2)
+ 111⋮ 111│ 
+
+ 144⋮ 144│         if entdig:
+ 145⋮ 145│             base += ', digest="%s"' % entdig
+ 146⋮ 146│         if qop:
+ 147⋮    │-            base += ', qop=auth, nc=%s, cnonce="%s"' % (ncvalue, cnonce)
+    ⋮ 147│+            base += ', qop="auth", nc=%s, cnonce="%s"' % (ncvalue, cnonce)
+ 148⋮ 148│ 
+ 149⋮ 149│         return 'Digest %s' % (base)
+ 150⋮ 150│ 

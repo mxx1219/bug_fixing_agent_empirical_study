@@ -1,0 +1,33 @@
+
+astropy/utils/misc.py
+
+  4 ⋮  4 │ A "grab bag" of relatively small general-purpose utilities that don't have
+  5 ⋮  5 │ a clear module/package to live in.
+  6 ⋮  6 │ """
+  7 ⋮    │-
+  8 ⋮    │-
+  9 ⋮    │-
+ 10 ⋮  7 │ import abc
+ 11 ⋮  8 │ import contextlib
+ 12 ⋮  9 │ import difflib
+
+ 27 ⋮ 24 │ from collections import defaultdict, OrderedDict
+ 28 ⋮ 25 │ 
+ 29 ⋮ 26 │ 
+ 30 ⋮    │-
+ 31 ⋮ 27 │ __all__ = ['isiterable', 'silence', 'format_exception', 'NumpyRNGContext',
+ 32 ⋮ 28 │            'find_api_page', 'is_path_hidden', 'walk_skip_hidden',
+ 33 ⋮ 29 │            'JsonCustomEncoder', 'indent', 'InheritDocstrings',
+
+ 528⋮ 524│                 not key.startswith('_'))
+ 529⋮ 525│ 
+ 530⋮ 526│         for key, val in dct.items():
+ 531⋮    │-            if (inspect.isfunction(val) and
+ 532⋮    │-                is_public_member(key) and
+ 533⋮    │-                val.__doc__ is None):
+    ⋮ 527│+            if ((inspect.isfunction(val) or inspect.isdatadescriptor(val)) and
+    ⋮ 528│+                    is_public_member(key) and
+    ⋮ 529│+                    val.__doc__ is None):
+ 534⋮ 530│                 for base in cls.__mro__[1:]:
+ 535⋮ 531│                     super_method = getattr(base, key, None)
+ 536⋮ 532│                     if super_method is not None:

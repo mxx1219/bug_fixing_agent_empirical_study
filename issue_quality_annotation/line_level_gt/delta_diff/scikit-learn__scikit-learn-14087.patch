@@ -1,0 +1,25 @@
+
+sklearn/linear_model/logistic.py
+
+2170⋮2170│                 # Take the best scores across every fold and the average of
+2171⋮2171│                 # all coefficients corresponding to the best scores.
+2172⋮2172│                 best_indices = np.argmax(scores, axis=1)
+2173⋮    │-                if self.multi_class == 'ovr':
+    ⋮2173│+                if multi_class == 'ovr':
+2174⋮2174│                     w = np.mean([coefs_paths[i, best_indices[i], :]
+2175⋮2175│                                  for i in range(len(folds))], axis=0)
+2176⋮2176│                 else:
+
+2180⋮2180│                 best_indices_C = best_indices % len(self.Cs_)
+2181⋮2181│                 self.C_.append(np.mean(self.Cs_[best_indices_C]))
+2182⋮2182│ 
+2183⋮    │-                best_indices_l1 = best_indices // len(self.Cs_)
+2184⋮    │-                self.l1_ratio_.append(np.mean(l1_ratios_[best_indices_l1]))
+    ⋮2183│+                if self.penalty == 'elasticnet':
+    ⋮2184│+                    best_indices_l1 = best_indices // len(self.Cs_)
+    ⋮2185│+                    self.l1_ratio_.append(np.mean(l1_ratios_[best_indices_l1]))
+    ⋮2186│+                else:
+    ⋮2187│+                    self.l1_ratio_.append(None)
+2185⋮2188│ 
+2186⋮2189│             if multi_class == 'multinomial':
+2187⋮2190│                 self.C_ = np.tile(self.C_, n_classes)

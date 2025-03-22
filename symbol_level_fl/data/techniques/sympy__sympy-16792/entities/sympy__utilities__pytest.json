@@ -1,0 +1,106 @@
+[
+    {
+        "type": "functions",
+        "line_range": "26-96"
+    },
+    {
+        "type": "functions",
+        "line_range": "122,133-135"
+    },
+    {
+        "type": "functions",
+        "line_range": "123-132"
+    },
+    {
+        "type": "functions",
+        "line_range": "137-138"
+    },
+    {
+        "type": "functions",
+        "line_range": "140-141,148-149"
+    },
+    {
+        "type": "functions",
+        "line_range": "142,145-147"
+    },
+    {
+        "type": "functions",
+        "line_range": "143-144"
+    },
+    {
+        "type": "functions",
+        "line_range": "151-153,156-159"
+    },
+    {
+        "type": "functions",
+        "line_range": "154-155"
+    },
+    {
+        "type": "functions",
+        "line_range": "161-196"
+    },
+    {
+        "type": "functions",
+        "line_range": "203,209-210"
+    },
+    {
+        "type": "functions",
+        "line_range": "204,208"
+    },
+    {
+        "type": "functions",
+        "line_range": "205-207"
+    },
+    {
+        "type": "functions",
+        "line_range": "213-238"
+    },
+    {
+        "type": "functions",
+        "line_range": "240-284"
+    },
+    {
+        "type": "methods",
+        "line_range": "99-100"
+    },
+    {
+        "type": "methods",
+        "line_range": "102-103"
+    },
+    {
+        "type": "methods",
+        "line_range": "105-108"
+    },
+    {
+        "type": "classes",
+        "line_range": "98,101,104"
+    },
+    {
+        "type": "classes",
+        "line_range": "110-111"
+    },
+    {
+        "type": "classes",
+        "line_range": "113-114"
+    },
+    {
+        "type": "classes",
+        "line_range": "116-117"
+    },
+    {
+        "type": "classes",
+        "line_range": "119-120"
+    },
+    {
+        "type": "imports",
+        "line_range": "3-12"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "1"
+    },
+    {
+        "type": "top_level_statements",
+        "line_range": "14-25,97,109,112,115,118,121,136,139,150,160,197-202"
+    }
+]

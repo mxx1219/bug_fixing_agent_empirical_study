@@ -1,0 +1,20 @@
+
+sphinx/builders/linkcheck.py
+
+ 20 ⋮ 20 │ 
+ 21 ⋮ 21 │ from docutils import nodes
+ 22 ⋮ 22 │ from docutils.nodes import Node
+ 23 ⋮    │-from requests.exceptions import HTTPError
+    ⋮ 23 │+from requests.exceptions import HTTPError, TooManyRedirects
+ 24 ⋮ 24 │ 
+ 25 ⋮ 25 │ from sphinx.application import Sphinx
+ 26 ⋮ 26 │ from sphinx.builders import Builder
+
+ 172⋮ 172│                                                  config=self.app.config, auth=auth_info,
+ 173⋮ 173│                                                  **kwargs)
+ 174⋮ 174│                         response.raise_for_status()
+ 175⋮    │-                    except HTTPError:
+    ⋮ 175│+                    except (HTTPError, TooManyRedirects):
+ 176⋮ 176│                         # retry with GET request if that fails, some servers
+ 177⋮ 177│                         # don't like HEAD requests.
+ 178⋮ 178│                         response = requests.get(req_url, stream=True, config=self.app.config,

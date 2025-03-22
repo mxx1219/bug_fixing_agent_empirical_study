@@ -1,0 +1,10 @@
+
+sklearn/utils/_show_versions.py
+
+ 48 ⋮ 48 │         "Cython",
+ 49 ⋮ 49 │         "pandas",
+ 50 ⋮ 50 │         "matplotlib",
+    ⋮ 51 │+        "joblib",
+ 51 ⋮ 52 │     ]
+ 52 ⋮ 53 │ 
+ 53 ⋮ 54 │     def get_version(module):

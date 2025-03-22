@@ -1,0 +1,11 @@
+
+astropy/io/fits/diff.py
+
+1449⋮1449│                 arrb.dtype, np.floating
+1450⋮1450│             ):
+1451⋮1451│                 diffs = where_not_allclose(arra, arrb, rtol=self.rtol, atol=self.atol)
+1452⋮    │-            elif "P" in col.format:
+    ⋮1452│+            elif "P" in col.format or "Q" in col.format:
+1453⋮1453│                 diffs = (
+1454⋮1454│                     [
+1455⋮1455│                         idx
